@@ -58,11 +58,12 @@ Create an `api` folder in your root directory, and place an `index.php` file ins
 require __DIR__ . '/../public/index.php';
 ```
 
-## 3. Preparing the Database
+## 3. Preparing the Database (Supabase)
 
-Since you cannot use SQLite on Vercel:
-1. Create a managed PostgreSQL or MySQL database (e.g., [Neon.tech](https://neon.tech) for Postgres or [PlanetScale](https://planetscale.com) for MySQL).
-2. Get your connection string (e.g., `postgres://user:password@host/dbname`).
+Since you cannot use SQLite on Vercel, **Supabase** (PostgreSQL) is the most popular and easiest choice for Vercel deployment:
+1. Create a free project on [Supabase](https://supabase.com).
+2. Go to your Project Settings -> Database to find your connection details.
+3. You will need these to fill out your Vercel Environment Variables.
 
 ## 4. Compiling Assets (Vite)
 
@@ -89,8 +90,12 @@ To commit compiled assets:
      - `APP_KEY` = (Generate one using `php artisan key:generate --show`)
      - `APP_DEBUG` = "false"
      - `APP_URL` = (Your Vercel domain)
-     - `DB_CONNECTION` = "pgsql" (or mysql)
-     - `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` (From your remote database provider)
+     - `DB_CONNECTION` = "pgsql"
+     - `DB_HOST` = (e.g., `aws-0-eu-central-1.pooler.supabase.com`)
+     - `DB_PORT` = "5432"
+     - `DB_DATABASE` = "postgres"
+     - `DB_USERNAME` = "postgres.xxxxxxx"
+     - `DB_PASSWORD` = "your-supabase-password"
      - `SESSION_DRIVER` = "cookie"
      - `CACHE_DRIVER` = "array" (Or Redis if you have an external Redis instance)
 6. Click **Deploy**.
