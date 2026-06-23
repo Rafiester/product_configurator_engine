@@ -36,12 +36,16 @@
                     </div>
                     
                     <div class="flex items-center space-x-4">
-                        <a href="{{ route('configurators.edit', $configurator) }}" class="text-primary-DEFAULT hover:text-primary-hover font-medium transition-colors">Edit Details</a>
+                        <div class="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
+                            <a href="{{ route('configurators.edit', $configurator) }}" class="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors">Edit Details</a>
+                        </div>
                         
                         <form action="{{ route('configurators.destroy', $configurator) }}" method="POST" class="inline" @submit.prevent="window.confirmAction({ title: 'Delete Configurator?', message: 'This action cannot be undone.', type: 'danger', confirmText: 'Delete', onConfirm: () => $el.submit() })">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-600 font-medium transition-colors">Delete</button>
+                            <div class="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
+                                <button type="submit" class="inline-flex items-center justify-center px-4 py-1.5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold rounded-md shadow-sm text-xs transition-colors">Delete</button>
+                            </div>
                         </form>
 
                         <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">

@@ -65,11 +65,17 @@
                             <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Unpublish</option>
                         </select>
                     </div>
-                    <div class="flex items-center flex-none">
-                        <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2 px-6 rounded-md shadow-sm sm:text-sm whitespace-nowrap transition-colors">
-                            Filter
-                        </button>
-                        <a href="{{ route('products.index') }}" class="ml-4 sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 whitespace-nowrap transition-colors">Clear</a>
+                    <div class="flex items-center space-x-3 flex-none ml-2">
+                        <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                            <button type="submit" class="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm whitespace-nowrap transition-colors focus:outline-none">
+                                Filter
+                            </button>
+                        </div>
+                        <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                            <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm whitespace-nowrap transition-colors focus:outline-none">
+                                Clear
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -132,11 +138,15 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end gap-3">
-                                        <a href="{{ route('products.edit', $product) }}" class="text-primary-DEFAULT hover:text-primary-hover font-semibold transition-colors">Edit</a>
+                                        <div class="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
+                                            <a href="{{ route('products.edit', $product) }}" class="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors">Edit</a>
+                                        </div>
                                         <form x-data action="{{ route('products.destroy', $product) }}" method="POST" @submit.prevent="window.confirmAction({ title: 'Delete Product?', message: 'This action cannot be undone.', type: 'danger', confirmText: 'Delete', onConfirm: () => $el.submit() })" class="inline m-0">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-600 font-semibold transition-colors">Delete</button>
+                                            <div class="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
+                                                <button type="submit" class="inline-flex items-center justify-center px-4 py-1.5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold rounded-md shadow-sm text-xs transition-colors">Delete</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </td>
