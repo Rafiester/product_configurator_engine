@@ -19,27 +19,18 @@ This application helps internal admin users effortlessly manage PC build options
 - Pastel pink SaaS design system
 - Custom toast notification system
 
-## Quick Setup
+## Installation & Deployment
 
-```bash
-# Clone the repository and install dependencies
-composer install
-npm install
+This application supports multiple environments. Choose the setup guide that fits your needs:
 
-# Setup environment variables
-cp .env.example .env
-php artisan key:generate
+1. **[🖥️ Local Development Setup](docs/DEPLOY_LOCAL.md)**  
+   *For local development using `php artisan serve`, Laravel Valet, Herd, or Sail.*
 
-# Run migrations (and seeders if applicable)
-php artisan migrate
+2. **[🚀 VPS Server Deployment](docs/DEPLOY_SERVER.md)**  
+   *For traditional production deployment on Ubuntu using Nginx and PHP-FPM.*
 
-# Compile frontend assets
-npm run build
-# OR run the dev server: npm run dev
-
-# Start the local PHP development server
-php artisan serve
-```
+3. **[☁️ Vercel Serverless Deployment](docs/DEPLOY_VERCEL.md)**  
+   *For serverless deployment using `vercel-php` and external databases.*
 
 ## Documentation
 
@@ -47,7 +38,6 @@ For deep technical details, architectures, and guidelines, please refer to the d
 
 - [Overview](docs/OVERVIEW.md)
 - [Features Details](docs/FEATURES.md)
-- [Setup Instructions](docs/SETUP.md)
 - [Database Structure](docs/DATABASE.md)
 - [Product Master Data](docs/PRODUCT_MASTER_DATA.md)
 - [Configurator Builder](docs/CONFIGURATOR_BUILDER.md)
