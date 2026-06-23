@@ -1,0 +1,1 @@
+{"version":2,"defects":{"Tests\\Feature\\ProductSaveTest::test_product_saves":8,"Tests\\Feature\\RealDbTest::test_save":8},"times":{"Tests\\Feature\\ProductSaveTest::test_product_saves":0.048,"Tests\\Feature\\RealDbTest::test_save":0.034}}
