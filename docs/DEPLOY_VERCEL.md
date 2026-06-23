@@ -21,7 +21,7 @@ Create a `vercel.json` file in your project root:
     "builds": [
         {
             "src": "api/index.php",
-            "use": "vercel-php@0.6.0"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "/public/**",
