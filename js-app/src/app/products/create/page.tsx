@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { createProduct } from '../actions';
 
+export const dynamic = 'force-dynamic';
+
 export default function CreateProductPage() {
   return (
     <div className="py-12">

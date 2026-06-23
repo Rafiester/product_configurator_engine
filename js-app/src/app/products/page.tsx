@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import ImportModal from '@/components/ImportModal';
 import { DeleteButton } from '@/components/DeleteButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProductsPage({
   searchParams,
 }: {
