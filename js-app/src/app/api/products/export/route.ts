@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import * as xlsx from 'xlsx';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const trace = (action: string, details: any) => {
   console.info(`[TRACE - ${new Date().toISOString()}] EXPORT_${action}:`, JSON.stringify(details));
 };
