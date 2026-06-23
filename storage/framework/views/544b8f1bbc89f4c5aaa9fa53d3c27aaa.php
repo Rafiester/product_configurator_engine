@@ -20,16 +20,20 @@
                 </h2>
             </div>
             <div x-data class="flex items-center space-x-3">
-                <a href="<?php echo e(route('products.export')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-white dark:bg-dark-surface border-2 border-primary-DEFAULT rounded-lg font-semibold text-primary-DEFAULT hover:bg-primary-soft dark:hover:bg-primary-darkSoft transition-colors focus:outline-none shadow-sm text-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Download Master Data
-                </a>
-                <button @click="$dispatch('open-import-modal')" class="inline-flex items-center justify-center px-6 py-2.5 bg-transparent border-2 border-primary-DEFAULT rounded-lg font-semibold text-primary-DEFAULT hover:bg-primary-soft dark:hover:bg-primary-darkSoft transition-colors focus:outline-none shadow-sm text-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    Import Excel
-                </button>
                 <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                    <a href="<?php echo e(route('products.create')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm">
+                    <a href="<?php echo e(route('products.export')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Download Master Data
+                    </a>
+                </div>
+                <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                    <button @click="$dispatch('open-import-modal')" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        Import Excel
+                    </button>
+                </div>
+                <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                    <a href="<?php echo e(route('products.create')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Create New Product
                     </a>

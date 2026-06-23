@@ -10,7 +10,7 @@
                 </h2>
             </div>
             <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <a href="{{ route('configurators.create') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm">
+                <a href="{{ route('configurators.create') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Add Configurator
                 </a>
@@ -45,7 +45,7 @@
                         </form>
 
                         <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-                            <button @click="expanded = !expanded" class="bg-primary-DEFAULT text-black dark:text-white font-semibold py-2 px-4 rounded-md shadow-sm flex items-center space-x-2">
+                            <button @click="expanded = !expanded" class="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2 px-4 rounded-lg shadow-sm flex items-center space-x-2 transition-colors">
                                 <span x-text="expanded ? 'Collapse Builder' : 'Expand Builder'"></span>
                                 <svg x-show="expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                                 <svg x-show="!expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -116,12 +116,13 @@
                         </table>
                     </div>
                     
-                    <!-- Save Button Below Table -->
                     <div class="mt-4 flex justify-end px-6">
-                        <button @click="saveConfiguration" class="bg-primary-DEFAULT text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                            <span>Save Configuration</span>
-                        </button>
+                        <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                            <button @click="saveConfiguration" class="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                                <span>Save Configuration</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
