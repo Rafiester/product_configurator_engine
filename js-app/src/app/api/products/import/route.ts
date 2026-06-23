@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { parseProductExcel, filterDuplicates } from '@/lib/excel-import';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const trace = (action: string, details: any) => {
   console.info(`[TRACE - ${new Date().toISOString()}] IMPORT_${action}:`, JSON.stringify(details));
 };
