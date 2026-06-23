@@ -28,7 +28,7 @@
 
                         <div class="flex items-center justify-end mt-8 border-t border-gray-200 dark:border-dark-border pt-6">
                             <a href="{{ route('configurators.index') }}" class="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mr-6 transition-colors">Cancel</a>
-                            <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2">
+                            <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover text-black dark:text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2">
                                 Save
                             </button>
                         </div>

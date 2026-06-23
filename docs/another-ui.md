@@ -1,218 +1,214 @@
-Refactor the Configurator module flow to simplify the UI and remove unnecessary separate edit-page builder flow.
+# UI Prompt — Cosmetic Currency & Percentage Formatting Only
 
-The spreadsheet-style Dynamic PC Builder is already correct. Keep that builder layout and move it into the main Configurator card/list page.
+Update the display formatting for pricing and margin values in the Product Master Data table and Dynamic PC Builder table.
 
-This is a UI/UX flow simplification task. Do not change pricing calculations or backend business logic unless required for saving from the main page.
+This is a cosmetic UI formatting task only.
 
----
-
-# CORE GOAL
-
-Change the Configurator flow from:
-
-Configurator List
-→ Edit Configurator Page
-→ Dynamic PC Builder
-
-Into:
-
-Configurator List
-→ Expand Builder directly inside configurator card
-→ Edit/save configuration in the same page
+Do NOT change backend logic, database values, calculations, formulas, save logic, or numeric values.
 
 ---
 
-# 1. CONFIGURATOR LIST PAGE
+## Objective
 
-Each configurator should be displayed as a card or clean list row.
+Make financial values easier to read by adding display prefixes/suffixes:
 
-Each configurator item must show:
+* Add `RM` before currency values
+* Add `%` after percentage values
 
-* Configurator name
-* Status badge: Publish / Unpublish or Active / Inactive
-* Actions:
+Important:
 
-  * Edit Details
-  * Delete
-  * Expand Builder / Collapse Builder
+This must only affect the displayed text in the UI.
 
----
-
-# 2. REMOVE SEPARATE BUILDER PAGE FLOW
-
-Do not require the user to open a separate edit page just to access the Dynamic PC Builder.
-
-The Dynamic PC Builder should be embedded directly inside the expanded configurator card.
-
-The separate edit page should only be used for basic configurator metadata if still needed, such as:
-
-* Name
-* Status
-
-But the builder itself must live in the main Configurator page.
+It must NOT change the actual numeric value used for calculation or saving.
 
 ---
 
-# 3. EXPAND / COLLAPSE BUILDER
+## Currency Columns
 
-Add an Expand / Collapse button on each configurator card.
+Apply `RM` prefix to the displayed value in these columns:
 
-Behavior:
-
-* Default: collapsed
-* Click "Expand Builder" → show Dynamic PC Builder inside that card
-* Click "Collapse Builder" → hide builder
-* Only one builder should be open at a time if possible, to keep the UI clean
-
-Button style:
-
-* Pastel pink primary accent
-* Smooth transition
-* Text changes dynamically:
-
-  * Expand Builder
-  * Collapse Builder
-
----
-
-# 4. EMBED EXISTING SPREADSHEET BUILDER
-
-Keep the existing Dynamic PC Builder table layout exactly as the stable version.
-
-Builder columns:
-
-* Category
-* Product
-* Qty
 * SDP (RM)
 * Total SDP (RM)
 * Page Price (RM)
 * SRP (RM)
 * Margin
+
+---
+
+## Percentage Column
+
+Apply `%` suffix to the displayed value in:
+
 * Margin %
 
-Rows:
+---
 
-* GPU
-* RAM
-* CPU
-* Chassis
-* Motherboard
-* SSD
-* PSU
-* Cooler
-* ARGB / Accessories
+## Display Examples
 
-Do not convert it into rule blocks, chips, or nested cards.
+Currency display:
 
-Keep it as spreadsheet-style table.
+```text
+RM 345.00
+RM 1,350.00
+RM 3,398.00
+```
+
+Percentage display:
+
+```text
+13.53%
+10.08%
+-30.26%
+```
 
 ---
 
-# 5. REMOVE INTERNAL SCROLL
+## Important Rule
 
-The builder must not have internal scroll inside the card/tab.
+Do NOT store `RM` or `%` in the database.
 
-Rules:
+Do NOT send `RM` or `%` in form payloads.
 
-* No overflow-y-auto inside builder
-* No fixed max-height scroll container
-* No nested scrolling
-* The page itself should handle scrolling naturally
+Do NOT modify calculation logic.
 
-If the builder is long, allow the full page to scroll, not the builder card.
+Do NOT parse formatted text for calculations.
 
----
-
-# 6. SAVE CONFIGURATION
-
-Place the "Save Configuration" button inside the expanded builder header.
-
-Position:
-
-* Top right of builder section
-
-Style:
-
-* Pastel pink primary button
-* White text
-* Rounded
-* Soft shadow
-
-Behavior:
-
-* Saves the current builder selections
-* Ignores empty/unselected rows safely
-* Does not delete master products
-* Only updates the configurator’s selected components
+Formatting must happen only at the view/rendering layer.
 
 ---
 
-# 7. CONFIGURATOR CARD HEADER
+## Calculation Must Stay The Same
 
-When collapsed, each configurator card should stay compact.
+Current calculations must remain unchanged:
 
-Header layout:
+```text
+Total SDP = Quantity × SDP
+Margin = Page Price - Total SDP
+Margin % = (Margin / Page Price) × 100
+```
 
-Left:
-
-* Configurator name
-* Status badge
-
-Right:
-
-* Edit Details
-* Delete
-* Expand Builder
-
-When expanded:
-
-* Same header remains visible
-* Builder appears below the header
+Only the final displayed output should be formatted.
 
 ---
 
-# 8. IMPORTANT UI RULES
+## Affected Areas
 
-Do not reintroduce:
+Apply this display formatting to:
 
-* Rule engine UI
-* Chip-heavy UI
-* Separate preview page
-* Separate builder edit page
-* Nested product manager inside configurator
-* Internal scrolling containers
-
-The correct layout is:
-
-Configurator Card
-↓
-Expand Builder
-↓
-Spreadsheet Dynamic PC Builder Table
-↓
-Save Configuration
+1. Product Master Data table
+2. Product create/edit preview if applicable
+3. Configurator Dynamic PC Builder table
+4. Grand Total row
+5. Any summary cards that show these same values
 
 ---
 
-# 9. UX GOAL
+## Format Rules
+
+Use consistent formatting:
+
+```text
+RM {number}
+{number}%
+```
+
+Numbers should keep 2 decimal places where currently used.
+
+Example:
+
+```text
+RM 1,289.00
+RM 900.00
+RM 54.00
+13.53%
+```
+
+---
+
+## Zero / Empty Value Handling
+
+If value is zero:
+
+```text
+RM 0.00
+0.00%
+```
+
+If value is empty/null/unselected:
+
+```text
+-
+```
+
+Do not show:
+
+```text
+RM -
+-% 
+```
+
+---
+
+## Margin % Safety
+
+If Page Price is 0, avoid displaying `NaN`, `Infinity`, or `#DIV/0`.
+
+Show:
+
+```text
+-
+```
+
+or:
+
+```text
+0.00%
+```
+
+depending on existing UI convention.
+
+Do not change the formula, only prevent ugly display output.
+
+---
+
+## Implementation Guidance
+
+Create or reuse a helper/formatter function if possible:
+
+```js
+formatCurrency(value) => "RM 1,289.00"
+formatPercent(value) => "13.53%"
+```
+
+or Laravel Blade helper if formatting is server-rendered.
+
+The helper must return formatted strings only for display.
+
+Raw numeric values must remain numeric internally.
+
+---
+
+## Strict DO NOT
+
+Do NOT:
+
+* Change database schema
+* Change stored values
+* Change calculations
+* Change save logic
+* Change validation rules
+* Change product dropdown behavior
+* Add RM/% into input values used for saving
+* Break dark mode or light mode styling
+
+---
+
+## Final Expected Result
 
 After implementation:
 
-* Configurator flow becomes shorter and easier
-* Admin does not need to switch pages
-* Builder is accessible directly from the configurator card
-* Spreadsheet builder remains stable and familiar
-* Page feels like a SaaS admin tool, not a multi-page form maze
-
----
-
-# 10. DO NOT CHANGE
-
-* Product master data structure
-* Pricing formula
-* Margin formula
-* Product CRUD flow
-* Existing dropdown calculation behavior
-
-Only simplify the configurator layout and move the stable builder into the main configurator card.
+* Currency columns visually show `RM` before the number
+* Margin % visually shows `%` after the number
+* Calculations still work exactly the same
+* Saved values remain clean numeric values
+* UI looks closer to the spreadsheet reference

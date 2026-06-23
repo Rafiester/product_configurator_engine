@@ -18,7 +18,7 @@
                 </h2>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage product details and configurator availability</p>
             </div>
-            <button type="submit" form="product-edit-form" class="bg-primary-DEFAULT hover:bg-primary-hover text-white font-semibold py-2 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 flex items-center gap-2">
+            <button type="submit" form="product-edit-form" class="bg-primary-DEFAULT hover:bg-primary-hover text-black dark:text-white font-semibold py-2 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Save Changes
             </button>
@@ -66,7 +66,12 @@
                             </div>
                             <div>
                                 <label class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-1">Category <span class="text-red-500">*</span></label>
-                                <input type="text" name="category" class="shadow-sm bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md w-full focus:border-primary-DEFAULT focus:ring-primary-DEFAULT" value="<?php echo e(old('category', $product->category)); ?>" required>
+                                <select name="category" class="shadow-sm bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md w-full focus:border-primary-DEFAULT focus:ring-primary-DEFAULT" required>
+                                    <option value="">-- Select Category --</option>
+                                    <?php $__currentLoopData = ['GPU', 'RAM', 'CPU', 'Chassis', 'Motherboard', 'SSD', 'PSU', 'Cooler', 'ARGB / Accessories']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($cat); ?>" <?php echo e(old('category', $product->category) == $cat ? 'selected' : ''); ?>><?php echo e($cat); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-1">Status <span class="text-red-500">*</span></label>

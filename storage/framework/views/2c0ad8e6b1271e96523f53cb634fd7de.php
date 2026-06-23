@@ -41,6 +41,66 @@
 
             </main>
         </div>
+        
+        <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.toast','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('toast'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7cfab914afdd05940201ca0b2cbc009b)): ?>
+<?php $attributes = $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b; ?>
+<?php unset($__attributesOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b)): ?>
+<?php $component = $__componentOriginal7cfab914afdd05940201ca0b2cbc009b; ?>
+<?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
+<?php endif; ?>
+        <?php if (isset($component)) { $__componentOriginal2cfaf2d8c559a20e3495c081df2d0b10 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2cfaf2d8c559a20e3495c081df2d0b10 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.confirm-modal','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('confirm-modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2cfaf2d8c559a20e3495c081df2d0b10)): ?>
+<?php $attributes = $__attributesOriginal2cfaf2d8c559a20e3495c081df2d0b10; ?>
+<?php unset($__attributesOriginal2cfaf2d8c559a20e3495c081df2d0b10); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2cfaf2d8c559a20e3495c081df2d0b10)): ?>
+<?php $component = $__componentOriginal2cfaf2d8c559a20e3495c081df2d0b10; ?>
+<?php unset($__componentOriginal2cfaf2d8c559a20e3495c081df2d0b10); ?>
+<?php endif; ?>
+
+        <?php if(session('success')): ?>
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    setTimeout(() => {
+                        window.notify({ type: 'success', title: 'Success', message: "<?php echo e(session('success')); ?>" });
+                    }, 100);
+                });
+            </script>
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    setTimeout(() => {
+                        window.notify({ type: 'error', title: 'Error', message: "<?php echo e(session('error')); ?>" });
+                    }, 100);
+                });
+            </script>
+        <?php endif; ?>
     </body>
 </html>
 <?php /**PATH /Users/flo/cms/resources/views/layouts/app.blade.php ENDPATH**/ ?>

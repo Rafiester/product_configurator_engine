@@ -39,5 +39,27 @@
                 {{ $slot }}
             </main>
         </div>
+        
+        <x-toast />
+        <x-confirm-modal />
+
+        @if (session('success'))
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    setTimeout(() => {
+                        window.notify({ type: 'success', title: 'Success', message: "{{ session('success') }}" });
+                    }, 100);
+                });
+            </script>
+        @endif
+        @if (session('error'))
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    setTimeout(() => {
+                        window.notify({ type: 'error', title: 'Error', message: "{{ session('error') }}" });
+                    }, 100);
+                });
+            </script>
+        @endif
     </body>
 </html>

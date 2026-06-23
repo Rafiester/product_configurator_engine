@@ -8,7 +8,7 @@
                 </h2>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage product details and configurator availability</p>
             </div>
-            <button type="submit" form="product-edit-form" class="bg-primary-DEFAULT hover:bg-primary-hover text-white font-semibold py-2 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 flex items-center gap-2">
+            <button type="submit" form="product-edit-form" class="bg-primary-DEFAULT hover:bg-primary-hover text-black dark:text-white font-semibold py-2 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Save Changes
             </button>

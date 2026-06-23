@@ -9,11 +9,21 @@
                     {{ __('Products (Master Data)') }}
                 </h2>
             </div>
-            <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <a href="{{ route('products.create') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-white focus:outline-none shadow-sm text-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Create New Product
+            <div x-data class="flex items-center space-x-3">
+                <a href="{{ route('products.export') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-white dark:bg-dark-surface border-2 border-primary-DEFAULT rounded-lg font-semibold text-primary-DEFAULT hover:bg-primary-soft dark:hover:bg-primary-darkSoft transition-colors focus:outline-none shadow-sm text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download Master Data
                 </a>
+                <button @click="$dispatch('open-import-modal')" class="inline-flex items-center justify-center px-6 py-2.5 bg-transparent border-2 border-primary-DEFAULT rounded-lg font-semibold text-primary-DEFAULT hover:bg-primary-soft dark:hover:bg-primary-darkSoft transition-colors focus:outline-none shadow-sm text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Import Excel
+                </button>
+                <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                    <a href="{{ route('products.create') }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Create New Product
+                    </a>
+                </div>
             </div>
         </div>
     </x-slot>
@@ -52,7 +62,7 @@
                         </select>
                     </div>
                     <div class="flex items-center flex-none">
-                        <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-white font-semibold py-2 px-6 rounded-md shadow-sm sm:text-sm whitespace-nowrap transition-colors">
+                        <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2 px-6 rounded-md shadow-sm sm:text-sm whitespace-nowrap transition-colors">
                             Filter
                         </button>
                         <a href="{{ route('products.index') }}" class="ml-4 sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 whitespace-nowrap transition-colors">Clear</a>
@@ -119,7 +129,7 @@
                                 <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end gap-3">
                                         <a href="{{ route('products.edit', $product) }}" class="text-primary-DEFAULT hover:text-primary-hover font-semibold transition-colors">Edit</a>
-                                        <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Delete this product?');" class="inline m-0">
+                                        <form x-data action="{{ route('products.destroy', $product) }}" method="POST" @submit.prevent="window.confirmAction({ title: 'Delete Product?', message: 'This action cannot be undone.', type: 'danger', confirmText: 'Delete', onConfirm: () => $el.submit() })" class="inline m-0">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-500 hover:text-red-600 font-semibold transition-colors">Delete</button>
@@ -141,4 +151,113 @@
             </div>
         </div>
     </div>
+
+    <!-- Import Excel Modal -->
+    <div x-data="productImport()" 
+         @open-import-modal.window="openModal" 
+         x-show="show" 
+         class="fixed inset-0 z-50 overflow-y-auto" 
+         style="display: none;"
+         x-cloak>
+        <div x-show="show" 
+             x-transition:enter="transition-opacity ease-linear duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-gray-900/50 dark:bg-black/60 backdrop-blur-sm"></div>
+
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div x-show="show" 
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 @click.away="closeModal"
+                 class="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-dark-surface shadow-xl rounded-2xl border border-gray-200 dark:border-white/10 z-10">
+                
+                <h3 class="text-lg leading-6 font-bold text-gray-900 dark:text-gray-100 mb-2">Import Product Master Data</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                    Upload an Excel file using the master data format. Existing products will be skipped automatically.
+                </p>
+
+                <form @submit.prevent="submitImport" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">File upload (.xlsx, .xls, .csv)</label>
+                        
+                        <input type="file" id="excel_file" name="excel_file" x-ref="fileInput" accept=".xlsx,.xls,.csv" 
+                               class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-soft file:text-primary-DEFAULT hover:file:bg-primary-hover dark:file:bg-primary-darkSoft transition-colors cursor-pointer"
+                               @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''" required>
+                    </div>
+
+                    <div class="mt-8 flex flex-row-reverse space-x-3 space-x-reverse">
+                        <button type="submit" :disabled="isImporting || !fileName"
+                                class="inline-flex justify-center rounded-xl border border-transparent px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover focus:ring-primary-DEFAULT text-base font-semibold text-black dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm transition-colors disabled:opacity-50">
+                            <span x-show="!isImporting">Import Data</span>
+                            <span x-show="isImporting">Importing...</span>
+                        </button>
+                        <button type="button" @click="closeModal" :disabled="isImporting"
+                                class="inline-flex justify-center rounded-xl border border-gray-300 dark:border-gray-600 px-6 py-2.5 bg-white dark:bg-dark-surface2 text-base font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-dark-surface focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 sm:text-sm transition-colors disabled:opacity-50">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('productImport', () => ({
+                show: false,
+                isImporting: false,
+                fileName: '',
+                openModal() {
+                    this.show = true;
+                    this.fileName = '';
+                    if(this.$refs.fileInput) this.$refs.fileInput.value = '';
+                },
+                closeModal() {
+                    if (this.isImporting) return;
+                    this.show = false;
+                },
+                async submitImport() {
+                    const fileInput = this.$refs.fileInput;
+                    if (!fileInput.files.length) return;
+
+                    this.isImporting = true;
+                    const formData = new FormData();
+                    formData.append('file', fileInput.files[0]);
+                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+                    try {
+                        const response = await fetch('{{ route('products.import') }}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            window.notify({ type: 'success', title: 'Product Import Completed', message: result.message });
+                            this.closeModal();
+                            setTimeout(() => window.location.reload(), 2000);
+                        } else {
+                            window.notify({ type: 'error', title: 'Import Failed', message: result.message });
+                        }
+                    } catch (error) {
+                        window.notify({ type: 'error', title: 'Import Failed', message: 'An unexpected error occurred.' });
+                    } finally {
+                        this.isImporting = false;
+                    }
+                }
+            }));
+        });
+    </script>
 </x-app-layout>

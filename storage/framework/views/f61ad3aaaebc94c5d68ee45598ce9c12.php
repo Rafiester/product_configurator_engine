@@ -45,7 +45,12 @@
 
                                 <div class="mb-4">
                                     <label class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">Category <span class="text-red-500">*</span></label>
-                                    <input type="text" name="category" class="shadow-sm bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md w-full focus:border-primary-DEFAULT focus:ring-primary-DEFAULT" value="<?php echo e(old('category')); ?>" required>
+                                    <select name="category" class="shadow-sm bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md w-full focus:border-primary-DEFAULT focus:ring-primary-DEFAULT" required>
+                                        <option value="">-- Select Category --</option>
+                                        <?php $__currentLoopData = ['GPU', 'RAM', 'CPU', 'Chassis', 'Motherboard', 'SSD', 'PSU', 'Cooler', 'ARGB / Accessories']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($cat); ?>" <?php echo e(old('category') == $cat ? 'selected' : ''); ?>><?php echo e($cat); ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </select>
                                 </div>
 
                                 <div class="mb-4">
@@ -100,7 +105,7 @@
 
                         <div class="flex items-center justify-end mt-10 border-t border-gray-200 dark:border-dark-border pt-6">
                             <a href="<?php echo e(route('products.index')); ?>" class="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mr-6 transition-colors">Cancel</a>
-                            <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2">
+                            <button type="submit" class="bg-primary-DEFAULT hover:bg-primary-hover text-black dark:text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2">
                                 Create Product
                             </button>
                         </div>

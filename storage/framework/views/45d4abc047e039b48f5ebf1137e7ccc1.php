@@ -20,7 +20,7 @@
                 </h2>
             </div>
             <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <a href="<?php echo e(route('configurators.create')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-white focus:outline-none shadow-sm text-sm">
+                <a href="<?php echo e(route('configurators.create')); ?>" class="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Add Configurator
                 </a>
@@ -49,14 +49,14 @@
                     <div class="flex items-center space-x-4">
                         <a href="<?php echo e(route('configurators.edit', $configurator)); ?>" class="text-primary-DEFAULT hover:text-primary-hover font-medium transition-colors">Edit Details</a>
                         
-                        <form action="<?php echo e(route('configurators.destroy', $configurator)); ?>" method="POST" class="inline">
+                        <form action="<?php echo e(route('configurators.destroy', $configurator)); ?>" method="POST" class="inline" @submit.prevent="window.confirmAction({ title: 'Delete Configurator?', message: 'This action cannot be undone.', type: 'danger', confirmText: 'Delete', onConfirm: () => $el.submit() })">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
-                            <button type="submit" class="text-red-500 hover:text-red-600 font-medium transition-colors" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="text-red-500 hover:text-red-600 font-medium transition-colors">Delete</button>
                         </form>
 
                         <div class="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-                            <button @click="expanded = !expanded" class="bg-primary-DEFAULT text-white font-semibold py-2 px-4 rounded-md shadow-sm flex items-center space-x-2">
+                            <button @click="expanded = !expanded" class="bg-primary-DEFAULT text-black dark:text-white font-semibold py-2 px-4 rounded-md shadow-sm flex items-center space-x-2">
                                 <span x-text="expanded ? 'Collapse Builder' : 'Expand Builder'"></span>
                                 <svg x-show="expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                                 <svg x-show="!expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -101,27 +101,27 @@
                                         <td class="py-2 px-4 text-center">
                                             <input type="number" min="1" x-model.number="row.qty" class="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT" :disabled="!row.product_id">
                                         </td>
-                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="formatNumber(row.sdp)"></td>
-                                        <td class="py-2 px-4 text-right text-gray-900 dark:text-gray-100 font-medium" x-text="formatNumber(row.sdp * row.qty)"></td>
-                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="formatNumber(row.page_price)"></td>
-                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="formatNumber(row.srp)"></td>
+                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="row.product_id ? formatCurrency(row.sdp) : '-'"></td>
+                                        <td class="py-2 px-4 text-right text-gray-900 dark:text-gray-100 font-medium" x-text="row.product_id ? formatCurrency(row.sdp * row.qty) : '-'"></td>
+                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="row.product_id ? formatCurrency(row.page_price) : '-'"></td>
+                                        <td class="py-2 px-4 text-right text-gray-600 dark:text-gray-400" x-text="row.product_id ? formatCurrency(row.srp) : '-'"></td>
                                         <td class="py-2 px-4 text-right font-medium" 
                                             :class="marginClass(row.page_price - (row.sdp * row.qty))"
-                                            x-text="formatNumber(row.page_price - (row.sdp * row.qty))"></td>
+                                            x-text="row.product_id ? formatCurrency(row.page_price - (row.sdp * row.qty)) : '-'"></td>
                                         <td class="py-2 px-4 text-right font-medium"
                                             :class="marginClass(row.page_price - (row.sdp * row.qty))"
-                                            x-text="row.page_price > 0 ? formatNumber(((row.page_price - (row.sdp * row.qty)) / row.page_price) * 100) + '%' : '0.00%'"></td>
+                                            x-text="row.product_id ? (row.page_price > 0 ? formatPercent(((row.page_price - (row.sdp * row.qty)) / row.page_price) * 100) : '-') : '-'"></td>
                                     </tr>
                                 </template>
                             </tbody>
                             <tfoot class="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
                                 <tr>
                                     <td colspan="4" class="py-3 px-4 text-right text-gray-900 dark:text-gray-100">GRAND TOTAL:</td>
-                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatNumber(totalSdpSum)"></td>
-                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatNumber(pagePriceSum)"></td>
-                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatNumber(srpSum)"></td>
-                                    <td class="py-3 px-4 text-right" :class="marginClass(marginSum)" x-text="formatNumber(marginSum)"></td>
-                                    <td class="py-3 px-4 text-right" :class="marginClass(marginSum)" x-text="formatNumber(marginPercentageSum) + '%'"></td>
+                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatCurrency(totalSdpSum)"></td>
+                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatCurrency(pagePriceSum)"></td>
+                                    <td class="py-3 px-4 text-right text-gray-900 dark:text-gray-100" x-text="formatCurrency(srpSum)"></td>
+                                    <td class="py-3 px-4 text-right" :class="marginClass(marginSum)" x-text="formatCurrency(marginSum)"></td>
+                                    <td class="py-3 px-4 text-right" :class="marginClass(marginSum)" x-text="pagePriceSum > 0 ? formatPercent(marginPercentageSum) : '-'"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -129,7 +129,7 @@
                     
                     <!-- Save Button Below Table -->
                     <div class="mt-4 flex justify-end px-6">
-                        <button @click="saveConfiguration" class="bg-primary-DEFAULT text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2">
+                        <button @click="saveConfiguration" class="bg-primary-DEFAULT text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                             <span>Save Configuration</span>
                         </button>
@@ -231,6 +231,16 @@
                     return parseFloat(value || 0).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 },
 
+                formatCurrency(value) {
+                    if (value === null || value === undefined || value === '') return '-';
+                    return 'RM ' + this.formatNumber(value);
+                },
+
+                formatPercent(value) {
+                    if (value === null || value === undefined || value === '') return '-';
+                    return this.formatNumber(value) + '%';
+                },
+
                 marginClass(value) {
                     if (!value && value !== 0) return '';
                     return parseFloat(value) > 0 ? 'text-primary-DEFAULT font-semibold' : (parseFloat(value) < 0 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400');
@@ -267,14 +277,18 @@
                             body: JSON.stringify(payload)
                         });
                         
-                        if (response.ok) {
-                            alert('Configuration saved successfully!');
+                        const result = await response.json();
+                        if (result.success) {
+                            window.notify({ type: 'success', title: 'Configuration Saved', message: 'Your configuration has been saved successfully.' });
+                            this.isSaving = false;
                         } else {
-                            alert('Failed to save configuration.');
+                            window.notify({ type: 'error', title: 'Error', message: 'Failed to save configuration.' });
+                            this.isSaving = false;
                         }
                     } catch (error) {
-                        console.error(error);
-                        alert('Error saving configuration.');
+                        console.error('Error saving configuration:', error);
+                        window.notify({ type: 'error', title: 'Error', message: 'Error saving configuration.' });
+                        this.isSaving = false;
                     }
                 }
             }));
