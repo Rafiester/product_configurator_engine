@@ -13,10 +13,11 @@ All pricing and product selection are dynamic and driven by master data.
 # Tech Stack
 
 * Backend: Laravel 12
-* Frontend: Blade + Tailwind CSS
+* Frontend: Blade + Tailwind CSS + Alpine.js
 * Database: Supabase PostgreSQL
 * Auth: Laravel Authentication
 * Hosting: Local / VPS (prototype first)
+* UI/UX: Modern SaaS Admin Interface (Dark/Light mode, Pastel Pink #F9A8D4 accents)
 
 ---
 
@@ -186,16 +187,20 @@ System calculates price dynamically
 
 # Configurator UI Flow
 
+The configurator flow is optimized to be short and accessible directly from the configurator card, eliminating the need to switch pages.
+
 ```text
-Configurator: U7
+Configurator Card
 ↓
-Select Category (GPU / RAM / SSD)
+Click "Expand Builder"
 ↓
-System loads only mapped products
+Spreadsheet Dynamic PC Builder Table (Nested Product Manager)
 ↓
-User selects component
+User selects components per category from dropdowns
 ↓
-Auto calculate price
+Auto-calculates prices dynamically
+↓
+Click "Save Configuration"
 ```
 
 ---
@@ -278,34 +283,22 @@ Example:
 
 ---
 
-## Mapping Page (Core Feature)
+## Dynamic PC Builder (Nested inside Configurators)
 
-Example UI:
+Replaces traditional multi-page forms with a familiar spreadsheet-like interface nested directly within the Configurator page.
 
-```text
-Configurator: U7
-
-GPU:
-☑ RTX 5060 Ti
-☑ RTX 5070
-☐ RTX 5080
-
-RAM:
-☑ 16GB DDR5
-☑ 32GB DDR5
-```
-
----
-
-## Preview Page
-
-Shows:
-
-* Selected Components
-* Total SDP
-* Total Price
-* Margin
-* Margin %
+Features:
+* Inline dropdowns for strict product selection per category (GPU, RAM, CPU, etc.)
+* Real-time calculation of pricing
+* Shows:
+  * Selected Components
+  * Qty
+  * Total SDP
+  * Page Price
+  * SRP
+  * Margin
+  * Margin %
+* Admin does not need to switch pages to build a PC layout.
 
 ---
 
