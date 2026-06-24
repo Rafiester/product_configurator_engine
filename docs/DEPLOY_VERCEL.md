@@ -1,112 +1,45 @@
-# Deploying to Vercel
+# Deploying to Vercel (Next.js & Supabase)
 
-Vercel is a serverless platform designed primarily for Node.js/Next.js, but it can successfully run Laravel applications using the community PHP runtimes. However, because it is serverless, there are several architectural constraints you must address.
+Deploying a Next.js application to Vercel is extremely simple and supports automatic CI/CD rebuilds when you push to Github.
 
-## 1. Serverless Constraints for Laravel
+## 1. Prerequisites
+- A GitHub repository containing this migrated codebase.
+- A free Vercel account linked to your GitHub.
+- An active Supabase project (PostgreSQL).
 
-Before deploying, you must understand how Vercel changes your application behavior:
-- **No Persistent Local Storage**: You cannot use SQLite. You must use an external database (e.g., Supabase, Neon, PlanetScale, or a traditional RDS).
-- **Ephemeral File System**: Uploaded files (like the Excel import) will only exist for the duration of the request. Since our Excel import parses data in memory and doesn't store the file permanently, this works fine! If you add product image uploads in the future, you **must** use Amazon S3 or Cloudflare R2.
-- **No Long-Running Daemons**: You cannot run `php artisan queue:work` or standard cron jobs natively. You must use serverless queues (like AWS SQS) or Vercel Cron Jobs triggered via HTTP.
+---
 
-## 2. Required Files for Vercel
+## 2. Serverless Optimization on Vercel
+Vercel handles Next.js natively:
+- **Prisma Client**: During builds on Vercel, the Prisma client generates automatically.
+- **Connection Pooling**: Next.js Serverless functions connect and disconnect rapidly. Ensure you configure your Vercel variables to point to **Supabase's connection pooler URL (PgBouncer)** using port `6543` and `?pgbouncer=true`.
 
-To tell Vercel how to build and run your Laravel app, you need to create two files in the root of your repository.
+---
 
-### `vercel.json`
-Create a `vercel.json` file in your project root:
-```json
-{
-    "version": 2,
-    "builds": [
-        {
-            "src": "api/index.php",
-            "use": "vercel-php@0.6.0"
-        },
-        {
-            "src": "/public/**",
-            "use": "@vercel/static"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/build/(.*)",
-            "dest": "/public/build/$1"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/api/index.php"
-        }
-    ],
-    "env": {
-        "APP_ENV": "production",
-        "APP_DEBUG": "false",
-        "CACHE_DRIVER": "array",
-        "SESSION_DRIVER": "cookie",
-        "QUEUE_CONNECTION": "sync"
-    }
-}
-```
-*(Note: Ensure you are using the latest compatible `vercel-php` runtime version for your PHP version).*
+## 3. Deployment Steps
 
-### `api/index.php`
-Create an `api` folder in your root directory, and place an `index.php` file inside it. This acts as the serverless entry point:
-```php
-<?php
-
-// Forward Vercel requests to the normal Laravel public/index.php
-require __DIR__ . '/../public/index.php';
-```
-
-## 3. Preparing the Database (Supabase)
-
-Since you cannot use SQLite on Vercel, **Supabase** (PostgreSQL) is the most popular and easiest choice for Vercel deployment:
-1. Create a free project on [Supabase](https://supabase.com).
-2. Go to your Project Settings -> Database to find your connection details.
-3. You will need these to fill out your Vercel Environment Variables.
-
-## 4. Compiling Assets (Vite)
-
-Vercel doesn't run `npm run build` for PHP projects automatically unless configured. You have two options:
-1. **Commit your build assets**: Run `npm run build` locally and commit the `public/build` folder to Git.
-2. **Build on Vercel** (Recommended): Modify your `package.json` to include a build script, and ensure Vercel runs it. However, because Vercel isolates the Node builder and PHP builder, the easiest way for Laravel on Vercel is to just run `npm run build` locally and commit the compiled assets.
-
-To commit compiled assets:
-1. Remove `public/build` from your `.gitignore`.
-2. Run `npm run build`.
-3. Commit the changes.
-
-## 5. Deployment Steps
-
-1. Push your repository (with `vercel.json`, `api/index.php`, and compiled frontend assets) to GitHub.
+1. Commit and push your local codebase modifications to your GitHub repository.
 2. Log into [Vercel](https://vercel.com).
 3. Click **Add New** -> **Project**.
 4. Import your GitHub repository.
 5. In the **Configure Project** step:
-   - Framework Preset: **Other**
+   - Framework Preset: **Next.js** (detected automatically)
+   - Root Directory: `./` (root of the workspace)
    - Open the **Environment Variables** section and add:
-     - `APP_NAME` = "PC Configurator"
-     - `APP_ENV` = "production"
-     - `APP_KEY` = (Generate one using `php artisan key:generate --show`)
-     - `APP_DEBUG` = "false"
-     - `APP_URL` = (Your Vercel domain)
-     - `DB_CONNECTION` = "pgsql"
-     - `DB_HOST` = (e.g., `aws-0-eu-central-1.pooler.supabase.com`)
-     - `DB_PORT` = "5432"
-     - `DB_DATABASE` = "postgres"
-     - `DB_USERNAME` = "postgres.xxxxxxx"
-     - `DB_PASSWORD` = "your-supabase-password"
-     - `SESSION_DRIVER` = "cookie"
-     - `CACHE_DRIVER` = "array" (Or Redis if you have an external Redis instance)
+     - `DATABASE_URL` = (e.g., `postgresql://postgres.xxx:pass@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true`)
+     - `DIRECT_URL` = (e.g., `postgresql://postgres.xxx:pass@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres`)
 6. Click **Deploy**.
 
-## 6. Running Migrations on Vercel
+Vercel will pull the code, install node dependencies, compile Tailwind assets, and spin up serverless routes.
 
-Since you do not have SSH access to a Vercel serverless function to run `php artisan migrate`, you must run migrations against your production database remotely.
+---
 
-From your local machine:
-1. Temporarily update your local `.env` with your Production Database credentials.
-2. Run `php artisan migrate --force`.
-3. Revert your local `.env` back to your local database.
+## 4. Running Database Migrations
+Prisma migrations require direct access to the database using `DIRECT_URL` and should not be run through pgbouncer transaction ports.
 
-Alternatively, you can create a secure webhook route in Laravel that runs `Artisan::call('migrate', ['--force' => true])` when triggered, but running it remotely from your local machine is safer.
+To run migrations, execute them from your local development terminal pointing to the remote Supabase database:
+```bash
+# Verify your local .env points to the production database and run:
+npx prisma migrate deploy
+```
+This applies any pending migrations safely to your production Supabase database.

@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PC Configurator Admin Panel (Next.js & Prisma)
 
-## Getting Started
+An exclusive SaaS-style admin portal and PC builder dashboard featuring a premium Pastel Pink theme and fully responsive layout. Migrated from Laravel to Next.js.
 
-First, run the development server:
+## 🚀 Technology Stack
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Actions)
+- **Database ORM**: [Prisma](https://www.prisma.io/) (PostgreSQL / Supabase connection)
+- **Styling**: [TailwindCSS v3](https://tailwindcss.com/)
+- **Theme Support**: Class-based Dark Mode & Light Mode using `next-themes`
+- **Excel Processing**: `xlsx` (SheetJS) for parsing imports and `exceljs` for custom color-coded exports.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Local Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Prerequisites
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18.0 or higher)
+- [npm](https://www.npmjs.com/) or another Node package manager
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Installation Steps
+1. Clone this repository to your local system:
+   ```bash
+   git clone <repository_url> pc-configurator-cms
+   cd pc-configurator-cms
+   ```
+2. Install Javascript dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up your environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Provide your Supabase connection strings inside the `.env` file:
+   ```ini
+   DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+   DIRECT_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
+   ```
+4. Generate the Prisma database client:
+   ```bash
+   npx prisma generate
+   ```
+5. Spin up the local Next.js development server:
+   ```bash
+   npm run dev
+   ```
+6. Open [http://localhost:3000](http://localhost:3000) (or the port specified in terminal) to view the application.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Deployment Guides
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+We provide exhaustive documentation for deploying this application across various environments:
+- **Local Dev Setup**: Check out [docs/DEPLOY_LOCAL.md](file:///Users/flo/cms/docs/DEPLOY_LOCAL.md)
+- **Cloud Preview (Gitpod)**: Check out [docs/DEPLOY_GITPOD.md](file:///Users/flo/cms/docs/DEPLOY_GITPOD.md)
+- **Traditional VPS Hosting (PM2 & Nginx)**: Check out [docs/DEPLOY_SERVER.md](file:///Users/flo/cms/docs/DEPLOY_SERVER.md)
+- **Serverless Hosting (Vercel)**: Check out [docs/DEPLOY_VERCEL.md](file:///Users/flo/cms/docs/DEPLOY_VERCEL.md)
+- **Database Schema Guide**: Check out [docs/DATABASE.md](file:///Users/flo/cms/docs/DATABASE.md)

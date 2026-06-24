@@ -1,132 +1,110 @@
-# Server Deployment Guide
+# Server Deployment Guide (Next.js & PM2)
 
-This guide covers how to deploy the PC Configurator CMS to a traditional Virtual Private Server (VPS) such as DigitalOcean, AWS EC2, or Linode using Nginx and PHP-FPM.
+This guide covers how to deploy the Next.js PC Configurator dashboard to a traditional Virtual Private Server (VPS) such as DigitalOcean, AWS EC2, or Linode using Nginx and PM2.
 
 ## Prerequisites
 Your server should be provisioned with:
 - Ubuntu 22.04 / 24.04 (or similar Linux distribution)
 - Nginx
-- PHP 8.2+ and required extensions (`php-mbstring`, `php-xml`, `php-bcmath`, `php-curl`, `php-mysql` / `php-pgsql`, `php-zip`)
-- MySQL 8 or PostgreSQL 15+
-- Composer
-- Node.js & npm (v18+)
+- Node.js (v18.0 or higher) & npm
+- Git
+- PM2 (Process Manager 2) installed globally (`npm install -g pm2`)
+- An active Supabase PostgreSQL database connection
+
+---
 
 ## 1. Deploy the Codebase
-Log into your server via SSH and navigate to the web root directory (usually `/var/www`):
-
+Log into your server via SSH and navigate to the web root directory:
 ```bash
 cd /var/www
 git clone <your-repository-url> pc-configurator
 cd pc-configurator
 ```
 
-## 2. Set Directory Permissions
-Ensure the web server (usually `www-data`) has the appropriate read/write permissions to the `storage` and `bootstrap/cache` directories.
+---
 
-```bash
-sudo chown -R $USER:www-data storage
-sudo chown -R $USER:www-data bootstrap/cache
-chmod -R 775 storage
-chmod -R 775 bootstrap/cache
-```
-
-## 3. Environment Configuration
+## 2. Environment Configuration
 Create the production environment file:
 ```bash
 cp .env.example .env
 ```
-Edit the `.env` file (`nano .env`) and set the following critical values:
+Edit the `.env` file (`nano .env`) and set your Supabase production URLs:
 ```ini
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://yourdomain.com
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
+DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
 ```
 
-## 4. Install Dependencies
-Install production dependencies without development packages:
-```bash
-composer install --optimize-autoloader --no-dev
-```
+---
 
-## 5. Generate Key & Migrate
-Generate the Laravel App Key and run migrations to build the tables:
-```bash
-php artisan key:generate
-php artisan migrate --force
-```
-
-## 6. Build Frontend Assets
-Compile the Tailwind CSS and Alpine.js assets for production:
+## 3. Install Dependencies & Build
+Run the following commands to install packages, compile the Tailwind stylesheets, and generate the Prisma Client for production:
 ```bash
 npm install
+npx prisma generate
 npm run build
 ```
 
-## 7. Optimize Laravel
-Cache the framework settings to improve performance significantly:
+---
+
+## 4. Run Next.js with PM2
+To keep the Next.js application running in the background and survive server reboots, run it via PM2:
 ```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+pm2 start npm --name "pc-configurator" -- start
+```
+Configure PM2 to launch automatically on server restarts:
+```bash
+pm2 startup
+pm2 save
 ```
 
-## 8. Nginx Configuration
-Create an Nginx server block for the application:
+---
+
+## 5. Nginx Configuration
+Create an Nginx configuration file to act as a reverse proxy, forwarding web traffic from port 80 to Next.js on port 3000.
 ```bash
 sudo nano /etc/nginx/sites-available/pc-configurator
 ```
 
-Use the following configuration template (adjust `server_name` and `root`):
+Insert the following server block (replace `yourdomain.com` with your actual domain):
 ```nginx
 server {
     listen 80;
     listen [::]:80;
     server_name yourdomain.com;
-    root /var/www/pc-configurator/public;
-
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-
-    index index.php;
-
-    charset utf-8;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    error_page 404 /index.php;
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock; # Adjust PHP version
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-        fastcgi_hide_header X-Powered-By;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
+    location /_next/static {
+        alias /var/www/pc-configurator/.next/static;
+        expires 365d;
+        access_log off;
     }
 }
 ```
 
-Enable the site and reload Nginx:
+Enable the configuration and reload Nginx:
 ```bash
 sudo ln -s /etc/nginx/sites-available/pc-configurator /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-## 9. Next Steps
-- Use **Certbot (Let's Encrypt)** to provision an SSL certificate for `yourdomain.com`.
-- Optional: Use a tool like **Laravel Forge** or **Ploi.io** to automate all the server provisioning and deployment steps above.
+---
+
+## 6. Security (SSL)
+It is highly recommended to secure the site with HTTPS using Certbot (Let's Encrypt):
+```bash
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d yourdomain.com
+```
+Follow the prompts to enable redirecting all HTTP traffic to HTTPS automatically.

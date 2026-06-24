@@ -1,87 +1,60 @@
-# Local Deployment Guide
+# Local Deployment Guide (Next.js)
 
-This guide covers how to set up the PC Configurator CMS on your local machine for development and testing.
+This guide covers how to set up the PC Configurator CMS on your local machine for Next.js development.
 
 ## Prerequisites
-- PHP 8.2 or higher
-- Composer
-- Node.js & npm (v18+)
-- SQLite (default) or MySQL/PostgreSQL
+- Node.js (v18.0 or higher)
+- npm (Node Package Manager)
+- A Supabase project (PostgreSQL database instance)
+
+---
 
 ## Step-by-Step Installation
 
 ### 1. Clone the Repository
-Open your terminal and clone the repository:
 ```bash
 git clone <repository_url> pc-configurator-cms
 cd pc-configurator-cms
 ```
 
-### 2. Install Dependencies
-Install PHP packages:
-```bash
-composer install
-```
-Install Javascript packages (for Alpine.js and TailwindCSS):
+### 2. Install Javascript Dependencies
+Install the required node modules:
 ```bash
 npm install
 ```
 
 ### 3. Environment Configuration
-Copy the sample environment file to create your local configuration:
+Copy the sample environment configuration file:
 ```bash
 cp .env.example .env
 ```
-Generate your application encryption key:
-```bash
-php artisan key:generate
-```
 
-By default, the `.env` file uses SQLite for zero-configuration local development. If you wish to use MySQL, update your `.env` file accordingly:
+Open the newly created `.env` file and set your Supabase database connections:
+- **`DATABASE_URL`**: Transaction pooler URL (Pgbouncer port 6543) for serverless queries.
+- **`DIRECT_URL`**: Direct database connection URL (Session port 5432) for running schema migrations.
+
+Example:
 ```ini
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=pc_configurator
-DB_USERNAME=root
-DB_PASSWORD=
+DATABASE_URL="postgresql://postgres.xxx:password@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.xxx:password@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
 ```
 
-### 4. Database Setup
-Run the migrations to create the database structure:
+### 4. Database Setup & Sync
+Generate the Prisma Client types:
 ```bash
-php artisan migrate
+npx prisma generate
 ```
-*(If prompted to create the database file for SQLite, type `yes`).*
 
-### 5. Compile Assets
-Compile the TailwindCSS styles and AlpineJS scripts:
+If you need to push schema changes directly to Supabase during setup, run:
 ```bash
-# For a one-time compile
-npm run build
+npx prisma db push
+```
 
-# Or, if you are actively editing CSS/Blade files:
+### 5. Running the Application
+Launch the Next.js local server:
+```bash
 npm run dev
 ```
 
-### 6. Serve the Application
-
-**Option A: PHP Artisan (Simplest)**
-```bash
-php artisan serve
-```
-Your app will be available at `http://localhost:8000`.
-
-**Option B: Laravel Herd / Valet (Mac)**
-If you are using Laravel Herd or Valet, simply ensure the folder is parked:
-```bash
-valet park
-```
-Access your app at `http://pc-configurator-cms.test`.
-
-**Option C: Laravel Sail (Docker)**
-If you prefer Docker:
-```bash
-./vendor/bin/sail up -d
-```
-Access your app at `http://localhost`.
+The terminal will output the local development port. Open your browser and navigate to:
+[http://localhost:3000](http://localhost:3000) (or the port specified by the dev server).

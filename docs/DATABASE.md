@@ -1,46 +1,54 @@
-# Database Structure
+# Database Structure (PostgreSQL / Prisma schema)
 
-## `users`
-Standard Laravel users table used for managing administrator access.
-- `id`
-- `name`
-- `email`
-- `password`
+The Next.js PC Configurator CMS uses a Supabase PostgreSQL backend managed via Prisma. 
 
-## `products`
-The main repository for Product Master Data.
-- `id` (UUID)
-- `category` (String)
-- `name` (String)
-- `qty` (Integer)
-- `sdp` (Decimal)
-- `page_price` (Decimal)
-- `srp` (Decimal)
-- `status` (Enum: publish, unpublish)
-- `deleted_at` (SoftDeletes)
-- `timestamps`
+---
 
-## `configurators`
-Stores the high-level PC package templates.
-- `id` (UUID)
-- `name` (String)
-- `description` (Text)
-- `status` (Enum: publish, unpublish)
-- `deleted_at` (SoftDeletes)
-- `timestamps`
+## Prisma Models
 
-## `configurator_product_mappings`
-The pivot table linking `configurators` to their selected `products`. It operates dynamically as the storage backend for the PC Builder spreadsheet UI.
-- `id` (UUID)
-- `configurator_id` (Foreign Key -> configurators.id)
-- `product_id` (Foreign Key -> products.id)
-- `category` (String) - Cached for grouping
-- `qty` (Integer)
-- `sdp` (Decimal)
-- `total_sdp` (Decimal)
-- `page_price` (Decimal)
-- `srp` (Decimal)
-- `margin` (Decimal)
-- `margin_percentage` (Decimal)
+### `Product`
+Stores the master data records for components.
+- **`id`** (`Uuid`, Primary Key) -> Auto-generated UUID.
+- **`name`** (`String`) -> Component name.
+- **`category`** (`String`) -> Component category type (e.g. CPU, GPU, RAM).
+- **`qty`** (`Int`) -> General inventory count.
+- **`sdp`** (`Decimal(10,2)`) -> Standard Dealer Price.
+- **`page_price`** (`Decimal(10,2)`) -> Target retail page price.
+- **`srp`** (`Decimal(10,2)`) -> Suggested Retail Price.
+- **`status`** (`String`) -> Deployment state (`active` / `inactive`).
+- **`deletedAt`** (`DateTime`, Nullable) -> Timestamp field used for Soft Deletion support.
+- **`createdAt`** / **`updatedAt`** (`DateTime`) -> Standard database timestamps.
 
-*Note: For historical tracking and builder snapshots, pricing is snapshotted into this mapping table at the time of configuration save, preventing historical configurations from changing unexpectedly if Master Data is updated.*
+### `Configurator`
+Represents build templates/packages.
+- **`id`** (`Uuid`, Primary Key) -> Auto-generated UUID.
+- **`name`** (`String`) -> Package template title.
+- **`status`** (`String`) -> Package availability status (`active` / `inactive`).
+- **`createdAt`** / **`updatedAt`** (`DateTime`) -> Standard database timestamps.
+
+### `ConfiguratorProductMapping`
+Pivot model mapping product assignments to specific templates, acting as the spreadsheet persistence backend. 
+- **`id`** (`Uuid`, Primary Key) -> Auto-generated UUID.
+- **`configuratorId`** (`Uuid`, Foreign Key -> `Configurator.id` cascade on delete)
+- **`productId`** (`Uuid`, Foreign Key -> `Product.id` cascade on delete)
+- **`category`** (`String`) -> Cached category name.
+- **`qty`** (`Int`) -> Quantity of the product required in this builder package.
+- **`sdp`** (`Decimal(10,2)`) -> Snapshot cost price.
+- **`totalSdp`** (`Decimal(10,2)`) -> Calculated snapshot cost (qty * sdp).
+- **`pagePrice`** (`Decimal(10,2)`) -> Snapshot target retail price.
+- **`srp`** (`Decimal(10,2)`) -> Snapshot suggested retail price.
+- **`margin`** (`Decimal(10,2)`) -> Calculated margin (pagePrice - totalSdp).
+- **`marginPercentage`** (`Decimal(5,2)`) -> Calculated margin ratio.
+- **`createdAt`** / **`updatedAt`** (`DateTime`) -> Snapshotted timestamps.
+
+---
+
+## Model Relations
+
+```mermaid
+erDiagram
+    Product ||--o{ ConfiguratorProductMapping : "assigned to"
+    Configurator ||--o{ ConfiguratorProductMapping : "contains"
+```
+
+*Note: Pricing and calculated margins are snapshotted into `ConfiguratorProductMapping` records on save, protecting historically built configuration logs from shifting if base Master Data values are updated later.*

@@ -1,21 +1,17 @@
 tasks:
-  - name: Laravel & Vite Setup
+  - name: Next.js Setup & Start
     init: |
-      composer install
       npm install
       cp .env.example .env
-      php artisan key:generate
-      touch database/database.sqlite
-      php artisan migrate --seed
+      npx prisma generate
       npm run build
     command: |
-      php artisan serve --host=0.0.0.0 --port=8000 &
       npm run dev
 
 ports:
-  - port: 8000
+  - port: 3000
     onOpen: open-preview
     visibility: public
-  - port: 5173
+  - port: 3001
     onOpen: ignore
     visibility: public
