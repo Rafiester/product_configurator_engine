@@ -5,24 +5,30 @@ import ConfiguratorList from '@/components/ConfiguratorList';
 export const dynamic = 'force-dynamic';
 
 export default async function ConfiguratorsPage() {
-  // Fetch configurators along with their mappings and nested product info
-  const rawConfigurators = await prisma.configurator.findMany({
-    include: {
-      products: {
-        include: {
-          product: {
-            select: {
-              name: true,
-              status: true
+  // Fetch configurators along with their mappings/nested product info, and active products concurrently
+  const [rawConfigurators, activeProducts] = await Promise.all([
+    prisma.configurator.findMany({
+      include: {
+        products: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                status: true
+              }
             }
           }
         }
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
+    }),
+    prisma.product.findMany({
+      where: { deletedAt: null, status: 'active' },
+      orderBy: { name: 'asc' }
+    })
+  ]);
 
   const configurators = rawConfigurators.map(c => ({
     id: c.id,
@@ -43,12 +49,6 @@ export default async function ConfiguratorsPage() {
       product: p.product
     }))
   }));
-
-  // Fetch all active products to populate the dropdown selects
-  const activeProducts = await prisma.product.findMany({
-    where: { deletedAt: null, status: 'active' },
-    orderBy: { name: 'asc' }
-  });
 
   // Group active products by category
   const productsByCategory: { [category: string]: any[] } = {};

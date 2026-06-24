@@ -14,12 +14,17 @@ interface InitialConfigData {
 }
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
-  const rawProduct = await prisma.product.findUnique({
-    where: { id: params.id, deletedAt: null },
-    include: {
-      configurators: true
-    }
-  });
+  const [rawProduct, configurators] = await Promise.all([
+    prisma.product.findUnique({
+      where: { id: params.id, deletedAt: null },
+      include: {
+        configurators: true
+      }
+    }),
+    prisma.configurator.findMany({
+      orderBy: { name: 'asc' }
+    })
+  ]);
 
   if (!rawProduct) {
     notFound();
@@ -35,11 +40,6 @@ export default async function EditProductPage({ params }: { params: { id: string
     srp: Number(rawProduct.srp),
     status: rawProduct.status,
   };
-
-  // Fetch all available configurators
-  const configurators = await prisma.configurator.findMany({
-    orderBy: { name: 'asc' }
-  });
 
   // Prepare initial toggle data for checklist
   const initialConfigData: InitialConfigData = {};

@@ -28,25 +28,23 @@ export default async function ProductsPage({
     where.status = status;
   }
 
-  // Fetch unique categories for the filter dropdown
-  const categoriesRaw = await prisma.product.findMany({
-    where: { deletedAt: null },
-    select: { category: true },
-    distinct: ['category']
-  });
+  // Fetch unique categories, total filtered products count, and the filtered products list concurrently
+  const [categoriesRaw, totalItems, products] = await Promise.all([
+    prisma.product.groupBy({
+      by: ['category'],
+      where: { deletedAt: null }
+    }),
+    prisma.product.count({ where }),
+    prisma.product.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * perPage,
+      take: perPage
+    })
+  ]);
+
   const categories = categoriesRaw.map(c => c.category).filter(Boolean).sort();
-
-  // Count total filtered products
-  const totalItems = await prisma.product.count({ where });
   const totalPages = Math.ceil(totalItems / perPage);
-
-  // Fetch filtered products with skip & take limit
-  const products = await prisma.product.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    skip: (page - 1) * perPage,
-    take: perPage
-  });
 
   const startIdx = totalItems > 0 ? (page - 1) * perPage + 1 : 0;
   const endIdx = Math.min(page * perPage, totalItems);
