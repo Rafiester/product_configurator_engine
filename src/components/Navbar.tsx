@@ -17,14 +17,19 @@ export default function Navbar() {
   const isActive = (path: string) => pathname?.startsWith(path);
 
   return (
-    <nav className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             {/* Logo */}
             <div className="shrink-0 flex items-center">
-              <Link href="/dashboard" className="text-xl font-bold tracking-tight text-primary-DEFAULT">
-                PC<span className="text-gray-900 dark:text-white">Config</span>
+              <Link href="/dashboard" className="text-xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center">
+                <svg className="w-6 h-6 mr-2 text-primary-DEFAULT" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <line x1="8" y1="21" x2="16" y2="21" strokeLinecap="round" strokeLinejoin="round" />
+                  <line x1="12" y1="17" x2="12" y2="21" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Dynamic <span className="text-primary-DEFAULT">Data</span></span>
               </Link>
             </div>
 
