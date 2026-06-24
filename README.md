@@ -32,6 +32,9 @@ This application supports multiple environments. Choose the setup guide that fit
 3. **[☁️ Vercel Serverless Deployment](docs/DEPLOY_VERCEL.md)**  
    *For serverless deployment using `vercel-php` and external databases.*
 
+4. **[☁️ Gitpod Cloud Workspace Setup](docs/DEPLOY_GITPOD.md)**  
+   *For instant cloud development using Gitpod.*
+
 ## Documentation
 
 For deep technical details, architectures, and guidelines, please refer to the documentation in the `/docs` folder:

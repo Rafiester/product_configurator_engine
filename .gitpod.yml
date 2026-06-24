@@ -1,0 +1,21 @@
+tasks:
+  - name: Laravel & Vite Setup
+    init: |
+      composer install
+      npm install
+      cp .env.example .env
+      php artisan key:generate
+      touch database/database.sqlite
+      php artisan migrate --seed
+      npm run build
+    command: |
+      php artisan serve --host=0.0.0.0 --port=8000 &
+      npm run dev
+
+ports:
+  - port: 8000
+    onOpen: open-preview
+    visibility: public
+  - port: 5173
+    onOpen: ignore
+    visibility: public
