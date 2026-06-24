@@ -252,12 +252,84 @@ export default async function DashboardPage() {
         {/* Top Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">SaaS Metrics Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Metrics Dashboard</h1>
             <p className="text-sm dashboard-text-muted mt-1">Real-time overview of catalogs, active builds, margins, and operational performance.</p>
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary-soft text-[#F472B6]">
             <span className="w-2 h-2 rounded-full bg-[#F472B6] animate-pulse"></span>
             LIVE SYSTEM DATA
+          </div>
+        </div>
+
+        {/* Quick Actions (Moved to Top) */}
+        <div className="space-y-3">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Quick Actions</h3>
+            <p className="text-xs dashboard-text-muted mt-0.5">Shortcuts to manage catalog items, compile configurations, or import/export master files.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Card 1: New Product */}
+            <Link href="/products/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
+              <div className="flex justify-between items-start">
+                <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </div>
+              <div className="mt-auto">
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Product</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">Add component to master database</p>
+              </div>
+            </Link>
+
+            {/* Card 2: New Configurator */}
+            <Link href="/configurators/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
+              <div className="flex justify-between items-start">
+                <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </div>
+              <div className="mt-auto">
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Configurator</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">Build new system specification</p>
+              </div>
+            </Link>
+
+            {/* Card 3: Import Excel */}
+            <div className="dashboard-card border rounded-2xl p-6 flex flex-col justify-between h-36">
+              <div className="flex justify-between items-start">
+                <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                </div>
+              </div>
+              <div className="flex sm:flex-row sm:items-end justify-between gap-3 mt-auto w-full">
+                <div className="truncate">
+                  <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Import Products</h4>
+                  <p className="text-xs dashboard-text-muted mt-0.5 truncate">Upload catalog from Excel</p>
+                </div>
+                <div className="shrink-0 -mb-1.5 -mr-1.5">
+                  <ImportModal />
+                </div>
+              </div>
+            </div>
+
+            {/* Card 4: Export Master Data */}
+            <a href="/api/products/export" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
+              <div className="flex justify-between items-start">
+                <div className="p-3 bg-pink-500/10 text-pink-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
+                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </div>
+              <div className="mt-auto">
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Export Master Data</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">Download database spreadsheet</p>
+              </div>
+            </a>
+
           </div>
         </div>
 
@@ -539,77 +611,6 @@ export default async function DashboardPage() {
 
         </div>
 
-        {/* 4. Quick Actions */}
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Quick Actions</h3>
-            <p className="text-xs dashboard-text-muted mt-0.5">Shortcuts to manage catalog items, compile configurations, or import/export master files.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Card 1: New Product */}
-            <Link href="/products/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-                </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Product</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Add component to master database</p>
-              </div>
-            </Link>
-
-            {/* Card 2: New Configurator */}
-            <Link href="/configurators/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Configurator</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Build new system specification</p>
-              </div>
-            </Link>
-
-            {/* Card 3: Import Excel */}
-            <div className="dashboard-card border rounded-2xl p-6 flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                </div>
-              </div>
-              <div className="flex sm:flex-row sm:items-end justify-between gap-3 mt-auto w-full">
-                <div className="truncate">
-                  <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Import Products</h4>
-                  <p className="text-xs dashboard-text-muted mt-0.5 truncate">Upload catalog from Excel</p>
-                </div>
-                <div className="shrink-0 -mb-1.5 -mr-1.5">
-                  <ImportModal />
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: Export Master Data */}
-            <a href="/api/products/export" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-pink-500/10 text-pink-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-              </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Export Master Data</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Download database spreadsheet</p>
-              </div>
-            </a>
-
-          </div>
-        </div>
 
       </div>
     </div>

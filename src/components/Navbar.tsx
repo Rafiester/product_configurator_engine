@@ -24,13 +24,13 @@ export default function Navbar() {
           <div className="flex w-full sm:w-auto">
             {/* Logo */}
             <div className="shrink-0 flex items-center">
-              <Link href="/dashboard" className="text-xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center">
-                <svg className="w-6 h-6 mr-2 text-primary-DEFAULT" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <Link href="/dashboard" className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary-DEFAULT hover:text-primary-hover transition-colors flex items-center">
+                <svg className="w-8 h-8 mr-3 text-primary-DEFAULT" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" />
                   <line x1="8" y1="21" x2="16" y2="21" strokeLinecap="round" strokeLinejoin="round" />
                   <line x1="12" y1="17" x2="12" y2="21" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span>Dynamic <span className="text-primary-DEFAULT">Data</span></span>
+                <span>Dynamic Data</span>
               </Link>
             </div>
 
