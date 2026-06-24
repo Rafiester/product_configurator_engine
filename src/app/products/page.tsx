@@ -66,7 +66,7 @@ export default async function ProductsPage({
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         
         {/* Header */}
-        <div className="flex justify-between items-center w-full">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary-soft dark:bg-primary-darkSoft rounded-lg">
               <svg className="w-6 h-6 text-primary-DEFAULT dark:text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
@@ -75,15 +75,15 @@ export default async function ProductsPage({
               Products (Master Data)
             </h2>
           </div>
-          <div className="flex items-center space-x-3">
-            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-              <a href="/api/products/export" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block text-center sm:text-left">
+              <a href="/api/products/export" className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
                 Download Master Data
               </a>
             </div>
             <ImportModal />
-            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-              <Link href="/products/create" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
+            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block text-center sm:text-left">
+              <Link href="/products/create" className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
                 Create New Product
               </Link>
             </div>
@@ -93,7 +93,7 @@ export default async function ProductsPage({
         {/* Filters */}
         <div className="bg-white dark:bg-dark-surface p-4 shadow-sm rounded-xl border border-gray-200 dark:border-dark-border">
           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 pb-1.5 border-b border-gray-200 dark:border-dark-border">Search & Filter Products</h3>
-          <form method="GET" action="/products" className="flex flex-row items-center gap-4 w-full">
+          <form method="GET" action="/products" className="flex flex-col md:flex-row md:items-center gap-4 w-full">
             <div className="w-full flex-[2]">
               <input type="text" name="search" defaultValue={search} placeholder="Search by name..." className="block w-full rounded-md bg-white border-gray-300 placeholder-gray-400 text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 focus:border-primary-DEFAULT focus:ring-primary-DEFAULT sm:text-sm" />
             </div>
@@ -112,14 +112,14 @@ export default async function ProductsPage({
                 <option value="inactive">Unpublish</option>
               </select>
             </div>
-            <div className="flex items-center space-x-3 flex-none ml-2">
-              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <button type="submit" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
+            <div className="flex items-center justify-end gap-3 w-full md:w-auto mt-2 md:mt-0">
+              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block w-full sm:w-auto text-center">
+                <button type="submit" className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
                   Filter
                 </button>
               </div>
-              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <Link href="/products" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
+              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block w-full sm:w-auto text-center">
+                <Link href="/products" className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
                   Clear
                 </Link>
               </div>
@@ -127,9 +127,10 @@ export default async function ProductsPage({
           </form>
         </div>
 
-        {/* Data Table */}
+        {/* Data Table Container */}
         <div className="bg-white dark:bg-dark-surface overflow-hidden shadow-sm rounded-xl border border-gray-200 dark:border-dark-border">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
               <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
@@ -182,6 +183,73 @@ export default async function ProductsPage({
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Product Cards View */}
+          <div className="block md:hidden divide-y divide-gray-200 dark:divide-dark-border">
+            {products.length === 0 ? (
+              <div className="px-4 py-8 text-center text-gray-500">No products found.</div>
+            ) : (
+              products.map((p, idx) => {
+                const totalSdp = p.qty * Number(p.sdp);
+                return (
+                  <div key={p.id} className="p-4 space-y-3 bg-white dark:bg-dark-surface">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">#{startIdx + idx}</span>
+                        <h4 className="text-base font-bold text-gray-900 dark:text-gray-100 break-words" title={p.name}>
+                          {p.name}
+                        </h4>
+                        <div className="pt-1">
+                          <span className="px-2.5 py-0.5 inline-flex text-xs font-medium rounded-full bg-primary-soft dark:bg-primary-darkSoft text-primary-active dark:text-primary-dark">
+                            {p.category}
+                          </span>
+                        </div>
+                      </div>
+                      <span className={`px-2.5 py-0.5 inline-flex text-xs font-medium rounded-full border ${p.status === 'active' ? 'bg-primary-soft border-primary-DEFAULT/30 text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT' : 'bg-gray-100 border-gray-200 text-gray-500'}`}>
+                        {p.status === 'active' ? 'Publish' : 'Unpublish'}
+                      </span>
+                    </div>
+
+                    {/* Specs Grid */}
+                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-150 dark:border-dark-border/50 text-xs">
+                      <div>
+                        <span className="text-gray-500 dark:text-gray-400">Qty</span>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">{p.qty}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 dark:text-gray-400">SDP</span>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.sdp).toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 dark:text-gray-400">Total SDP</span>
+                        <div className="font-bold text-gray-900 dark:text-gray-100 mt-0.5">RM {totalSdp.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 dark:text-gray-400">Page Price</span>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.page_price).toFixed(2)}</div>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-gray-500 dark:text-gray-400">SRP</span>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.srp).toFixed(2)}</div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex justify-end gap-3 pt-3 border-t border-gray-150 dark:border-dark-border/50">
+                      <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
+                        <Link href={`/products/${p.id}/edit`} className="inline-flex items-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md text-xs transition-colors">
+                          Edit
+                        </Link>
+                      </div>
+                      <div className="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
+                        <DeleteButton id={p.id} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Pagination Footer */}

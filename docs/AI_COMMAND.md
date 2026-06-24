@@ -1,27 +1,133 @@
-# UI Refinement: Expand Product Table & Reduce Empty Spacing
+# Mobile Version Optimization Based on Existing UI
 
-Please refine the Product Master Data page layout based on the current UI.
+Create a dedicated mobile experience for the application by adapting the current UI and all existing features to mobile screens.
 
-## Goals
-- Expand the product table width so it uses more available horizontal space.
-- Reduce excessive empty spacing between the page title, action buttons, filter card, and table.
-- Make the layout feel more compact, dense, and dashboard-like without changing the existing visual style.
-- Keep the dark mode styling, rounded cards, borders, and current color theme.
+## Objective
 
-## Required Changes
-1. Increase the main content/container max-width or make it closer to full-width.
-2. Reduce vertical spacing between:
-   - Page header and filter section
-   - Filter section and product table
-   - Table rows if they feel too tall
-3. Align the page title and action buttons more tightly in one row.
-4. Make the product table wider and reduce unused left/right margins.
-5. Keep table columns readable:
-   - Product name should have enough width
-   - Price columns should stay aligned
-   - Status column should remain compact
-6. Do not change existing data logic, import/export functions, filters, or CRUD behavior.
-7. This is UI/layout-only refinement.
+The current desktop design is already approved and should be treated as the source of truth.
+
+Your task is NOT to redesign the application.
+
+Your task is to optimize the existing UI, components, layouts, and workflows for mobile devices while preserving the current visual identity, user experience, color scheme, hierarchy, and functionality.
+
+---
+
+## Important Constraints
+
+### Preserve Existing Design
+
+* Maintain current design language.
+* Maintain current dark theme.
+* Maintain current component styling.
+* Maintain current visual hierarchy.
+* Maintain current branding and spacing philosophy.
+
+### Do Not Affect
+
+* Desktop layout
+* Tablet layout
+* Existing business logic
+* Existing API integrations
+* Existing database structure
+* Existing features
+
+Desktop and tablet experiences must remain unchanged.
+
+---
+
+## Mobile Optimization Scope
+
+Perform a complete mobile responsiveness audit across the application and adapt every existing screen accordingly.
+
+### Navigation
+
+* Convert desktop navigation into a mobile-friendly experience.
+* Ensure all existing navigation items remain accessible.
+* Preserve current user menu and dark mode functionality.
+
+### Dashboard
+
+* Adapt all current cards, widgets, statistics, charts, and components to fit mobile screens.
+* Preserve information hierarchy.
+* Prevent overflow and clipping.
+
+### Master Data
+
+Review all existing UI and optimize for mobile:
+
+* Header actions
+* Search section
+* Filters
+* Product listing
+* Pagination
+* CRUD actions
+* Import / Export functions
+* Status indicators
+* Forms and dialogs
+
+### Configurator
+
+Review all existing configurator workflows and optimize for mobile:
+
+* Component selectors
+* Filtering
+* Build summary
+* Pricing display
+* Validation states
+* Action buttons
+
+### Forms
+
+Review all existing forms:
+
+* Create Product
+* Edit Product
+* Import dialogs
+* Settings forms
+* Any other existing forms
+
+Ensure every form is usable and intuitive on mobile devices.
+
+### Tables
+
+Audit all existing tables throughout the application.
+
+For each table:
+
+* Determine the most suitable mobile presentation.
+* Preserve all information.
+* Preserve all actions.
+* Avoid horizontal scrolling whenever possible.
+* Use responsive patterns that fit the existing design system.
+
+---
+
+## Mobile UX Requirements
+
+* No broken layouts.
+* No content overflow.
+* No inaccessible actions.
+* No clipped text.
+* No unusable tables.
+* No hidden functionality.
+* Touch-friendly interaction areas.
+* Smooth scrolling and navigation.
+* Consistent spacing across all screens.
+
+---
+
+## Technical Requirements
+
+* Mobile-first responsive implementation for screens below 768px.
+* Use existing component architecture.
+* Reuse existing UI components whenever possible.
+* Follow current project conventions.
+* Avoid duplicate components unless necessary.
+
+---
 
 ## Expected Result
-The Product Master Data page should look cleaner and more space-efficient, with the table taking priority visually and less empty padding around the content.
+
+The application should feel like a polished native mobile experience while remaining visually consistent with the current desktop version.
+
+Every existing screen, feature, component, form, table, and workflow should be reviewed and optimized for mobile without introducing a new design language or altering the approved desktop experience.

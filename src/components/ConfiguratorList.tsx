@@ -327,151 +327,274 @@ function ConfiguratorCard({
             <h4 className="text-md font-bold text-gray-900 dark:text-gray-100">Dynamic PC Builder</h4>
           </div>
 
-          <div className="w-full overflow-x-auto scrollbar-hide">
-            <table className="w-full min-w-full text-left border-collapse table-fixed whitespace-nowrap">
-              <thead className="bg-gray-50 dark:bg-gray-900">
-                <tr>
-                  <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
-                    Category
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
-                    Product
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
-                    Qty
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
-                    SDP
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                    Total SDP
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
-                    Page Price
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                    SRP
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
-                    Margin
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-24">
-                    Margin %
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-dark-border bg-white dark:bg-dark-surface2">
-                {rows.map((row) => (
-                  <tr
-                    key={row.category}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                  >
-                    <td className="py-2 px-4 font-medium text-gray-900 dark:text-gray-100 truncate">
-                      {row.category}
-                    </td>
-                    <td className="py-2 px-4">
-                      <select
-                        value={row.productId}
-                        onChange={(e) => onProductChange(row.category, e.target.value)}
-                        className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
+          {/* Desktop Builder Grid View */}
+          <div className="hidden md:block">
+            <div className="w-full overflow-x-auto scrollbar-hide">
+              <table className="w-full min-w-full text-left border-collapse table-fixed whitespace-nowrap">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
+                      Category
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
+                      Product
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
+                      Qty
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                      SDP
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                      Total SDP
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
+                      Page Price
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                      SRP
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                      Margin
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-24">
+                      Margin %
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-dark-border bg-white dark:bg-dark-surface2">
+                  {rows.map((row) => (
+                    <tr
+                      key={row.category}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      <td className="py-2 px-4 font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {row.category}
+                      </td>
+                      <td className="py-2 px-4">
+                        <select
+                          value={row.productId}
+                          onChange={(e) => onProductChange(row.category, e.target.value)}
+                          className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
+                        >
+                          <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
+                          {(productsByCategory[row.category] || []).map((p) => (
+                            <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
+                              {p.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        <input
+                          type="number"
+                          min="1"
+                          disabled={!row.productId}
+                          value={row.qty}
+                          onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
+                          className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
+                        />
+                      </td>
+                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
+                      </td>
+                      <td className="py-2 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
+                        {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
+                      </td>
+                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
+                      </td>
+                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
+                      </td>
+                      <td
+                        className={`py-2 px-4 text-right tabular-nums ${marginClass(
+                          row.pagePrice - row.sdp * row.qty
+                        )}`}
                       >
-                        <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
-                        {(productsByCategory[row.category] || []).map((p) => (
-                          <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
-                            {p.name}
-                          </option>
-                        ))}
-                      </select>
+                        {row.productId
+                          ? `RM ${(row.pagePrice - row.sdp * row.qty).toFixed(2)}`
+                          : '-'}
+                      </td>
+                      <td
+                        className={`py-2 px-4 text-right tabular-nums ${marginClass(
+                          row.pagePrice - row.sdp * row.qty
+                        )}`}
+                      >
+                        {row.productId
+                          ? row.pagePrice > 0
+                            ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(
+                                2
+                              )}%`
+                            : '0.00%'
+                          : '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
+                  <tr>
+                    <td colSpan={4} className="py-3 px-4 text-right text-gray-900 dark:text-gray-100">
+                      GRAND TOTAL:
                     </td>
-                    <td className="py-2 px-4 text-center">
+                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                      RM {totals.sdpSum.toFixed(2)}
+                    </td>
+                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                      RM {totals.pageSum.toFixed(2)}
+                    </td>
+                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                      RM {totals.srpSum.toFixed(2)}
+                    </td>
+                    <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                      RM {totals.marginSum.toFixed(2)}
+                    </td>
+                    <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                      {totals.marginPercent.toFixed(2)}%
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div className="mt-4 flex justify-end px-6">
+              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
+                <button
+                  onClick={saveConfiguration}
+                  disabled={isSaving}
+                  className="bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2 transition-colors disabled:opacity-50"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                    />
+                  </svg>
+                  <span>{isSaving ? 'Saving...' : 'Save Configuration'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Category Builder Cards View */}
+          <div className="block md:hidden space-y-4 px-6 pt-4 pb-2">
+            {rows.map((row) => (
+              <div key={row.category} className="border border-gray-200 dark:border-dark-border rounded-xl p-4 bg-gray-50/30 dark:bg-dark-surface space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-gray-900 dark:text-gray-100 text-sm">
+                    {row.category}
+                  </span>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-500 dark:text-gray-400">Select Component</label>
+                  <select
+                    value={row.productId}
+                    onChange={(e) => onProductChange(row.category, e.target.value)}
+                    className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1.5"
+                  >
+                    <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
+                    {(productsByCategory[row.category] || []).map((p) => (
+                      <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {row.productId && (
+                  <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
+                    <div className="col-span-2 space-y-1">
+                      <label className="block text-xs text-gray-500 dark:text-gray-400">Quantity</label>
                       <input
                         type="number"
                         min="1"
-                        disabled={!row.productId}
                         value={row.qty}
                         onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
-                        className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
+                        className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1"
                       />
-                    </td>
-                    <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                      {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
-                    </td>
-                    <td className="py-2 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
-                      {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
-                    </td>
-                    <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                      {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
-                    </td>
-                    <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                      {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
-                    </td>
-                    <td
-                      className={`py-2 px-4 text-right tabular-nums ${marginClass(
-                        row.pagePrice - row.sdp * row.qty
-                      )}`}
-                    >
-                      {row.productId
-                        ? `RM ${(row.pagePrice - row.sdp * row.qty).toFixed(2)}`
-                        : '-'}
-                    </td>
-                    <td
-                      className={`py-2 px-4 text-right tabular-nums ${marginClass(
-                        row.pagePrice - row.sdp * row.qty
-                      )}`}
-                    >
-                      {row.productId
-                        ? row.pagePrice > 0
-                          ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(
-                              2
-                            )}%`
-                          : '0.00%'
-                        : '-'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
-                <tr>
-                  <td colSpan={4} className="py-3 px-4 text-right text-gray-900 dark:text-gray-100">
-                    GRAND TOTAL:
-                  </td>
-                  <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                    RM {totals.sdpSum.toFixed(2)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                    RM {totals.pageSum.toFixed(2)}
-                  </td>
-                  <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                    RM {totals.srpSum.toFixed(2)}
-                  </td>
-                  <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
-                    RM {totals.marginSum.toFixed(2)}
-                  </td>
-                  <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
-                    {totals.marginPercent.toFixed(2)}%
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">SDP</span>
+                      <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.sdp.toFixed(2)}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">Total SDP</span>
+                      <div className="font-bold text-gray-900 dark:text-gray-100 mt-0.5">RM {(row.sdp * row.qty).toFixed(2)}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">Page Price</span>
+                      <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.pagePrice.toFixed(2)}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">SRP</span>
+                      <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.srp.toFixed(2)}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">Margin</span>
+                      <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
+                        RM {(row.pagePrice - row.sdp * row.qty).toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-550 dark:text-gray-400">Margin %</span>
+                      <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
+                        {row.pagePrice > 0
+                          ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(2)}%`
+                          : '0.00%'}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {/* Mobile Grand Totals Summary Card */}
+            <div className="border-t border-gray-200 dark:border-dark-border pt-4 mt-4 text-xs">
+              <div className="bg-gray-50 dark:bg-dark-surface p-4 rounded-xl space-y-2.5">
+                <div className="font-bold text-gray-900 dark:text-gray-100 text-sm">GRAND TOTALS</div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">TOTAL SDP</span>
+                  <span className="font-bold text-gray-900 dark:text-gray-100">RM {totals.sdpSum.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">TOTAL PAGE PRICE</span>
+                  <span className="font-bold text-gray-900 dark:text-gray-100">RM {totals.pageSum.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500 dark:text-gray-400 font-medium">TOTAL SRP</span>
+                  <span className="font-bold text-gray-900 dark:text-gray-100">RM {totals.srpSum.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between border-t border-gray-150 dark:border-dark-border/50 pt-2">
+                  <span className="text-gray-500 dark:text-gray-450 font-semibold">EST. MARGIN</span>
+                  <span className={`font-bold ${marginClass(totals.marginSum)}`}>
+                    RM {totals.marginSum.toFixed(2)} ({totals.marginPercent.toFixed(2)}%)
+                  </span>
+                </div>
+              </div>
+            </div>
 
-          <div className="mt-4 flex justify-end px-6">
-            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-              <button
-                onClick={saveConfiguration}
-                disabled={isSaving}
-                className="bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2 transition-colors disabled:opacity-50"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
-                  />
-                </svg>
-                <span>{isSaving ? 'Saving...' : 'Save Configuration'}</span>
-              </button>
+            {/* Mobile Save Button */}
+            <div className="mt-4 flex justify-stretch w-full">
+              <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block w-full">
+                <button
+                  onClick={saveConfiguration}
+                  disabled={isSaving}
+                  className="bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2.5 w-full rounded-lg shadow-sm flex items-center justify-center space-x-2 transition-colors disabled:opacity-50"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                    />
+                  </svg>
+                  <span>{isSaving ? 'Saving...' : 'Save Configuration'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

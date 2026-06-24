@@ -55,7 +55,7 @@ export default async function EditProductPage({ params }: { params: { id: string
 
   return (
     <div className="py-12">
-      <div className="max-w-[1280px] mx-auto px-6 space-y-6">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
