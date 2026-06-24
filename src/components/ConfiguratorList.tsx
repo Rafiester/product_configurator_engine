@@ -341,13 +341,13 @@ function ConfiguratorCard({
           </div>
 
           {/* Right Side: Action Buttons aligned horizontally */}
-          <div className="flex items-center gap-3 w-full md:w-auto justify-end shrink-0">
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
             
             {/* Edit Button */}
             <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
               <Link
                 href={`/configurators/${configurator.id}/edit`}
-                className="inline-flex items-center justify-center h-9 px-5 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-xs transition-colors"
+                className="inline-flex items-center justify-center h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Edit
               </Link>
@@ -357,7 +357,7 @@ function ConfiguratorCard({
             <div className="p-1 bg-red-100 dark:bg-red-950/30 rounded-xl shrink-0">
               <button
                 onClick={() => onDelete(configurator.id, configurator.name)}
-                className="inline-flex items-center justify-center h-9 px-5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-xs transition-colors"
+                className="inline-flex items-center justify-center h-10 px-6 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Delete
               </button>
@@ -367,7 +367,7 @@ function ConfiguratorCard({
             <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="inline-flex items-center justify-center h-9 px-5 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-xs transition-colors gap-2"
+                className="inline-flex items-center justify-center h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors gap-2"
               >
                 <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
                 {expanded ? (
@@ -390,42 +390,39 @@ function ConfiguratorCard({
 
       {/* Collapsible PC Builder */}
       {expanded && (
-        <div className="border-t border-gray-200 dark:border-[#2A2F3A] pb-4 transition-all duration-300">
-          <div className="flex justify-between items-center mb-4 px-6 pt-4">
-            <h4 className="text-md font-bold text-gray-900 dark:text-gray-100">Dynamic PC Builder</h4>
-          </div>
+        <div className="border-t border-gray-200 dark:border-[#2A2F3A] pt-6 pb-4 transition-all duration-300">
 
           {/* Desktop Builder Grid View */}
-          <div className="hidden md:block">
+          <div className="hidden md:block px-6 md:px-8">
             <div className="w-full overflow-x-auto scrollbar-hide">
               <table className="w-full min-w-full text-left border-collapse table-fixed whitespace-nowrap">
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
-                    <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
+                    <th className="py-4 px-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
                       Category
                     </th>
-                    <th className="py-3 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
+                    <th className="py-4 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
                       Product
                     </th>
-                    <th className="py-3 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
+                    <th className="py-4 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
                       Qty
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
                       SDP
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                       Total SDP
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
                       Page Price
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                       SRP
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
                       Margin
                     </th>
-                    <th className="py-3 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-24">
+                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-24">
                       Margin %
                     </th>
                   </tr>
@@ -436,10 +433,10 @@ function ConfiguratorCard({
                       key={row.category}
                       className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
-                      <td className="py-2 px-4 font-medium text-gray-900 dark:text-gray-100 truncate">
+                      <td className="py-3 px-4 font-medium text-gray-900 dark:text-gray-100 truncate">
                         {row.category}
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-3 px-4">
                         <select
                           value={row.productId}
                           onChange={(e) => onProductChange(row.category, e.target.value)}
@@ -453,7 +450,7 @@ function ConfiguratorCard({
                           ))}
                         </select>
                       </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-3 px-4 text-center">
                         <input
                           type="number"
                           min="1"
@@ -463,20 +460,20 @@ function ConfiguratorCard({
                           className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
                         />
                       </td>
-                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
                         {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
                       </td>
-                      <td className="py-2 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
+                      <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
                         {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
                       </td>
-                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
                         {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
                       </td>
-                      <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
                         {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
                       </td>
                       <td
-                        className={`py-2 px-4 text-right tabular-nums ${marginClass(
+                        className={`py-3 px-4 text-right tabular-nums ${marginClass(
                           row.pagePrice - row.sdp * row.qty
                         )}`}
                       >
@@ -485,7 +482,7 @@ function ConfiguratorCard({
                           : '-'}
                       </td>
                       <td
-                        className={`py-2 px-4 text-right tabular-nums ${marginClass(
+                        className={`py-3 px-4 text-right tabular-nums ${marginClass(
                           row.pagePrice - row.sdp * row.qty
                         )}`}
                       >
@@ -502,22 +499,22 @@ function ConfiguratorCard({
                 </tbody>
                 <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
                   <tr>
-                    <td colSpan={4} className="py-3 px-4 text-right text-gray-900 dark:text-gray-100">
+                    <td colSpan={4} className="py-4 px-4 text-right text-gray-900 dark:text-gray-100">
                       GRAND TOTAL:
                     </td>
-                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
                       RM {totals.sdpSum.toFixed(2)}
                     </td>
-                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
                       RM {totals.pageSum.toFixed(2)}
                     </td>
-                    <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
                       RM {totals.srpSum.toFixed(2)}
                     </td>
-                    <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                    <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                       RM {totals.marginSum.toFixed(2)}
                     </td>
-                    <td className={`py-3 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                    <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                       {totals.marginPercent.toFixed(2)}%
                     </td>
                   </tr>
@@ -525,7 +522,7 @@ function ConfiguratorCard({
               </table>
             </div>
 
-            <div className="mt-4 flex justify-end px-6">
+            <div className="mt-4 flex justify-end">
               <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
                 <button
                   onClick={saveConfiguration}

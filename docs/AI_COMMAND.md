@@ -1,93 +1,132 @@
-🔥 CONFIGURATOR COLLAPSED CARD REDESIGN
+# Configurator Card Polish (Final SaaS Layout Refinement)
 
-Redesign the collapsed Configurator Card into a modern SaaS summary card.
+The configurator card is already close to the desired design. Apply ONLY the following UI refinements.
 
-OBJECTIVE
-- Keep the spreadsheet builder exactly as-is when expanded.
-- Only redesign the collapsed state.
-- Do not modify any CRUD, save, update, delete, expand, collapse, calculations, margin logic, or backend functionality.
-- UI changes only.
+## Header Section
 
-CARD LAYOUT
+### Action Buttons
+Current action buttons (Edit, Delete, Expand/Collapse Builder) feel too small and too far apart.
 
-TOP ROW
-Left:
-- Configurator Name (large bold title)
+Adjust:
 
-Right:
-- Last Updated label
-- Example:
-  Last Updated
-  24 Jun 2026, 14:35
+- Increase button height by ~10-15%
+- Increase horizontal padding
+- Increase font size slightly
+- Reduce gap between buttons
+- Keep all 3 buttons aligned on a single row
+- Maintain pastel pink accent styling
+- Preserve dark/light mode support
 
-MIDDLE SECTION
+Desired visual hierarchy:
 
-Description text under configurator name.
+[ Edit ] [ Delete ] [ Expand Builder ]
 
-Example:
-"Gaming PC configuration optimized for high-performance gaming, streaming, content creation, and productivity workloads with balanced component selection and healthy profit margins."
+Compact but premium SaaS appearance.
 
-Requirements:
-- max 2 lines
-- use line clamp
-- muted text color
-- support dark and light mode
+---
 
-BOTTOM SECTION
+## Remove Builder Title
 
-Left side:
-Status Badge
+Delete:
 
-Example:
-● Active
+"Dynamic PC Builder"
 
-Use existing pastel pink accent styling.
+from the expanded section.
 
-Below status:
-Components: 9 | Avg Margin: 13.26% | Margin: RM 769
+The spreadsheet/table itself already communicates the builder context.
 
-Requirements:
-- Components count calculated from assigned products
-- Avg Margin uses current configurator calculation
-- Margin uses current total margin value
-- Read-only summary only
+No replacement title needed.
 
-Right side:
-Action buttons aligned horizontally
+---
 
-[ Edit ]
-[ Delete ]
-[ Expand Builder ]
+## Table Alignment
 
-Requirements:
-- All 3 buttons same height
-- Same vertical alignment
-- Positioned bottom-right
-- Equal spacing between buttons
+Currently the table starts too close to the card edges and does not visually align with the content above.
 
-STYLE
+Adjust:
 
-Card:
-- Larger padding
-- Rounded corners (16px)
-- Subtle border
-- Soft SaaS shadow
+- Add left padding to table container
+- Add right padding to table container
+- Table content should align vertically with:
+  - Configurator title
+  - Description text
+  - Status badge
+  - Metrics row
 
-Dark Mode:
-- Matte black background
-- Dark navy surface
-- Pastel pink accent
+Use approximately:
 
-Light Mode:
-- White background
-- Dark text
-- Pastel pink accent
+padding-left: 24px–32px
+padding-right: 24px–32px
 
-DO NOT:
-- Change spreadsheet builder
-- Change calculations
-- Change save functionality
-- Change database schema
-- Change expand/collapse behavior
+The table should feel like it belongs inside the same card layout.
 
-Only redesign the collapsed configurator card UI.
+---
+
+## Table Breathing Space
+
+Improve spacing inside the spreadsheet section.
+
+Adjust:
+
+### Header Row
+
+Increase vertical padding:
+
+- Category
+- Product
+- Qty
+- SDP
+- Total SDP
+- Page Price
+- SRP
+- Margin
+- Margin %
+
+Need better readability.
+
+---
+
+### Data Rows
+
+Increase row height slightly.
+
+Target:
+
+- More breathing room
+- Cleaner SaaS dashboard appearance
+- No cramped spreadsheet feeling
+
+Do NOT make rows excessively tall.
+
+---
+
+## Grand Total Section
+
+Keep current structure.
+
+Only:
+
+- Align with table padding
+- Match left/right spacing of table
+- Preserve current calculations
+- Preserve current styling
+
+---
+
+## Important Constraints
+
+DO NOT modify:
+
+- Configurator CRUD logic
+- Save Configuration logic
+- Product selection logic
+- Margin calculations
+- Grand Total calculations
+- Database schema
+- API endpoints
+- Expand/Collapse functionality
+
+This task is UI spacing and visual polish only.
+
+Goal:
+Create a cleaner premium SaaS configurator card with better alignment, larger action buttons, improved spacing, and a more polished professional appearance.
