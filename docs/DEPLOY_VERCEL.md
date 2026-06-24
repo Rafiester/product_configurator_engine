@@ -17,7 +17,20 @@ Vercel serverless functions connect and disconnect rapidly. To prevent connectio
 
 ---
 
-## 3. Configuring Environment Variables on Vercel
+## 3. Function Region Optimization (Crucial for Speed)
+By default, Vercel creates serverless functions in the **Washington, D.C. (us-east-1)** datacenter. Because your Supabase database is in **Singapore (ap-southeast-1)**, every database query must travel cross-continent, resulting in ~200ms of extra latency per network round-trip.
+
+To eliminate this latency and make page loads fast:
+1. Log into your **[Vercel Dashboard](https://vercel.com)**.
+2. Select your project and navigate to the **Settings** tab.
+3. Click on **Functions** in the left sidebar.
+4. Scroll down to **Function Region** and change it from **Washington, D.C. (us-east-1)** to **Singapore (sin1)**.
+5. Click **Save**.
+6. **Important**: This change will apply to your *next* deployment. Make a code change/push or manually redeploy to build the serverless functions in the Singapore region.
+
+---
+
+## 4. Configuring Environment Variables on Vercel
 
 If your Vercel deployment is failing or not receiving data, you need to add the database credentials in the Vercel Dashboard:
 
@@ -39,7 +52,7 @@ If your Vercel deployment is failing or not receiving data, you need to add the 
 
 ---
 
-## 4. Initial Deployment Steps (For New Projects)
+## 5. Initial Deployment Steps (For New Projects)
 
 1. Log into [Vercel](https://vercel.com).
 2. Click **Add New** -> **Project**.
@@ -52,7 +65,7 @@ If your Vercel deployment is failing or not receiving data, you need to add the 
 
 ---
 
-## 5. Running Database Migrations
+## 6. Running Database Migrations
 Prisma migrations require direct access to the database using `DIRECT_URL` (Port 5432) and should not be run through the transaction pooler.
 
 To run migrations, execute them from your local development terminal pointing to your remote Supabase database:
