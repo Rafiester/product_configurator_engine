@@ -30,7 +30,7 @@ cp .env.example .env
 ```
 Edit the `.env` file (`nano .env`) and set your Supabase production URLs:
 ```ini
-DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&connect_timeout=30"
 DIRECT_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
 ```
 

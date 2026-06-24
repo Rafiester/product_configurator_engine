@@ -26,7 +26,7 @@ Vercel handles Next.js natively:
    - Framework Preset: **Next.js** (detected automatically)
    - Root Directory: `./` (root of the workspace)
    - Open the **Environment Variables** section and add:
-     - `DATABASE_URL` = (e.g., `postgresql://postgres.xxx:pass@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true`)
+     - `DATABASE_URL` = (e.g., `postgresql://postgres.xxx:pass@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&connect_timeout=30`)
      - `DIRECT_URL` = (e.g., `postgresql://postgres.xxx:pass@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres`)
 6. Click **Deploy**.
 
