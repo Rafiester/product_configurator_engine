@@ -364,8 +364,8 @@ export default async function DashboardPage() {
                         strokeWidth="8"
                         strokeDasharray={segment.dashArray}
                         transform={`rotate(${segment.rotateAngle} 50 50)`}
-                        className="transition-all duration-300 hover:stroke-[10px] cursor-pointer"
-                        style={{ strokeDashoffset: 0, transformOrigin: '50px 50px' }}
+                        className="transition-[stroke-width] duration-300 hover:stroke-[10px] cursor-pointer"
+                        style={{ strokeDashoffset: 0 }}
                       />
                     )
                   ))}
