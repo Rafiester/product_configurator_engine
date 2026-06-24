@@ -427,71 +427,84 @@ export default async function DashboardPage() {
         </div>
 
         {/* Quick Actions (Moved below KPI row) */}
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.quickActions}</h3>
-            <p className="text-xs dashboard-text-muted mt-0.5">{activeT.quickActionsDesc}</p>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10">
+              <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.quickActions}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.quickActionsDesc}</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             
             {/* Card 1: New Product */}
-            <Link href="/products/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-blue-500/10 text-blue-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+            <Link href="/products/create" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
+              <div className="relative flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500/15 to-blue-600/5 group-hover:from-pink-500/15 group-hover:to-rose-500/5 transition-all duration-300">
+                  <svg className="w-6 h-6 text-blue-500 group-hover:text-pink-500 transition-colors duration-300" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100/80 dark:bg-gray-800/50 group-hover:bg-pink-50 dark:group-hover:bg-pink-950/30 transition-all duration-300">
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-pink-500 group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                </div>
               </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.newProduct}</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.newProductDesc}</p>
+              <div className="relative mt-auto">
+                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.newProduct}</h4>
+                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.newProductDesc}</p>
               </div>
             </Link>
 
             {/* Card 2: New Configurator */}
-            <Link href="/configurators/create" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <Link href="/configurators/create" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
+              <div className="relative flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-emerald-600/5 group-hover:from-pink-500/15 group-hover:to-rose-500/5 transition-all duration-300">
+                  <svg className="w-6 h-6 text-emerald-500 group-hover:text-pink-500 transition-colors duration-300" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100/80 dark:bg-gray-800/50 group-hover:bg-pink-50 dark:group-hover:bg-pink-950/30 transition-all duration-300">
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-pink-500 group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                </div>
               </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.newConfigurator}</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.newConfiguratorDesc}</p>
+              <div className="relative mt-auto">
+                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.newConfigurator}</h4>
+                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.newConfiguratorDesc}</p>
               </div>
             </Link>
 
             {/* Card 3: Import Excel */}
-            <div className="dashboard-card border rounded-2xl p-6 flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-purple-500/10 text-purple-500 rounded-xl">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <div className="relative dashboard-card border rounded-2xl p-5 flex flex-col gap-4 h-[168px] overflow-hidden group hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
+              <div className="relative flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-violet-500/15 to-violet-600/5 group-hover:from-pink-500/15 group-hover:to-rose-500/5 transition-all duration-300">
+                  <svg className="w-6 h-6 text-violet-500 group-hover:text-pink-500 transition-colors duration-300" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 </div>
-              </div>
-              <div className="flex sm:flex-row sm:items-end justify-between gap-3 mt-auto w-full">
-                <div className="truncate">
-                  <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.importProducts}</h4>
-                  <p className="text-xs dashboard-text-muted mt-0.5 truncate">{activeT.importProductsDesc}</p>
-                </div>
-                <div className="shrink-0 -mb-1.5 -mr-1.5">
+                <div className="shrink-0 relative z-10">
                   <ImportModal />
                 </div>
+              </div>
+              <div className="relative mt-auto">
+                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.importProducts}</h4>
+                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.importProductsDesc}</p>
               </div>
             </div>
 
             {/* Card 4: Export Master Data */}
-            <a href="/api/products/export" className="dashboard-card border rounded-2xl p-6 hover:border-[#F472B6] transition-colors group flex flex-col justify-between h-36">
-              <div className="flex justify-between items-start">
-                <div className="p-3 bg-pink-500/10 text-pink-500 rounded-xl group-hover:bg-[#F472B6]/10 group-hover:text-[#F472B6] transition-colors">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <a href="/api/products/export" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
+              <div className="relative flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-pink-500/15 to-rose-500/5">
+                  <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </div>
-                <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100/80 dark:bg-gray-800/50 group-hover:bg-pink-50 dark:group-hover:bg-pink-950/30 transition-all duration-300">
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-pink-500 group-hover:translate-x-0.5 transition-all duration-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                </div>
               </div>
-              <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.exportMaster}</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.exportMasterDesc}</p>
+              <div className="relative mt-auto">
+                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.exportMaster}</h4>
+                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.exportMasterDesc}</p>
               </div>
             </a>
 

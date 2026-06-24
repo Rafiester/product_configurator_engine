@@ -193,56 +193,61 @@ export default async function ProductsPage({
               products.map((p, idx) => {
                 const totalSdp = p.qty * Number(p.sdp);
                 return (
-                  <div key={p.id} className="p-4 space-y-3 bg-white dark:bg-dark-surface">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">#{startIdx + idx}</span>
-                        <h4 className="text-base font-bold text-gray-900 dark:text-gray-100 break-words" title={p.name}>
-                          {p.name}
-                        </h4>
-                        <div className="pt-1">
-                          <span className="px-2.5 py-0.5 inline-flex text-xs font-medium rounded-full bg-primary-soft dark:bg-primary-darkSoft text-primary-active dark:text-primary-dark">
-                            {p.category}
-                          </span>
-                        </div>
+                  <div key={p.id} className="px-5 py-5 space-y-0 bg-white dark:bg-dark-surface">
+                    {/* Header: ID + Category badge + Status */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400 dark:text-gray-500 font-mono font-semibold">#{startIdx + idx}</span>
+                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-pink-50 dark:bg-pink-950/20 text-pink-600 dark:text-pink-400 border border-pink-200/60 dark:border-pink-800/30">
+                          {p.category}
+                        </span>
                       </div>
-                      <span className={`px-2.5 py-0.5 inline-flex text-xs font-medium rounded-full border ${p.status === 'active' ? 'bg-primary-soft border-primary-DEFAULT/30 text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT' : 'bg-gray-100 border-gray-200 text-gray-500'}`}>
+                      <span className={`px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md border ${p.status === 'active' ? 'bg-emerald-50 border-emerald-200/60 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-400' : 'bg-gray-50 border-gray-200 text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400'}`}>
                         {p.status === 'active' ? 'Publish' : 'Unpublish'}
                       </span>
                     </div>
 
-                    {/* Specs Grid */}
-                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-150 dark:border-dark-border/50 text-xs">
-                      <div>
-                        <span className="text-gray-500 dark:text-gray-400">Qty</span>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">{p.qty}</div>
+                    {/* Product Name */}
+                    <h4 className="text-[15px] font-bold text-gray-900 dark:text-gray-100 leading-snug break-words mb-3" title={p.name}>
+                      {p.name}
+                    </h4>
+
+                    {/* Quantity - standalone field */}
+                    <div className="flex items-center justify-between py-2.5 border-t border-gray-100 dark:border-gray-800/60">
+                      <span className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide">Qty</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100 tabular-nums">{p.qty}</span>
+                    </div>
+
+                    {/* Financial Fields - grouped sub-container */}
+                    <div className="rounded-xl bg-gray-50/80 dark:bg-gray-800/30 border border-gray-100 dark:border-gray-800/40 p-3.5 space-y-0 mb-1">
+                      <div className="flex items-center justify-between py-1.5">
+                        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">SDP</span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums">RM {Number(p.sdp).toFixed(2)}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500 dark:text-gray-400">SDP</span>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.sdp).toFixed(2)}</div>
+                      <div className="border-t border-gray-200/50 dark:border-gray-700/30" />
+                      <div className="flex items-center justify-between py-1.5">
+                        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">Total SDP</span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100 tabular-nums">RM {totalSdp.toFixed(2)}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500 dark:text-gray-400">Total SDP</span>
-                        <div className="font-bold text-gray-900 dark:text-gray-100 mt-0.5">RM {totalSdp.toFixed(2)}</div>
+                      <div className="border-t border-gray-200/50 dark:border-gray-700/30" />
+                      <div className="flex items-center justify-between py-1.5">
+                        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">Page Price</span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums">RM {Number(p.page_price).toFixed(2)}</span>
                       </div>
-                      <div>
-                        <span className="text-gray-500 dark:text-gray-400">Page Price</span>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.page_price).toFixed(2)}</div>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-gray-500 dark:text-gray-400">SRP</span>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {Number(p.srp).toFixed(2)}</div>
+                      <div className="border-t border-gray-200/50 dark:border-gray-700/30" />
+                      <div className="flex items-center justify-between py-1.5">
+                        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">SRP</span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums">RM {Number(p.srp).toFixed(2)}</span>
                       </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex justify-end gap-3 pt-3 border-t border-gray-150 dark:border-dark-border/50">
-                      <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-                        <Link href={`/products/${p.id}/edit`} className="inline-flex items-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md text-xs transition-colors">
-                          Edit
-                        </Link>
-                      </div>
-                      <div className="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
+                    {/* Action Buttons - stacked vertically, full width */}
+                    <div className="flex flex-col gap-2.5 pt-4">
+                      <Link href={`/products/${p.id}/edit`} className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-gray-900 font-semibold rounded-xl text-sm transition-colors">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Edit
+                      </Link>
+                      <div className="w-full [&>button]:w-full [&>button]:justify-center [&>button]:py-3 [&>button]:rounded-xl [&>button]:text-sm [&>button]:font-semibold">
                         <DeleteButton id={p.id} />
                       </div>
                     </div>

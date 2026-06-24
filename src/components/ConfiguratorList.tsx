@@ -340,34 +340,34 @@ function ConfiguratorCard({
             </div>
           </div>
 
-          {/* Right Side: Action Buttons aligned horizontally */}
-          <div className="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
+          {/* Right Side: Action Buttons - stacked on mobile, inline on desktop */}
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 w-full md:w-auto md:justify-end shrink-0">
             
             {/* Edit Button */}
-            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
+            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full md:w-auto">
               <Link
                 href={`/configurators/${configurator.id}/edit`}
-                className="inline-flex items-center justify-center h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
+                className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Edit
               </Link>
             </div>
 
             {/* Delete Button */}
-            <div className="p-1 bg-red-100 dark:bg-red-950/30 rounded-xl shrink-0">
+            <div className="p-1 bg-red-100 dark:bg-red-950/30 rounded-xl w-full md:w-auto">
               <button
                 onClick={() => onDelete(configurator.id, configurator.name)}
-                className="inline-flex items-center justify-center h-10 px-6 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
+                className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Delete
               </button>
             </div>
 
             {/* Expand Builder Button */}
-            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
+            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full md:w-auto">
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="inline-flex items-center justify-center h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors gap-2"
+                className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors gap-2"
               >
                 <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
                 {expanded ? (
