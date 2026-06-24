@@ -261,7 +261,76 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions (Moved to Top) */}
+
+        {/* 1. KPI Cards Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Card: Products */}
+          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <span className="text-sm font-semibold dashboard-text-muted">Total Products</span>
+              <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-3xl font-extrabold tracking-tight">{totalProducts}</h3>
+              <p className="text-xs dashboard-text-muted mt-1">Published items in catalog</p>
+            </div>
+          </div>
+
+          {/* Card: Configurators */}
+          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <span className="text-sm font-semibold dashboard-text-muted">Configurators</span>
+              <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-3xl font-extrabold tracking-tight">{totalConfigurators}</h3>
+              <p className="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                {activeConfigurators} Published Builds
+              </p>
+            </div>
+          </div>
+
+          {/* Card: Average Margin % */}
+          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <span className="text-sm font-semibold dashboard-text-muted">Average Margin %</span>
+              <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-3xl font-extrabold tracking-tight text-[#F472B6]">
+                {avgMarginPercent.toFixed(1)}%
+              </h3>
+              <p className="text-xs dashboard-text-muted mt-1">Weighted average across builds</p>
+            </div>
+          </div>
+
+          {/* Card: Potential Revenue */}
+          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <span className="text-sm font-semibold dashboard-text-muted">Potential Revenue</span>
+              <div className="p-2 bg-purple-500/10 text-purple-500 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-3xl font-extrabold tracking-tight">
+                RM {potentialRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+              </h3>
+              <p className="text-xs dashboard-text-muted mt-1">Sum of configurator values</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Quick Actions (Moved below KPI row) */}
         <div className="space-y-3">
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Quick Actions</h3>
@@ -331,74 +400,6 @@ export default async function DashboardPage() {
             </a>
 
           </div>
-        </div>
-
-        {/* 1. KPI Cards Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* Card: Products */}
-          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Total Products</span>
-              <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-3xl font-extrabold tracking-tight">{totalProducts}</h3>
-              <p className="text-xs dashboard-text-muted mt-1">Published items in catalog</p>
-            </div>
-          </div>
-
-          {/* Card: Configurators */}
-          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Configurators</span>
-              <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-3xl font-extrabold tracking-tight">{totalConfigurators}</h3>
-              <p className="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                {activeConfigurators} Published Builds
-              </p>
-            </div>
-          </div>
-
-          {/* Card: Average Margin % */}
-          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Average Margin %</span>
-              <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-3xl font-extrabold tracking-tight text-[#F472B6]">
-                {avgMarginPercent.toFixed(1)}%
-              </h3>
-              <p className="text-xs dashboard-text-muted mt-1">Weighted average across builds</p>
-            </div>
-          </div>
-
-          {/* Card: Potential Revenue */}
-          <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Potential Revenue</span>
-              <div className="p-2 bg-purple-500/10 text-purple-500 rounded-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-3xl font-extrabold tracking-tight">
-                RM {potentialRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-              </h3>
-              <p className="text-xs dashboard-text-muted mt-1">Sum of configurator values</p>
-            </div>
-          </div>
-
         </div>
 
         {/* 2. Charts Row */}
