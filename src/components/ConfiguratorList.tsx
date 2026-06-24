@@ -373,11 +373,11 @@ function ConfiguratorCard({
                       <select
                         value={row.productId}
                         onChange={(e) => onProductChange(row.category, e.target.value)}
-                        className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-850 dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
+                        className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
                       >
-                        <option value="">-- Select Product --</option>
+                        <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
                         {(productsByCategory[row.category] || []).map((p) => (
-                          <option key={p.id} value={p.id}>
+                          <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
                             {p.name}
                           </option>
                         ))}
@@ -390,7 +390,7 @@ function ConfiguratorCard({
                         disabled={!row.productId}
                         value={row.qty}
                         onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
-                        className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-gray-850 dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
+                        className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
                       />
                     </td>
                     <td className="py-2 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
