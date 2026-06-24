@@ -419,6 +419,15 @@ function ConfiguratorCard({
               .dark .builder-table-wrapper:hover .builder-scroll-container::-webkit-scrollbar-thumb {
                 background: #EC7FB6;
               }
+              /* Make spin buttons on Qty input fields always visible */
+              .builder-table-wrapper input[type="number"]::-webkit-inner-spin-button,
+              .builder-table-wrapper input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: inner-spin-button !important;
+                opacity: 1 !important;
+              }
+              .builder-table-wrapper input[type="number"] {
+                -moz-appearance: number-input !important;
+              }
             `}} />
 
             <div className="w-full overflow-hidden builder-table-wrapper">
