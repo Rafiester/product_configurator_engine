@@ -40,6 +40,7 @@ interface ConfiguratorWithProducts {
   id: string;
   name: string;
   status: string;
+  updatedAt?: Date;
   products: MappingData[];
 }
 
@@ -257,72 +258,139 @@ function ConfiguratorCard({
   };
 
   const marginClass = (val: number) => {
-    if (val > 0) return 'text-primary-DEFAULT font-semibold';
+    if (val > 0) return 'text-[#F472B6] font-semibold';
     if (val < 0) return 'text-red-500 font-semibold';
     return 'text-gray-500 dark:text-gray-400';
   };
 
+  const componentsCount = rows.filter((r) => r.productId).length;
+
+  const description = configurator.name.toLowerCase().includes('gaming')
+    ? "Gaming PC configuration optimized for high-performance gaming, streaming, content creation, and productivity workloads with balanced component selection and healthy profit margins."
+    : `Custom PC build configuration for ${configurator.name} optimized for high-performance content creation, office productivity, and standard workloads.`;
+
+  const formatDate = (date?: Date) => {
+    if (!date) return 'Not Available';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const d = new Date(date);
+    const day = d.getDate();
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year}, ${hours}:${minutes}`;
+  };
+
+  const lastUpdatedStr = formatDate(configurator.updatedAt);
+
   return (
-    <div className="bg-white dark:bg-dark-surface2 shadow-sm rounded-lg border border-gray-200 dark:border-dark-border transition-all duration-300">
-      {/* Card Header */}
-      <div className="p-6 border-b border-gray-200 dark:border-dark-border flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50/50 dark:bg-dark-surface rounded-t-lg">
-        <div className="mb-4 md:mb-0">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 inline-block mr-3">
+    <div className="bg-white dark:bg-[#171A21] shadow-sm rounded-2xl border border-gray-200 dark:border-[#2A2F3A] transition-all duration-300 overflow-hidden">
+      {/* Redesigned Collapsed Card / Summary Card Header */}
+      <div className="p-6 md:p-8 flex flex-col space-y-4">
+        
+        {/* TOP ROW */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          {/* Left: Configurator Name */}
+          <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight m-0">
             {configurator.name}
           </h3>
-          <span
-            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
-              configurator.status === 'active'
-                ? 'bg-primary-soft text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT border-primary-border'
-                : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
-            }`}
-          >
-            {configurator.status === 'active' ? 'Active' : 'Inactive'}
-          </span>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-            <Link
-              href={`/configurators/${configurator.id}/edit`}
-              className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors"
-            >
-              Edit
-            </Link>
-          </div>
-
-          <div className="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
-            <button
-              onClick={() => onDelete(configurator.id, configurator.name)}
-              className="inline-flex items-center justify-center px-4 py-1.5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold rounded-md shadow-sm text-xs transition-colors"
-            >
-              Delete
-            </button>
-          </div>
-
-          <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors space-x-2"
-            >
-              <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
-              {expanded ? (
-                <svg className="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                </svg>
-              ) : (
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              )}
-            </button>
+          
+          {/* Right: Last Updated label */}
+          <div className="text-left sm:text-right shrink-0">
+            <span className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+              Last Updated
+            </span>
+            <span className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mt-0.5">
+              {lastUpdatedStr}
+            </span>
           </div>
         </div>
+
+        {/* MIDDLE SECTION: Description */}
+        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 max-w-4xl m-0">
+          {description}
+        </p>
+
+        {/* BOTTOM SECTION */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pt-2">
+          
+          {/* Left Side: Status & Stats */}
+          <div className="space-y-3">
+            {/* Status Badge */}
+            <div className="flex items-center">
+              <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border ${
+                configurator.status === 'active'
+                  ? 'bg-primary-soft text-[#F472B6] border-primary-border dark:bg-primary-darkSoft dark:text-[#F472B6]'
+                  : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${
+                  configurator.status === 'active' ? 'bg-[#F472B6] animate-pulse' : 'bg-gray-400'
+                }`} />
+                {configurator.status === 'active' ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            
+            {/* Component Stats */}
+            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <span>Components: <strong className="text-gray-900 dark:text-gray-100 font-bold">{componentsCount}</strong></span>
+              <span className="text-gray-300 dark:text-gray-700">|</span>
+              <span>Avg Margin: <strong className="text-[#F472B6] font-bold">{totals.marginPercent.toFixed(2)}%</strong></span>
+              <span className="text-gray-300 dark:text-gray-700">|</span>
+              <span>Margin: <strong className="text-emerald-500 dark:text-emerald-400 font-bold">RM {totals.marginSum.toFixed(2)}</strong></span>
+            </div>
+          </div>
+
+          {/* Right Side: Action Buttons aligned horizontally */}
+          <div className="flex items-center gap-3 w-full md:w-auto justify-end shrink-0">
+            
+            {/* Edit Button */}
+            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
+              <Link
+                href={`/configurators/${configurator.id}/edit`}
+                className="inline-flex items-center justify-center h-9 px-5 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-xs transition-colors"
+              >
+                Edit
+              </Link>
+            </div>
+
+            {/* Delete Button */}
+            <div className="p-1 bg-red-100 dark:bg-red-950/30 rounded-xl shrink-0">
+              <button
+                onClick={() => onDelete(configurator.id, configurator.name)}
+                className="inline-flex items-center justify-center h-9 px-5 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-xs transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+
+            {/* Expand Builder Button */}
+            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl shrink-0">
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="inline-flex items-center justify-center h-9 px-5 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-xs transition-colors gap-2"
+              >
+                <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
+                {expanded ? (
+                  <svg className="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
       {/* Collapsible PC Builder */}
       {expanded && (
-        <div className="pb-4 transition-all duration-300">
+        <div className="border-t border-gray-200 dark:border-[#2A2F3A] pb-4 transition-all duration-300">
           <div className="flex justify-between items-center mb-4 px-6 pt-4">
             <h4 className="text-md font-bold text-gray-900 dark:text-gray-100">Dynamic PC Builder</h4>
           </div>

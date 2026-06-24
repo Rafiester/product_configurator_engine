@@ -34,6 +34,7 @@ export default async function ConfiguratorsPage() {
     id: c.id,
     name: c.name,
     status: c.status,
+    updatedAt: c.updatedAt,
     products: c.products.map(p => ({
       id: p.id,
       configuratorId: p.configuratorId,

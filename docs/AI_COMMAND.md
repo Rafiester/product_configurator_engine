@@ -1,341 +1,93 @@
-# Dashboard SaaS Enhancement (Safe Mode)
+🔥 CONFIGURATOR COLLAPSED CARD REDESIGN
 
-## Objective
+Redesign the collapsed Configurator Card into a modern SaaS summary card.
 
-Upgrade the Dashboard page into a modern SaaS-style dashboard while preserving all existing business logic.
+OBJECTIVE
+- Keep the spreadsheet builder exactly as-is when expanded.
+- Only redesign the collapsed state.
+- Do not modify any CRUD, save, update, delete, expand, collapse, calculations, margin logic, or backend functionality.
+- UI changes only.
 
-IMPORTANT:
+CARD LAYOUT
 
-* DO NOT modify any Product CRUD logic.
-* DO NOT modify any Configurator CRUD logic.
-* DO NOT modify Save Configuration functionality.
-* DO NOT modify Import Product functionality.
-* DO NOT modify Export Product functionality.
-* DO NOT modify margin calculations.
-* DO NOT modify database schema.
-* DO NOT modify API routes.
-* DO NOT modify controllers, services, repositories, models, migrations, or validation rules.
-* Dashboard must be READ-ONLY.
-* Dashboard only consumes existing data.
+TOP ROW
+Left:
+- Configurator Name (large bold title)
 
-This task is UI/Visualization only.
+Right:
+- Last Updated label
+- Example:
+  Last Updated
+  24 Jun 2026, 14:35
 
----
+MIDDLE SECTION
 
-# Theme Support
-
-Dashboard must fully support:
-
-## Light Mode
-
-Background:
-
-* #FFFFFF
-
-Cards:
-
-* #FFFFFF
-
-Text:
-
-* #111827
-
-Border:
-
-* #E5E7EB
-
-Accent:
-
-* Pastel Pink (#F472B6)
-
----
-
-## Dark Mode
-
-Background:
-
-* #0F1115
-
-Cards:
-
-* #171A21
-
-Text:
-
-* #F3F4F6
-
-Border:
-
-* #2A2F3A
-
-Accent:
-
-* Pastel Pink (#F472B6)
-
-No pure black.
-
-Use matte dark surfaces.
-
----
-
-# Dashboard Layout
-
-Create responsive dashboard layout:
-
----
-
-[ KPI Cards Row ]
-
-Products
-Configurators
-Average Margin %
-Potential Revenue
-
----
-
-[ Row 2 ]
-
-Product Category Distribution
-Margin Health
-
----
-
-[ Row 3 ]
-
-Top Configurators
-Recent Activities
-
----
-
-[ Row 4 ]
-
-Quick Actions
-
----
-
-Spacing:
-
-* 24px between sections
-* 16px card padding minimum
-* Card radius 16px
-* Soft shadow
-
----
-
-# KPI Cards
-
-Create 4 cards.
-
-## Products
-
-Display:
-
-* Total Products
+Description text under configurator name.
 
 Example:
-325
+"Gaming PC configuration optimized for high-performance gaming, streaming, content creation, and productivity workloads with balanced component selection and healthy profit margins."
 
----
+Requirements:
+- max 2 lines
+- use line clamp
+- muted text color
+- support dark and light mode
 
-## Configurators
+BOTTOM SECTION
 
-Display:
-
-* Total Configurators
-* Active count
-
-Example:
-28 Active
-
----
-
-## Average Margin %
-
-Display:
-
-14.2%
-
-Use existing margin data.
-
-Do not recalculate business logic.
-
----
-
-## Potential Revenue
-
-Display:
-
-RM 85,320
-
-Based on existing configurator totals.
-
-Read-only.
-
----
-
-# Product Category Distribution
-
-Create Donut Chart.
-
-Categories:
-
-* CPU
-* GPU
-* RAM
-* SSD
-* Motherboard
-* PSU
-* Chassis
-* Cooler
-* Accessories
-
-Pastel Pink should be primary chart color.
-
-Dark mode and light mode must both render correctly.
-
----
-
-# Margin Health
-
-Create Horizontal Bar Chart.
-
-Show average margin percentage by category.
-
-Examples:
-
-GPU 18%
-CPU 12%
-RAM 15%
-SSD 14%
-
-Color rules:
-
-> =15%
-> green
-
-10%-15%
-pastel pink
-
-<10%
-orange
-
-Visualization only.
-
-No business logic changes.
-
----
-
-# Top Configurators
-
-Create ranking card.
-
-Show Top 5 Configurators.
-
-Columns:
-
-* Name
-* Margin
-* Status
+Left side:
+Status Badge
 
 Example:
+● Active
 
-Gaming Pro
-RM 769
+Use existing pastel pink accent styling.
 
-Creator Build
-RM 652
+Below status:
+Components: 9 | Avg Margin: 13.26% | Margin: RM 769
 
-Read-only.
+Requirements:
+- Components count calculated from assigned products
+- Avg Margin uses current configurator calculation
+- Margin uses current total margin value
+- Read-only summary only
 
----
+Right side:
+Action buttons aligned horizontally
 
-# Recent Activities
+[ Edit ]
+[ Delete ]
+[ Expand Builder ]
 
-Create activity timeline.
+Requirements:
+- All 3 buttons same height
+- Same vertical alignment
+- Positioned bottom-right
+- Equal spacing between buttons
 
-Show latest:
+STYLE
 
-* Product Created
-* Product Updated
-* Configurator Created
-* Configurator Updated
-* Import Product
+Card:
+- Larger padding
+- Rounded corners (16px)
+- Subtle border
+- Soft SaaS shadow
 
-If activity logs do not exist:
+Dark Mode:
+- Matte black background
+- Dark navy surface
+- Pastel pink accent
 
-show placeholder state.
+Light Mode:
+- White background
+- Dark text
+- Pastel pink accent
 
-Do not create new database tables.
+DO NOT:
+- Change spreadsheet builder
+- Change calculations
+- Change save functionality
+- Change database schema
+- Change expand/collapse behavior
 
-Do not create logging system.
-
----
-
-# Quick Actions
-
-Create action buttons.
-
-* New Product
-* New Configurator
-* Import Products
-* Export Master Data
-
-Use existing routes only.
-
-Do not change button functionality.
-
----
-
-# UI Quality
-
-Use SaaS design language:
-
-* clean cards
-* soft borders
-* pastel pink accent
-* modern spacing
-* responsive layout
-* no sticky components
-* no nested scrolling
-* no overflow issues
-
-Dashboard should visually match:
-
-* Product Master Data page
-* Configurator page
-* Dark Mode system
-* White Mode system
-
----
-
-# Safety Requirements
-
-Before finishing:
-
-Verify:
-
-✓ Product Save still works
-
-✓ Product Edit still works
-
-✓ Product Delete still works
-
-✓ Configurator Save still works
-
-✓ Configurator CRUD still works
-
-✓ Import Product still works
-
-✓ Export Product still works
-
-✓ Dark Mode still works
-
-✓ White Mode still works
-
-✓ No database changes
-
-✓ No API changes
-
-✓ No schema changes
-
-Only dashboard UI should be affected.
+Only redesign the collapsed configurator card UI.
