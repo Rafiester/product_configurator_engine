@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Product {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  category   String
+  qty        Int
+  sdp        Decimal   @db.Decimal(10, 2)
+  page_price Decimal   @db.Decimal(10, 2)
+  srp        Decimal   @db.Decimal(10, 2)
+  status     String    @default("active") // "active" or "inactive"
+  
+  deletedAt  DateTime? @map("deleted_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  configurators ConfiguratorProductMapping[]
+
+  @@map("products")
+}
+
+model Configurator {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  status    String   @default("active") // "active" or "inactive"
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products ConfiguratorProductMapping[]
+
+  @@map("configurators")
+}
+
+model ConfiguratorProductMapping {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  configuratorId  String       @map("configurator_id") @db.Uuid
+  productId       String       @map("product_id") @db.Uuid
+  category        String
+  qty             Int
+  sdp             Decimal      @db.Decimal(10, 2)
+  totalSdp        Decimal      @map("total_sdp") @db.Decimal(10, 2)
+  pagePrice       Decimal      @map("page_price") @db.Decimal(10, 2)
+  srp             Decimal      @db.Decimal(10, 2)
+  margin          Decimal      @db.Decimal(10, 2)
+  marginPercentage Decimal     @map("margin_percentage") @db.Decimal(5, 2)
+  
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  configurator Configurator @relation(fields: [configuratorId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("configurator_product_mappings")
+}

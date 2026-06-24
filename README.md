@@ -1,55 +1,36 @@
-# PC Configurator CMS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Description
-A lightweight internal CMS for managing PC component master data, configurator templates, pricing, and margin calculations.
+## Getting Started
 
-## Main Purpose
-This application helps internal admin users effortlessly manage PC build options, live calculate pricing, and review margins without the manual burden of maintaining hundreds of product combinations in legacy spreadsheets.
+First, run the development server:
 
-## Core Features
-- Product Master Data CRUD
-- Excel import for master data
-- Excel export for master data
-- Configurator management
-- Dynamic PC Builder spreadsheet
-- Live pricing calculation
-- Margin and margin percentage calculation
-- Publish / Unpublish status toggles
-- Dark mode and light mode support
-- Pastel pink SaaS design system
-- Custom toast notification system
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Installation & Deployment
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-This application supports multiple environments. Choose the setup guide that fits your needs:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-1. **[🖥️ Local Development Setup](docs/DEPLOY_LOCAL.md)**  
-   *For local development using `php artisan serve`, Laravel Valet, Herd, or Sail.*
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-2. **[🚀 VPS Server Deployment](docs/DEPLOY_SERVER.md)**  
-   *For traditional production deployment on Ubuntu using Nginx and PHP-FPM.*
+## Learn More
 
-3. **[☁️ Vercel Serverless Deployment](docs/DEPLOY_VERCEL.md)**  
-   *For serverless deployment using `vercel-php` and external databases.*
+To learn more about Next.js, take a look at the following resources:
 
-4. **[☁️ Gitpod Cloud Workspace Setup](docs/DEPLOY_GITPOD.md)**  
-   *For instant cloud development using Gitpod.*
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Documentation
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-For deep technical details, architectures, and guidelines, please refer to the documentation in the `/docs` folder:
+## Deploy on Vercel
 
-- [Overview](docs/OVERVIEW.md)
-- [Features Details](docs/FEATURES.md)
-- [Database Structure](docs/DATABASE.md)
-- [Product Master Data](docs/PRODUCT_MASTER_DATA.md)
-- [Configurator Builder](docs/CONFIGURATOR_BUILDER.md)
-- [Import/Export Guidelines](docs/IMPORT_EXPORT.md)
-- [Design System](docs/DESIGN_SYSTEM.md)
-- [Dark Mode Logic](docs/DARK_MODE.md)
-- [Notification System](docs/NOTIFICATION_SYSTEM.md)
-- [Testing Checklist](docs/TESTING_CHECKLIST.md)
-- [AI Workflow & Rules](docs/AI_WORKFLOW.md)
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## Current Status
-The CMS is currently fully functional with core Master Data and Configurator logic integrated, complete with advanced Excel Import/Export capabilities and a robust SaaS-style pastel pink UI supporting dynamic dark mode.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
