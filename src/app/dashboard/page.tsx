@@ -1,10 +1,104 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import ImportModal from '@/components/ImportModal';
+import { cookies } from 'next/headers';
+
+const t = {
+  en: {
+    title: 'Metrics Dashboard',
+    subtitle: 'Real-time overview of catalogs, active builds, margins, and operational performance.',
+    liveData: 'LIVE SYSTEM DATA',
+    totalProducts: 'Total Products',
+    publishedCatalog: 'Published items in catalog',
+    configurators: 'Configurators',
+    publishedBuilds: 'Published Builds',
+    avgMargin: 'Average Margin %',
+    weightedAverage: 'Weighted average across builds',
+    potentialRevenue: 'Potential Revenue',
+    sumConfigurator: 'Sum of configurator values',
+    quickActions: 'Quick Actions',
+    quickActionsDesc: 'Shortcuts to manage catalog items, compile configurations, or import/export master files.',
+    newProduct: 'New Product',
+    newProductDesc: 'Add component to master database',
+    newConfigurator: 'New Configurator',
+    newConfiguratorDesc: 'Build new system specification',
+    importProducts: 'Import Products',
+    importProductsDesc: 'Upload catalog from Excel',
+    exportMaster: 'Export Master Data',
+    exportMasterDesc: 'Download database spreadsheet',
+    categoryDist: 'Product Category Distribution',
+    categoryDistDesc: 'Spread of active products in catalog by component category.',
+    products: 'Products',
+    marginHealth: 'Margin Health',
+    marginHealthDesc: 'Average catalog profit margins by component category.',
+    healthy: 'Healthy',
+    target: 'Target',
+    low: 'Low',
+    topConfigurators: 'Top Configurators',
+    topConfiguratorsDesc: 'Top 5 configuration builds ranked by estimated margin amount.',
+    noConfigurators: 'No configuration builds created yet.',
+    recentActivities: 'Recent Activities',
+    recentActivitiesDesc: 'Timeline tracking recent additions or edits to catalog and builds.',
+    noActivities: 'No recent activities recorded.',
+    publish: 'Publish',
+    unpublish: 'Unpublish',
+    createdProduct: 'Created product "{name}"',
+    updatedProduct: 'Updated product "{name}"',
+    createdConfigurator: 'Created configurator "{name}"',
+    updatedConfigurator: 'Updated configurator "{name}"'
+  },
+  id: {
+    title: 'Dasbor Metrik',
+    subtitle: 'Tinjauan real-time katalog, konfigurasi aktif, margin, dan kinerja operasional.',
+    liveData: 'DATA SISTEM LANGSUNG',
+    totalProducts: 'Total Produk',
+    publishedCatalog: 'Item terbitan di katalog',
+    configurators: 'Konfigurator',
+    publishedBuilds: 'Konfigurasi Terbit',
+    avgMargin: 'Rata-rata Margin %',
+    weightedAverage: 'Rata-rata tertimbang di semua konfigurasi',
+    potentialRevenue: 'Potensi Pendapatan',
+    sumConfigurator: 'Jumlah nilai konfigurasi',
+    quickActions: 'Tindakan Cepat',
+    quickActionsDesc: 'Pintasan untuk mengelola item katalog, menyusun konfigurasi, atau impor/ekspor file master.',
+    newProduct: 'Produk Baru',
+    newProductDesc: 'Tambah komponen ke database master',
+    newConfigurator: 'Konfigurator Baru',
+    newConfiguratorDesc: 'Buat spesifikasi sistem baru',
+    importProducts: 'Impor Produk',
+    importProductsDesc: 'Unggah katalog dari Excel',
+    exportMaster: 'Ekspor Data Master',
+    exportMasterDesc: 'Unduh spreadsheet database',
+    categoryDist: 'Distribusi Kategori Produk',
+    categoryDistDesc: 'Penyebaran produk aktif di katalog berdasarkan kategori komponen.',
+    products: 'Produk',
+    marginHealth: 'Kesehatan Margin',
+    marginHealthDesc: 'Rata-rata margin keuntungan katalog berdasarkan kategori komponen.',
+    healthy: 'Sehat',
+    target: 'Target',
+    low: 'Rendah',
+    topConfigurators: 'Konfigurator Teratas',
+    topConfiguratorsDesc: '5 konfigurasi teratas diurutkan berdasarkan perkiraan jumlah margin.',
+    noConfigurators: 'Belum ada konfigurasi yang dibuat.',
+    recentActivities: 'Aktivitas Terbaru',
+    recentActivitiesDesc: 'Linimasa pelacakan penambahan atau pengeditan terbaru pada katalog dan konfigurasi.',
+    noActivities: 'Tidak ada aktivitas terbaru yang tercatat.',
+    publish: 'Terbit',
+    unpublish: 'Batal Terbit',
+    createdProduct: 'Membuat produk "{name}"',
+    updatedProduct: 'Memperbarui produk "{name}"',
+    createdConfigurator: 'Membuat konfigurator "{name}"',
+    updatedConfigurator: 'Memperbarui konfigurator "{name}"'
+  }
+};
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
+  const cookieStore = cookies();
+  const lang = cookieStore.get('lang')?.value || 'en';
+  const activeT = t[lang as 'en' | 'id'] || t.en;
+
   // Query all necessary data concurrently
   const [
     totalProducts,
@@ -194,18 +288,20 @@ export default async function DashboardPage() {
 
   recentProducts.forEach(p => {
     const isNew = Math.abs(p.createdAt.getTime() - p.updatedAt.getTime()) < 2000;
+    const titleTemplate = isNew ? activeT.createdProduct : activeT.updatedProduct;
     activities.push({
       type: 'product',
-      title: isNew ? `Created product "${p.name}"` : `Updated product "${p.name}"`,
+      title: titleTemplate.replace('{name}', p.name),
       time: p.updatedAt
     });
   });
 
   recentConfigurators.forEach(c => {
     const isNew = Math.abs(c.createdAt.getTime() - c.updatedAt.getTime()) < 2000;
+    const titleTemplate = isNew ? activeT.createdConfigurator : activeT.updatedConfigurator;
     activities.push({
       type: 'configurator',
-      title: isNew ? `Created configurator "${c.name}"` : `Updated configurator "${c.name}"`,
+      title: titleTemplate.replace('{name}', c.name),
       time: c.updatedAt
     });
   });
@@ -252,12 +348,12 @@ export default async function DashboardPage() {
         {/* Top Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Metrics Dashboard</h1>
-            <p className="text-sm dashboard-text-muted mt-1">Real-time overview of catalogs, active builds, margins, and operational performance.</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeT.title}</h1>
+            <p className="text-sm dashboard-text-muted mt-1">{activeT.subtitle}</p>
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary-soft text-[#F472B6]">
             <span className="w-2 h-2 rounded-full bg-[#F472B6] animate-pulse"></span>
-            LIVE SYSTEM DATA
+            {activeT.liveData}
           </div>
         </div>
 
@@ -268,21 +364,21 @@ export default async function DashboardPage() {
           {/* Card: Products */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Total Products</span>
+              <span className="text-sm font-semibold dashboard-text-muted">{activeT.totalProducts}</span>
               <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
               </div>
             </div>
             <div className="mt-4">
               <h3 className="text-3xl font-extrabold tracking-tight">{totalProducts}</h3>
-              <p className="text-xs dashboard-text-muted mt-1">Published items in catalog</p>
+              <p className="text-xs dashboard-text-muted mt-1">{activeT.publishedCatalog}</p>
             </div>
           </div>
 
           {/* Card: Configurators */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Configurators</span>
+              <span className="text-sm font-semibold dashboard-text-muted">{activeT.configurators}</span>
               <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
               </div>
@@ -291,7 +387,7 @@ export default async function DashboardPage() {
               <h3 className="text-3xl font-extrabold tracking-tight">{totalConfigurators}</h3>
               <p className="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                {activeConfigurators} Published Builds
+                {activeConfigurators} {activeT.publishedBuilds}
               </p>
             </div>
           </div>
@@ -299,7 +395,7 @@ export default async function DashboardPage() {
           {/* Card: Average Margin % */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Average Margin %</span>
+              <span className="text-sm font-semibold dashboard-text-muted">{activeT.avgMargin}</span>
               <div className="p-2 bg-[#F472B6]/10 text-[#F472B6] rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
               </div>
@@ -308,14 +404,14 @@ export default async function DashboardPage() {
               <h3 className="text-3xl font-extrabold tracking-tight text-[#F472B6]">
                 {avgMarginPercent.toFixed(1)}%
               </h3>
-              <p className="text-xs dashboard-text-muted mt-1">Weighted average across builds</p>
+              <p className="text-xs dashboard-text-muted mt-1">{activeT.weightedAverage}</p>
             </div>
           </div>
 
           {/* Card: Potential Revenue */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">Potential Revenue</span>
+              <span className="text-sm font-semibold dashboard-text-muted">{activeT.potentialRevenue}</span>
               <div className="p-2 bg-purple-500/10 text-purple-500 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               </div>
@@ -324,7 +420,7 @@ export default async function DashboardPage() {
               <h3 className="text-3xl font-extrabold tracking-tight">
                 RM {potentialRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
               </h3>
-              <p className="text-xs dashboard-text-muted mt-1">Sum of configurator values</p>
+              <p className="text-xs dashboard-text-muted mt-1">{activeT.sumConfigurator}</p>
             </div>
           </div>
 
@@ -333,8 +429,8 @@ export default async function DashboardPage() {
         {/* Quick Actions (Moved below KPI row) */}
         <div className="space-y-3">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Quick Actions</h3>
-            <p className="text-xs dashboard-text-muted mt-0.5">Shortcuts to manage catalog items, compile configurations, or import/export master files.</p>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.quickActions}</h3>
+            <p className="text-xs dashboard-text-muted mt-0.5">{activeT.quickActionsDesc}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -348,8 +444,8 @@ export default async function DashboardPage() {
                 <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </div>
               <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Product</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Add component to master database</p>
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.newProduct}</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.newProductDesc}</p>
               </div>
             </Link>
 
@@ -362,8 +458,8 @@ export default async function DashboardPage() {
                 <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </div>
               <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">New Configurator</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Build new system specification</p>
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.newConfigurator}</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.newConfiguratorDesc}</p>
               </div>
             </Link>
 
@@ -376,8 +472,8 @@ export default async function DashboardPage() {
               </div>
               <div className="flex sm:flex-row sm:items-end justify-between gap-3 mt-auto w-full">
                 <div className="truncate">
-                  <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Import Products</h4>
-                  <p className="text-xs dashboard-text-muted mt-0.5 truncate">Upload catalog from Excel</p>
+                  <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.importProducts}</h4>
+                  <p className="text-xs dashboard-text-muted mt-0.5 truncate">{activeT.importProductsDesc}</p>
                 </div>
                 <div className="shrink-0 -mb-1.5 -mr-1.5">
                   <ImportModal />
@@ -394,8 +490,8 @@ export default async function DashboardPage() {
                 <svg className="w-5 h-5 text-gray-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </div>
               <div className="mt-auto">
-                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">Export Master Data</h4>
-                <p className="text-xs dashboard-text-muted mt-0.5">Download database spreadsheet</p>
+                <h4 className="font-bold text-base text-gray-900 dark:text-gray-100 leading-tight">{activeT.exportMaster}</h4>
+                <p className="text-xs dashboard-text-muted mt-0.5">{activeT.exportMasterDesc}</p>
               </div>
             </a>
 
@@ -408,8 +504,8 @@ export default async function DashboardPage() {
           {/* Card: Product Category Distribution */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Product Category Distribution</h3>
-              <p className="text-xs dashboard-text-muted mt-0.5">Spread of active products in catalog by component category.</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.categoryDist}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.categoryDistDesc}</p>
             </div>
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-8 flex-1">
               
@@ -448,7 +544,7 @@ export default async function DashboardPage() {
                     {totalProducts}
                   </span>
                   <span className="text-[10px] uppercase tracking-wider font-semibold dashboard-text-muted mt-0.5">
-                    Products
+                    {activeT.products}
                   </span>
                 </div>
               </div>
@@ -472,22 +568,22 @@ export default async function DashboardPage() {
           {/* Card: Margin Health */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Margin Health</h3>
-              <p className="text-xs dashboard-text-muted mt-0.5">Average catalog profit margins by component category.</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.marginHealth}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.marginHealthDesc}</p>
               
               {/* Legend of rules */}
               <div className="flex gap-4 mt-2 text-[10px] font-bold">
                 <div className="flex items-center gap-1 text-emerald-500">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  &gt;= 15% Healthy
+                  &gt;= 15% {activeT.healthy}
                 </div>
                 <div className="flex items-center gap-1 text-[#F472B6]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F472B6]"></span>
-                  10%-15% Target
+                  10%-15% {activeT.target}
                 </div>
                 <div className="flex items-center gap-1 text-orange-500">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                  &lt; 10% Low
+                  &lt; 10% {activeT.low}
                 </div>
               </div>
             </div>
@@ -519,8 +615,8 @@ export default async function DashboardPage() {
           {/* Card: Top Configurators */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Top Configurators</h3>
-              <p className="text-xs dashboard-text-muted mt-0.5">Top 5 configuration builds ranked by estimated margin amount.</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.topConfigurators}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.topConfiguratorsDesc}</p>
             </div>
             
             <div className="mt-4 divide-y divide-gray-150 dark:divide-dark-border/40 flex-1 flex flex-col justify-center">
@@ -542,14 +638,14 @@ export default async function DashboardPage() {
                           ? 'bg-green-150 text-green-800 dark:bg-green-950/30 dark:text-green-450'
                           : 'bg-gray-150 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
                       }`}>
-                        {c.status === 'active' ? 'Publish' : 'Unpublish'}
+                        {c.status === 'active' ? activeT.publish : activeT.unpublish}
                       </span>
                     </div>
                   </div>
                 ))
               ) : (
                 <div className="py-8 text-center text-sm dashboard-text-muted">
-                  No configuration builds created yet.
+                  {activeT.noConfigurators}
                 </div>
               )}
             </div>
@@ -558,8 +654,8 @@ export default async function DashboardPage() {
           {/* Card: Recent Activities */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Recent Activities</h3>
-              <p className="text-xs dashboard-text-muted mt-0.5">Timeline tracking recent additions or edits to catalog and builds.</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.recentActivities}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.recentActivitiesDesc}</p>
             </div>
             
             <div className="mt-5 flex-1 flex flex-col justify-center">
@@ -602,7 +698,7 @@ export default async function DashboardPage() {
                     ))
                   ) : (
                     <div className="py-8 text-center text-sm dashboard-text-muted">
-                      No recent activities recorded.
+                      {activeT.noActivities}
                     </div>
                   )}
                 </ul>

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-export default function Navbar() {
+export default function Navbar({ lang }: { lang: string }) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -16,6 +16,32 @@ export default function Navbar() {
   }, []);
 
   const isActive = (path: string) => pathname?.startsWith(path);
+
+  const toggleLanguage = () => {
+    const nextLang = lang === 'en' ? 'id' : 'en';
+    document.cookie = `lang=${nextLang}; path=/; max-age=31536000`;
+    window.location.reload();
+  };
+
+  const t = {
+    en: {
+      dashboard: 'Dashboard',
+      masterData: 'Master Data',
+      configurator: 'Configurator',
+      adminUser: 'Admin User'
+    },
+    id: {
+      dashboard: 'Dasbor',
+      masterData: 'Data Master',
+      configurator: 'Konfigurator',
+      adminUser: 'Pengguna Admin'
+    }
+  }[lang as 'en' | 'id'] || {
+    dashboard: 'Dashboard',
+    masterData: 'Master Data',
+    configurator: 'Configurator',
+    adminUser: 'Admin User'
+  };
 
   return (
     <nav className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border">
@@ -44,7 +70,7 @@ export default function Navbar() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                Dashboard
+                {t.dashboard}
               </Link>
               <Link
                 href="/products"
@@ -54,7 +80,7 @@ export default function Navbar() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                Master Data
+                {t.masterData}
               </Link>
               <Link
                 href="/configurators"
@@ -64,13 +90,23 @@ export default function Navbar() {
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                Configurator
+                {t.configurator}
               </Link>
             </div>
           </div>
 
           {/* Desktop Right items */}
           <div className="hidden sm:flex sm:items-center sm:ml-6 gap-4">
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="px-2.5 py-1 text-xs font-bold border border-gray-200 dark:border-dark-border text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-surface2 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2"
+              aria-label="Toggle Language"
+            >
+              <span>🌐</span>
+              <span>{lang === 'en' ? 'EN' : 'ID'}</span>
+            </button>
+
             {/* Dark Mode Toggle */}
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -87,7 +123,7 @@ export default function Navbar() {
             {/* Profile Dropdown Mock */}
             <div className="relative">
               <button className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                <div>Admin User</div>
+                <div>{t.adminUser}</div>
                 <svg className="ml-1 -mr-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
               </button>
             </div>
@@ -128,7 +164,7 @@ export default function Navbar() {
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
-              Dashboard
+              {t.dashboard}
             </Link>
             <Link
               href="/products"
@@ -139,7 +175,7 @@ export default function Navbar() {
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
-              Master Data
+              {t.masterData}
             </Link>
             <Link
               href="/configurators"
@@ -150,28 +186,44 @@ export default function Navbar() {
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
-              Configurator
+              {t.configurator}
             </Link>
           </div>
           
           <div className="pt-4 pb-4 border-t border-gray-200 dark:border-dark-border px-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">Admin User</div>
+              <div className="text-sm font-semibold text-gray-900 dark:text-white">{t.adminUser}</div>
             </div>
-            <button
-              onClick={() => {
-                setTheme(theme === 'dark' ? 'light' : 'dark');
-                setIsOpen(false);
-              }}
-              className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-surface2 transition-colors focus:outline-none"
-              aria-label="Toggle Dark Mode"
-            >
-              {mounted && theme === 'dark' ? (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-              )}
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Language Toggle */}
+              <button
+                onClick={() => {
+                  toggleLanguage();
+                  setIsOpen(false);
+                }}
+                className="px-2.5 py-1 text-xs font-bold border border-gray-200 dark:border-dark-border text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-surface2 transition-colors flex items-center gap-1.5 focus:outline-none"
+                aria-label="Toggle Language"
+              >
+                <span>🌐</span>
+                <span>{lang === 'en' ? 'EN' : 'ID'}</span>
+              </button>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={() => {
+                  setTheme(theme === 'dark' ? 'light' : 'dark');
+                  setIsOpen(false);
+                }}
+                className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-dark-surface2 transition-colors focus:outline-none"
+                aria-label="Toggle Dark Mode"
+              >
+                {mounted && theme === 'dark' ? (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

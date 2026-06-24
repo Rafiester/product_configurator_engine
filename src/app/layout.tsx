@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { UIProvider } from '@/components/ToastProvider';
 import Navbar from '@/components/Navbar';
+import { cookies } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,13 +18,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const lang = cookieStore.get('lang')?.value || 'en';
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <body className={`${inter.className} bg-neutral-bg dark:bg-dark-bg text-neutral-text dark:text-dark-text min-h-screen antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <UIProvider>
             <div className="min-h-screen">
-              <Navbar />
+              <Navbar lang={lang} />
               <main>{children}</main>
             </div>
           </UIProvider>
