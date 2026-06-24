@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ConfiguratorsPage() {
   // Fetch configurators along with their mappings and nested product info
-  const configurators = await prisma.configurator.findMany({
+  const rawConfigurators = await prisma.configurator.findMany({
     include: {
       products: {
         include: {
@@ -23,6 +23,26 @@ export default async function ConfiguratorsPage() {
       createdAt: 'desc'
     }
   });
+
+  const configurators = rawConfigurators.map(c => ({
+    id: c.id,
+    name: c.name,
+    status: c.status,
+    products: c.products.map(p => ({
+      id: p.id,
+      configuratorId: p.configuratorId,
+      productId: p.productId,
+      category: p.category,
+      qty: p.qty,
+      sdp: Number(p.sdp),
+      totalSdp: Number(p.totalSdp),
+      pagePrice: Number(p.pagePrice),
+      srp: Number(p.srp),
+      margin: Number(p.margin),
+      marginPercentage: Number(p.marginPercentage),
+      product: p.product
+    }))
+  }));
 
   // Fetch all active products to populate the dropdown selects
   const activeProducts = await prisma.product.findMany({

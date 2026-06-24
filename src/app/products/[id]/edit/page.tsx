@@ -14,17 +14,27 @@ interface InitialConfigData {
 }
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
-  // Fetch product and its current mapped configurators
-  const product = await prisma.product.findUnique({
+  const rawProduct = await prisma.product.findUnique({
     where: { id: params.id, deletedAt: null },
     include: {
       configurators: true
     }
   });
 
-  if (!product) {
+  if (!rawProduct) {
     notFound();
   }
+
+  const product = {
+    id: rawProduct.id,
+    name: rawProduct.name,
+    category: rawProduct.category,
+    qty: rawProduct.qty,
+    sdp: Number(rawProduct.sdp),
+    page_price: Number(rawProduct.page_price),
+    srp: Number(rawProduct.srp),
+    status: rawProduct.status,
+  };
 
   // Fetch all available configurators
   const configurators = await prisma.configurator.findMany({
@@ -33,7 +43,7 @@ export default async function EditProductPage({ params }: { params: { id: string
 
   // Prepare initial toggle data for checklist
   const initialConfigData: InitialConfigData = {};
-  product.configurators.forEach((mapping) => {
+  rawProduct.configurators.forEach((mapping) => {
     initialConfigData[mapping.configuratorId] = {
       enabled: true,
       qty: mapping.qty,
@@ -41,7 +51,7 @@ export default async function EditProductPage({ params }: { params: { id: string
   });
 
   // Bind the ID to the server action
-  const updateProductWithId = updateProduct.bind(null, product.id);
+  const updateProductWithId = updateProduct.bind(null, rawProduct.id);
 
   return (
     <div className="py-12">
