@@ -1,22 +1,39 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useUI } from './ToastProvider';
 
 export default function Navbar({ lang }: { lang: string }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { showToast } = useUI();
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Click-outside handler for profile dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+    if (isProfileOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isProfileOpen]);
 
   const isActive = (path: string) => pathname?.startsWith(path);
 
@@ -27,8 +44,14 @@ export default function Navbar({ lang }: { lang: string }) {
   };
 
   const handleLogout = () => {
-    showToast('success', t.logoutSuccess, t.logoutSuccessDesc);
+    // Clear auth cookie
+    document.cookie = 'auth=; path=/; max-age=0';
     setIsProfileOpen(false);
+    showToast('success', t.logoutSuccess, t.logoutSuccessDesc);
+    // Redirect to login page
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 300);
   };
 
   const t = {
@@ -60,6 +83,9 @@ export default function Navbar({ lang }: { lang: string }) {
     logoutSuccessDesc: 'You have been logged out successfully.'
   };
 
+  // Hide navbar on login page
+  if (pathname === '/login') return null;
+
   return (
     <nav className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,8 +93,8 @@ export default function Navbar({ lang }: { lang: string }) {
           <div className="flex w-full sm:w-auto">
             {/* Logo */}
             <div className="shrink-0 flex items-center">
-              <Link href="/dashboard" className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary-DEFAULT hover:text-primary-hover transition-colors flex items-center">
-                <svg className="w-8 h-8 mr-3 text-primary-DEFAULT" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <Link href="/dashboard" className="text-2xl sm:text-3xl font-extrabold tracking-tight text-pink-600 hover:text-pink-500 transition-colors flex items-center">
+                <svg className="w-8 h-8 mr-3 text-pink-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" />
                   <line x1="8" y1="21" x2="16" y2="21" strokeLinecap="round" strokeLinejoin="round" />
                   <line x1="12" y1="17" x2="12" y2="21" strokeLinecap="round" strokeLinejoin="round" />
@@ -83,7 +109,7 @@ export default function Navbar({ lang }: { lang: string }) {
                 href="/dashboard"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
                   isActive('/dashboard')
-                    ? 'border-primary-DEFAULT text-gray-900 dark:text-white'
+                    ? 'border-pink-300 text-gray-900 dark:text-white'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
@@ -93,7 +119,7 @@ export default function Navbar({ lang }: { lang: string }) {
                 href="/products"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
                   isActive('/products')
-                    ? 'border-primary-DEFAULT text-gray-900 dark:text-white'
+                    ? 'border-pink-300 text-gray-900 dark:text-white'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
@@ -103,7 +129,7 @@ export default function Navbar({ lang }: { lang: string }) {
                 href="/configurators"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
                   isActive('/configurators')
-                    ? 'border-primary-DEFAULT text-gray-900 dark:text-white'
+                    ? 'border-pink-300 text-gray-900 dark:text-white'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
@@ -137,26 +163,28 @@ export default function Navbar({ lang }: { lang: string }) {
               )}
             </button>
 
-            {/* Profile Dropdown Mock */}
-            <div 
-              className="relative"
-              onMouseLeave={() => setIsProfileOpen(false)}
-            >
+            {/* Profile Dropdown - Click-based */}
+            <div ref={profileRef} className="relative">
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none"
+                className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-surface2"
               >
+                <div className="w-7 h-7 rounded-full bg-primary-DEFAULT/20 text-primary-DEFAULT flex items-center justify-center mr-2 text-xs font-bold">A</div>
                 <div>{t.adminUser}</div>
-                <svg className={`ml-1 -mr-0.5 h-4 w-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                <svg className={`ml-1.5 h-4 w-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
 
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white dark:bg-dark-surface border border-gray-150 dark:border-dark-border py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border py-1 z-50" style={{ animation: 'fadeInDown 0.15s ease-out' }}>
+                  <div className="px-4 py-2.5 border-b border-gray-100 dark:border-dark-border">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{t.adminUser}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">admin@dynamicdata.com</p>
+                  </div>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-700 dark:hover:text-red-400 transition-colors flex items-center gap-2"
+                    className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-700 dark:hover:text-red-400 transition-colors flex items-center gap-2 cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -199,7 +227,7 @@ export default function Navbar({ lang }: { lang: string }) {
               onClick={() => setIsOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
                 isActive('/dashboard')
-                  ? 'border-primary-DEFAULT bg-primary-soft text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT'
+                  ? 'border-pink-300 bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-300'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
@@ -210,7 +238,7 @@ export default function Navbar({ lang }: { lang: string }) {
               onClick={() => setIsOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
                 isActive('/products')
-                  ? 'border-primary-DEFAULT bg-primary-soft text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT'
+                  ? 'border-pink-300 bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-300'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
@@ -221,7 +249,7 @@ export default function Navbar({ lang }: { lang: string }) {
               onClick={() => setIsOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
                 isActive('/configurators')
-                  ? 'border-primary-DEFAULT bg-primary-soft text-primary-active dark:bg-primary-darkSoft dark:text-primary-DEFAULT'
+                  ? 'border-pink-300 bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-300'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
             >
