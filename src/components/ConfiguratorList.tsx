@@ -68,7 +68,7 @@ export default function ConfiguratorList({
       try {
         await deleteConfigurator(id);
         showToast('success', 'Deleted', 'Configurator deleted successfully.');
-        router.refresh();
+        setConfigurators((prev) => prev.filter((c) => c.id !== id));
       } catch (err: any) {
         showToast('error', 'Error', err.message || 'Failed to delete configurator.');
       }
