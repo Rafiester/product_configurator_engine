@@ -34,7 +34,7 @@ Ensure you have the following installed:
    ```
    Provide your Supabase connection strings inside the `.env` file:
    ```ini
-    DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&connect_timeout=30"
+    DATABASE_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=10&connect_timeout=30"
     DIRECT_URL="postgresql://postgres.[REF]:[PASS]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
    ```
 4. Generate the Prisma database client:
