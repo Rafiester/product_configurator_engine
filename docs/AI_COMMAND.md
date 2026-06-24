@@ -1,231 +1,194 @@
-# Configurator Table Layout & Scroll Improvements
+# Fix Missing Nested Horizontal Scroll Inside Configurator Builder Table
 
-## Objective
-Improve the Configurator Builder table usability and visual consistency without changing any business logic, calculations, CRUD operations, save functionality, import/export functionality, or existing configurator behavior.
+## Current Problem
+
+The Dynamic PC Builder table is wider than the card container.
+
+However:
+
+- Table width expands the card/container.
+- No horizontal scrollbar appears.
+- Right-most columns become inaccessible.
+- User cannot scroll inside the builder section.
+
+This means overflow is happening at the wrong container level.
 
 ---
 
-## Layout Improvements
+## Required Behavior
 
-### 1. Horizontal Table Scroll
-The table is currently being cut off on smaller viewports and some columns become inaccessible.
+The Configurator Card should remain fixed width.
 
-Implement:
+The Builder Table should become horizontally scrollable inside the card.
 
-- Wrap the entire builder table inside a horizontal scroll container.
-- Allow horizontal scrolling when table width exceeds available card width.
-- Do NOT shrink columns aggressively.
-- Preserve current column widths.
+User must be able to:
+
+- Scroll left/right inside table area
+- Access SRP
+- Access Margin
+- Access Margin %
+- Access Grand Total columns
+
+without expanding the card width.
+
+---
+
+## Correct Structure
+
+Use:
+
+```tsx
+<Card>
+
+  <ConfiguratorHeader />
+
+  <div className="builder-table-wrapper">
+      <div className="builder-scroll-container">
+          <table>
+              ...
+          </table>
+      </div>
+  </div>
+
+</Card>
+```
+
+---
+
+## Container Rules
+
+### Builder Wrapper
+
+```css
+.builder-table-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+```
+
+---
+
+### Scroll Container
+
+```css
+.builder-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scrollbar-width: thin;
+
+  -webkit-overflow-scrolling: touch;
+}
+```
+
+---
+
+### Table Width
+
+DO NOT use:
+
+```css
+width: 100%;
+```
+
+for the table.
+
+Instead use:
+
+```css
+min-width: 1500px;
+```
+
+or
+
+```css
+min-width: max-content;
+```
 
 Example:
 
 ```tsx
-<div className="overflow-x-auto">
-  <table className="min-w-[1400px] w-full">
-    ...
-  </table>
-</div>
+<table className="min-w-[1500px]">
 ```
 
-Requirements:
-
-- Desktop: table remains fully visible.
-- Smaller screens: horizontal scrolling appears automatically.
-- No content clipping.
-- No hidden columns.
-- Grand Total row must remain aligned with table columns.
+This forces the table to be wider than the card and activates horizontal scrolling.
 
 ---
 
-### 2. Match Card Content Padding
+## Important
 
-Current issue:
-The table starts closer to the card edge than the title/description section.
-
-Adjust spacing so table aligns perfectly with:
-
-- Configurator Title
-- Description
-- Status Badge
-- Summary Metrics
-
-Use consistent spacing:
+Remove any of these if present:
 
 ```css
-padding-left: 32px;
-padding-right: 32px;
+overflow-hidden
 ```
 
-Apply to:
+on:
 
-- Table header
-- Table body
-- Grand total section
-- Save button container
+- table container
+- builder section
+- card body
 
-Result:
-
-All content should visually align on the same vertical grid.
+because they block horizontal scrolling.
 
 ---
 
-### 3. Save Button Alignment
+## Grand Total Row
 
-Current issue:
-Save Configuration button alignment feels detached from table layout.
+Grand Total must remain inside the same scrollable table.
 
-Requirements:
+Do NOT separate it outside the table.
 
-- Keep button bottom-right.
-- Align button with table horizontal padding.
-- Match right edge of table content.
-- Maintain spacing below table.
-
-Suggested spacing:
-
-```css
-padding-top: 24px;
-padding-bottom: 32px;
-padding-right: 32px;
-```
+Otherwise alignment will break.
 
 ---
 
-## Save Button Visual Refresh
+## Scrollbar Styling
 
-Replace current styling with pastel pink SaaS design.
-
-### Dark Mode
-
-Background:
+Dark Mode:
 
 ```css
-#EC7FB6
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #131b2d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #EC7FB6;
+  border-radius: 999px;
+}
 ```
-
-Hover:
-
-```css
-#F090C1
-```
-
-Text:
-
-```css
-#FFFFFF
-```
-
-Shadow:
-
-```css
-0 8px 24px rgba(236,127,182,0.25)
-```
-
----
-
-### Light Mode
-
-Background:
-
-```css
-#EC7FB6
-```
-
-Text:
-
-```css
-#FFFFFF
-```
-
-Border:
-
-```css
-1px solid rgba(236,127,182,0.25)
-```
-
----
-
-### Button Specs
-
-```css
-height: 52px;
-padding-inline: 28px;
-border-radius: 14px;
-font-size: 15px;
-font-weight: 600;
-```
-
-Use same visual language as:
-
-- Collapse Builder button
-- Dashboard pastel pink accents
-- Success modal actions
-
----
-
-## Table Responsiveness
-
-Requirements:
-
-### Never allow:
-
-- Column clipping
-- Text overlapping
-- Grand Total misalignment
-- Margin % column being cut off
-
-### Always allow:
-
-- Horizontal scroll
-- Full table visibility
-- Consistent spacing
-- Proper column alignment
-
----
-
-## Functional Safety Requirements
-
-DO NOT modify:
-
-- Configurator CRUD
-- Save Configuration logic
-- Product selection logic
-- Margin calculations
-- SDP calculations
-- Total SDP calculations
-- Page Price calculations
-- SRP calculations
-- Grand Total calculations
-- Import Product functionality
-- Export Product functionality
-- Dashboard widgets
-- Dark Mode toggle logic
-- Light Mode toggle logic
-
-This update is strictly UI/layout only.
 
 ---
 
 ## Acceptance Criteria
 
-✓ Entire table accessible without clipping
+✓ Card width stays fixed
 
-✓ Horizontal scrolling appears when required
+✓ Table does not stretch card
 
-✓ Margin % column always visible
+✓ Horizontal scrollbar visible
 
-✓ Table aligned with card title and description
+✓ User can scroll to SRP
 
-✓ Save button aligned with table content
+✓ User can scroll to Margin
 
-✓ Save button updated to pastel pink SaaS style
+✓ User can scroll to Margin %
 
-✓ Grand Total row remains correctly aligned
+✓ Grand Total remains aligned
 
-✓ Dark Mode preserved
+✓ Desktop works
 
-✓ Light Mode preserved
+✓ Mobile works
 
-✓ No changes to calculations or data persistence
+✓ No changes to calculations
 
-✓ Configurator save functionality remains fully operational
+✓ No changes to save functionality
+
+✓ No changes to CRUD operations
+
+This is a layout-only fix.

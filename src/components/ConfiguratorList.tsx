@@ -394,132 +394,149 @@ function ConfiguratorCard({
 
           {/* Desktop Builder Grid View */}
           <div className="hidden md:block px-6 md:px-8">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full min-w-[1400px] text-left border-collapse table-fixed whitespace-nowrap">
-                <thead className="bg-gray-50 dark:bg-gray-900">
-                  <tr>
-                    <th className="py-4 pl-0 pr-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
-                      Category
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
-                      Product
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
-                      Qty
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
-                      SDP
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                      Total SDP
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
-                      Page Price
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                      SRP
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                      Margin
-                    </th>
-                    <th className="py-4 pl-4 pr-0 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                      Margin %
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-dark-border bg-white dark:bg-dark-surface2">
-                  {rows.map((row) => (
-                    <tr
-                      key={row.category}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      <td className="py-3 pl-0 pr-4 font-medium text-gray-900 dark:text-gray-100 truncate">
-                        {row.category}
-                      </td>
-                      <td className="py-3 px-4">
-                        <select
-                          value={row.productId}
-                          onChange={(e) => onProductChange(row.category, e.target.value)}
-                          className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
+            
+            {/* Custom Scrollbar Styles */}
+            <style dangerouslySetInnerHTML={{ __html: `
+              .builder-scroll-container::-webkit-scrollbar {
+                height: 8px;
+              }
+              .dark .builder-scroll-container::-webkit-scrollbar-track {
+                background: #131b2d;
+              }
+              .dark .builder-scroll-container::-webkit-scrollbar-thumb {
+                background: #EC7FB6;
+                border-radius: 999px;
+              }
+            `}} />
+
+            <div className="w-full overflow-hidden builder-table-wrapper">
+              <div className="w-full overflow-x-auto overflow-y-hidden [scrollbar-width:thin] touch-pan-x builder-scroll-container">
+                <table className="min-w-[1500px] text-left border-collapse table-fixed whitespace-nowrap">
+                  <thead className="bg-gray-50 dark:bg-gray-900">
+                    <tr>
+                      <th className="py-4 pl-0 pr-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
+                        Category
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
+                        Product
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
+                        Qty
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                        SDP
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                        Total SDP
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
+                        Page Price
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                        SRP
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                        Margin
+                      </th>
+                      <th className="py-4 pl-4 pr-0 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                        Margin %
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-dark-border bg-white dark:bg-dark-surface2">
+                    {rows.map((row) => (
+                      <tr
+                        key={row.category}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <td className="py-3 pl-0 pr-4 font-medium text-gray-900 dark:text-gray-100 truncate">
+                          {row.category}
+                        </td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={row.productId}
+                            onChange={(e) => onProductChange(row.category, e.target.value)}
+                            className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
+                          >
+                            <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
+                            {(productsByCategory[row.category] || []).map((p) => (
+                              <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
+                                {p.name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <input
+                            type="number"
+                            min="1"
+                            disabled={!row.productId}
+                            value={row.qty}
+                            onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
+                            className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
+                          />
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                          {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
+                          {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                          {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                          {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
+                        </td>
+                        <td
+                          className={`py-3 px-4 text-right tabular-nums ${marginClass(
+                            row.pagePrice - row.sdp * row.qty
+                          )}`}
                         >
-                          <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
-                          {(productsByCategory[row.category] || []).map((p) => (
-                            <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
-                              {p.name}
-                            </option>
-                          ))}
-                        </select>
+                          {row.productId
+                            ? `RM ${(row.pagePrice - row.sdp * row.qty).toFixed(2)}`
+                            : '-'}
+                        </td>
+                        <td
+                          className={`py-3 pl-4 pr-0 text-right tabular-nums ${marginClass(
+                            row.pagePrice - row.sdp * row.qty
+                          )}`}
+                        >
+                          {row.productId
+                            ? row.pagePrice > 0
+                              ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(
+                                  2
+                                )}%`
+                              : '0.00%'
+                            : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
+                    <tr>
+                      <td colSpan={4} className="py-4 pl-0 pr-4 text-right text-gray-900 dark:text-gray-100">
+                        GRAND TOTAL:
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <input
-                          type="number"
-                          min="1"
-                          disabled={!row.productId}
-                          value={row.qty}
-                          onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
-                          className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
-                        />
+                      <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                        RM {totals.sdpSum.toFixed(2)}
                       </td>
-                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                        {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
+                      <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                        RM {totals.pageSum.toFixed(2)}
                       </td>
-                      <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
-                        {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
+                      <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                        RM {totals.srpSum.toFixed(2)}
                       </td>
-                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                        {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
+                      <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                        RM {totals.marginSum.toFixed(2)}
                       </td>
-                      <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
-                        {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
-                      </td>
-                      <td
-                        className={`py-3 px-4 text-right tabular-nums ${marginClass(
-                          row.pagePrice - row.sdp * row.qty
-                        )}`}
-                      >
-                        {row.productId
-                          ? `RM ${(row.pagePrice - row.sdp * row.qty).toFixed(2)}`
-                          : '-'}
-                      </td>
-                      <td
-                        className={`py-3 pl-4 pr-0 text-right tabular-nums ${marginClass(
-                          row.pagePrice - row.sdp * row.qty
-                        )}`}
-                      >
-                        {row.productId
-                          ? row.pagePrice > 0
-                            ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(
-                                2
-                              )}%`
-                            : '0.00%'
-                          : '-'}
+                      <td className={`py-4 pl-4 pr-0 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                        {totals.marginPercent.toFixed(2)}%
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-                <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
-                  <tr>
-                    <td colSpan={4} className="py-4 pl-0 pr-4 text-right text-gray-900 dark:text-gray-100">
-                      GRAND TOTAL:
-                    </td>
-                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                      RM {totals.sdpSum.toFixed(2)}
-                    </td>
-                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                      RM {totals.pageSum.toFixed(2)}
-                    </td>
-                    <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                      RM {totals.srpSum.toFixed(2)}
-                    </td>
-                    <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
-                      RM {totals.marginSum.toFixed(2)}
-                    </td>
-                    <td className={`py-4 pl-4 pr-0 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
-                      {totals.marginPercent.toFixed(2)}%
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
+                  </tfoot>
+                </table>
+              </div>
             </div>
 
             <div className="pt-6 pb-8 flex justify-end">
