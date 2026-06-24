@@ -400,12 +400,24 @@ function ConfiguratorCard({
               .builder-scroll-container::-webkit-scrollbar {
                 height: 8px;
               }
-              .dark .builder-scroll-container::-webkit-scrollbar-track {
+              .builder-scroll-container::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .builder-scroll-container::-webkit-scrollbar-thumb {
+                background: transparent;
+                border-radius: 999px;
+              }
+              .builder-table-wrapper:hover .builder-scroll-container::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0.03);
+              }
+              .builder-table-wrapper:hover .builder-scroll-container::-webkit-scrollbar-thumb {
+                background: rgba(236, 127, 182, 0.4);
+              }
+              .dark .builder-table-wrapper:hover .builder-scroll-container::-webkit-scrollbar-track {
                 background: #131b2d;
               }
-              .dark .builder-scroll-container::-webkit-scrollbar-thumb {
+              .dark .builder-table-wrapper:hover .builder-scroll-container::-webkit-scrollbar-thumb {
                 background: #EC7FB6;
-                border-radius: 999px;
               }
             `}} />
 
