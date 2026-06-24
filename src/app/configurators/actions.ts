@@ -20,13 +20,12 @@ export async function createConfigurator(formData: FormData) {
     const config = await prisma.configurator.create({ data });
 
     trace('CREATE_SUCCESS', { id: config.id });
+    revalidatePath('/configurators');
+    return { success: true, id: config.id };
   } catch (error: any) {
     trace('CREATE_FAILED', { error: error.message });
-    throw error;
+    return { success: false, error: error.message };
   }
-  
-  revalidatePath('/configurators');
-  redirect('/configurators');
 }
 
 export async function updateConfigurator(id: string, formData: FormData) {
@@ -44,13 +43,12 @@ export async function updateConfigurator(id: string, formData: FormData) {
     });
 
     trace('UPDATE_SUCCESS', { id });
+    revalidatePath('/configurators');
+    return { success: true };
   } catch (error: any) {
     trace('UPDATE_FAILED', { id, error: error.message });
-    throw error;
+    return { success: false, error: error.message };
   }
-  
-  revalidatePath('/configurators');
-  redirect('/configurators');
 }
 
 export async function deleteConfigurator(id: string) {
