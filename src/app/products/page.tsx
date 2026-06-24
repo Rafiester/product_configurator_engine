@@ -8,11 +8,13 @@ export const dynamic = 'force-dynamic';
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { search?: string; category?: string; status?: string }
+  searchParams: { search?: string; category?: string; status?: string; page?: string }
 }) {
   const search = searchParams.search || '';
   const category = searchParams.category || '';
   const status = searchParams.status || '';
+  const page = parseInt(searchParams.page || '1', 10) || 1;
+  const perPage = 10;
 
   // Query conditions
   const where: any = { deletedAt: null };
@@ -34,11 +36,30 @@ export default async function ProductsPage({
   });
   const categories = categoriesRaw.map(c => c.category).filter(Boolean).sort();
 
-  // Fetch filtered products
+  // Count total filtered products
+  const totalItems = await prisma.product.count({ where });
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  // Fetch filtered products with skip & take limit
   const products = await prisma.product.findMany({
     where,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
+    skip: (page - 1) * perPage,
+    take: perPage
   });
+
+  const startIdx = totalItems > 0 ? (page - 1) * perPage + 1 : 0;
+  const endIdx = Math.min(page * perPage, totalItems);
+
+  // Pagination URL helper
+  const buildPageUrl = (targetPage: number) => {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (category) params.set('category', category);
+    if (status) params.set('status', status);
+    params.set('page', targetPage.toString());
+    return `/products?${params.toString()}`;
+  };
 
   return (
     <div className="py-12">
@@ -132,7 +153,7 @@ export default async function ProductsPage({
                     const totalSdp = p.qty * Number(p.sdp);
                     return (
                       <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">{idx + 1}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">{startIdx + idx}</td>
                         <td className="px-4 py-4 max-w-[300px] truncate text-sm font-medium text-gray-900 dark:text-gray-100" title={p.name}>{p.name}</td>
                         <td className="px-4 py-4 whitespace-nowrap"><span className="px-3 py-1 inline-flex text-xs font-medium rounded-full bg-primary-soft dark:bg-primary-darkSoft text-primary-active dark:text-primary-dark">{p.category}</span></td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 text-center tabular-nums">{p.qty}</td>
@@ -162,6 +183,113 @@ export default async function ProductsPage({
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Footer */}
+          {totalPages > 1 && (
+            <div className="bg-gray-50 dark:bg-dark-surface2 px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-dark-border">
+              <div className="flex-1 flex justify-between sm:hidden">
+                {page > 1 ? (
+                  <Link
+                    href={buildPageUrl(page - 1)}
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-dark-border text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-surface2 transition-colors"
+                  >
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-dark-border text-sm font-medium rounded-lg text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-dark-surface2 cursor-not-allowed">
+                    Previous
+                  </span>
+                )}
+                {page < totalPages ? (
+                  <Link
+                    href={buildPageUrl(page + 1)}
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-dark-border text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-surface2 transition-colors"
+                  >
+                    Next
+                  </Link>
+                ) : (
+                  <span className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-dark-border text-sm font-medium rounded-lg text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-dark-surface2 cursor-not-allowed">
+                    Next
+                  </span>
+                )}
+              </div>
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-450">
+                    Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{startIdx}</span> to{' '}
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{endIdx}</span> of{' '}
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">{totalItems}</span> products
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px" aria-label="Pagination">
+                    {/* Previous Button */}
+                    {page > 1 ? (
+                      <Link
+                        href={buildPageUrl(page - 1)}
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-lg border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-surface text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2 transition-colors"
+                      >
+                        <span className="sr-only">Previous</span>
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </Link>
+                    ) : (
+                      <span className="relative inline-flex items-center px-2 py-2 rounded-l-lg border border-gray-300 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                        <span className="sr-only">Previous</span>
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </span>
+                    )}
+
+                    {/* Page Numbers */}
+                    {Array.from({ length: totalPages }).map((_, i) => {
+                      const pageNum = i + 1;
+                      const isCurrent = pageNum === page;
+                      return isCurrent ? (
+                        <span
+                          key={pageNum}
+                          aria-current="page"
+                          className="z-10 bg-primary-soft dark:bg-primary-darkSoft border-primary-border text-primary-active dark:text-primary-DEFAULT relative inline-flex items-center px-4 py-2 border text-sm font-semibold"
+                        >
+                          {pageNum}
+                        </span>
+                      ) : (
+                        <Link
+                          key={pageNum}
+                          href={buildPageUrl(pageNum)}
+                          className="bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2 relative inline-flex items-center px-4 py-2 text-sm font-medium transition-colors"
+                        >
+                          {pageNum}
+                        </Link>
+                      );
+                    })}
+
+                    {/* Next Button */}
+                    {page < totalPages ? (
+                      <Link
+                        href={buildPageUrl(page + 1)}
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-lg border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-surface text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2 transition-colors"
+                      >
+                        <span className="sr-only">Next</span>
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    ) : (
+                      <span className="relative inline-flex items-center px-2 py-2 rounded-r-lg border border-gray-300 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                        <span className="sr-only">Next</span>
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    )}
+                  </nav>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
