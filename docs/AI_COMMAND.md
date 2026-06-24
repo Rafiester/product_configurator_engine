@@ -1,132 +1,158 @@
-# Configurator Card Polish (Final SaaS Layout Refinement)
+# Configurator Layout Alignment & CTA Refinement
 
-The configurator card is already close to the desired design. Apply ONLY the following UI refinements.
+The configurator card is almost finished.
 
-## Header Section
-
-### Action Buttons
-Current action buttons (Edit, Delete, Expand/Collapse Builder) feel too small and too far apart.
-
-Adjust:
-
-- Increase button height by ~10-15%
-- Increase horizontal padding
-- Increase font size slightly
-- Reduce gap between buttons
-- Keep all 3 buttons aligned on a single row
-- Maintain pastel pink accent styling
-- Preserve dark/light mode support
-
-Desired visual hierarchy:
-
-[ Edit ] [ Delete ] [ Expand Builder ]
-
-Compact but premium SaaS appearance.
+Apply the following visual alignment improvements only.
 
 ---
 
-## Remove Builder Title
+## 1. Table Horizontal Alignment
 
-Delete:
+Currently the table starts too close to the card edges.
 
-"Dynamic PC Builder"
+The table should align perfectly with the content above.
 
-from the expanded section.
+Use the same left/right gutter spacing as:
 
-The spreadsheet/table itself already communicates the builder context.
-
-No replacement title needed.
-
----
-
-## Table Alignment
-
-Currently the table starts too close to the card edges and does not visually align with the content above.
-
-Adjust:
-
-- Add left padding to table container
-- Add right padding to table container
-- Table content should align vertically with:
-  - Configurator title
-  - Description text
-  - Status badge
-  - Metrics row
-
-Use approximately:
-
-padding-left: 24px–32px
-padding-right: 24px–32px
-
-The table should feel like it belongs inside the same card layout.
-
----
-
-## Table Breathing Space
-
-Improve spacing inside the spreadsheet section.
-
-Adjust:
-
-### Header Row
-
-Increase vertical padding:
-
-- Category
-- Product
-- Qty
-- SDP
-- Total SDP
-- Page Price
-- SRP
-- Margin
-- Margin %
-
-Need better readability.
-
----
-
-### Data Rows
-
-Increase row height slightly.
+- Configurator title
+- Description
+- Status badge
+- Metrics row
 
 Target:
 
-- More breathing room
-- Cleaner SaaS dashboard appearance
-- No cramped spreadsheet feeling
+Card Content Padding:
+- Left: 32px
+- Right: 32px
 
-Do NOT make rows excessively tall.
+Apply the same spacing to:
 
----
+- Table header
+- Table body
+- Grand Total row
+- Save Configuration section
 
-## Grand Total Section
-
-Keep current structure.
-
-Only:
-
-- Align with table padding
-- Match left/right spacing of table
-- Preserve current calculations
-- Preserve current styling
+Everything should sit on the same vertical grid.
 
 ---
 
-## Important Constraints
+## 2. Symmetrical Table Layout
 
-DO NOT modify:
+Current table feels stretched edge-to-edge.
 
-- Configurator CRUD logic
-- Save Configuration logic
-- Product selection logic
-- Margin calculations
-- Grand Total calculations
-- Database schema
-- API endpoints
-- Expand/Collapse functionality
-
-This task is UI spacing and visual polish only.
+Add proper internal container padding.
 
 Goal:
-Create a cleaner premium SaaS configurator card with better alignment, larger action buttons, improved spacing, and a more polished professional appearance.
+
+Title
+Description
+Metrics
+Table
+Grand Total
+Save Button
+
+must all share the exact same horizontal alignment.
+
+No element should extend further left or right than the others.
+
+---
+
+## 3. Save Configuration Button Redesign
+
+Current button styling does not match the SaaS theme.
+
+Update Save Configuration button to use the same design language as:
+
+- Collapse Builder button
+- Edit button
+
+Style:
+
+Background:
+Pastel Pink Accent
+
+Examples:
+#EC7AB7
+#E97DB8
+
+Text:
+White
+
+Font Weight:
+600
+
+Border Radius:
+12px
+
+Height:
+44-48px
+
+Padding:
+16px 24px
+
+Hover:
+Slight brightness increase only
+
+No blue tones.
+
+---
+
+## 4. Save Button Alignment
+
+Align Save Configuration button with the table content width.
+
+Current position feels detached from the spreadsheet.
+
+Requirements:
+
+- Keep button on bottom-right
+- Respect same right gutter used by table
+- Align with Margin % column edge
+- Align with header content grid
+
+Visual result should feel intentional.
+
+---
+
+## 5. Grand Total Row Alignment
+
+Grand Total row must use the same left/right spacing as table content.
+
+No columns should feel cramped against edges.
+
+Especially:
+
+- Margin
+- Margin %
+- Grand Total values
+
+Need additional breathing room.
+
+---
+
+## 6. Do Not Change
+
+DO NOT TOUCH:
+
+- Save functionality
+- CRUD functionality
+- Configurator logic
+- Margin calculations
+- Product selection
+- Database structure
+- Expand / Collapse behavior
+- Responsive behavior
+
+UI alignment and styling only.
+
+Goal:
+
+Create a polished SaaS-grade configurator where:
+
+- Title section
+- Metrics section
+- Table section
+- Grand Total section
+- Save button
+
+all align on a consistent visual grid with premium spacing and pastel pink accent styling.
