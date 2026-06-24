@@ -133,7 +133,7 @@ function ConfiguratorCard({
         if (!found) {
           productsByCategory[cat].push({
             id: existing.productId,
-            name: `${existing.product.name} (Inactive)`,
+            name: `${existing.product.name} (Unpublished)`,
             sdp: Number(existing.sdp),
             page_price: Number(existing.pagePrice),
             srp: Number(existing.srp),
@@ -326,7 +326,7 @@ function ConfiguratorCard({
                 <span className={`w-1.5 h-1.5 rounded-full ${
                   configurator.status === 'active' ? 'bg-[#F472B6] animate-pulse' : 'bg-gray-400'
                 }`} />
-                {configurator.status === 'active' ? 'Active' : 'Inactive'}
+                {configurator.status === 'active' ? 'Publish' : 'Unpublish'}
               </span>
             </div>
             

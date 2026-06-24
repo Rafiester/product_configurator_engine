@@ -274,7 +274,7 @@ export default async function DashboardPage() {
             </div>
             <div className="mt-4">
               <h3 className="text-3xl font-extrabold tracking-tight">{totalProducts}</h3>
-              <p className="text-xs dashboard-text-muted mt-1">Active items in catalog</p>
+              <p className="text-xs dashboard-text-muted mt-1">Published items in catalog</p>
             </div>
           </div>
 
@@ -290,7 +290,7 @@ export default async function DashboardPage() {
               <h3 className="text-3xl font-extrabold tracking-tight">{totalConfigurators}</h3>
               <p className="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                {activeConfigurators} Active Builds
+                {activeConfigurators} Published Builds
               </p>
             </div>
           </div>
@@ -469,7 +469,7 @@ export default async function DashboardPage() {
                           ? 'bg-green-150 text-green-800 dark:bg-green-950/30 dark:text-green-450'
                           : 'bg-gray-150 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
                       }`}>
-                        {c.status}
+                        {c.status === 'active' ? 'Publish' : 'Unpublish'}
                       </span>
                     </div>
                   </div>

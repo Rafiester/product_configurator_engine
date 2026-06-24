@@ -278,9 +278,9 @@ export default function ProductForm({
                         </div>
                         <div className="text-xs text-gray-600 dark:text-gray-400">
                           {configurator.status === 'active' ? (
-                            <span className="text-green-600 dark:text-green-400">Active Builder</span>
+                            <span className="text-green-600 dark:text-green-400">Publish</span>
                           ) : (
-                            <span className="text-red-500 dark:text-red-400">Inactive</span>
+                            <span className="text-red-500 dark:text-red-400">Unpublish</span>
                           )}
                         </div>
                       </div>
@@ -337,7 +337,7 @@ export default function ProductForm({
             </div>
             <div className="p-5 space-y-4">
               <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-dark-border">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Active Deployments</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Published Deployments</span>
                 <span className="font-semibold text-gray-900 dark:text-gray-100">
                   {enabledCount} {enabledCount === 1 ? 'Configurator' : 'Configurators'}
                 </span>

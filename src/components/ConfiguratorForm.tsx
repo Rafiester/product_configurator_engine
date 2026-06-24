@@ -80,8 +80,8 @@ export default function ConfiguratorForm({
             defaultValue={initialData?.status || 'active'}
             className="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT sm:text-sm"
           >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="active">Publish</option>
+            <option value="inactive">Unpublish</option>
           </select>
         </div>
       </div>
