@@ -394,8 +394,8 @@ function ConfiguratorCard({
 
           {/* Desktop Builder Grid View */}
           <div className="hidden md:block px-6 md:px-8">
-            <div className="w-full overflow-x-auto scrollbar-hide">
-              <table className="w-full min-w-full text-left border-collapse table-fixed whitespace-nowrap">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full min-w-[1400px] text-left border-collapse table-fixed whitespace-nowrap">
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="py-4 pl-0 pr-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
@@ -522,12 +522,12 @@ function ConfiguratorCard({
               </table>
             </div>
 
-            <div className="mt-4 flex justify-end">
-              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-2xl inline-block">
+            <div className="pt-6 pb-8 flex justify-end">
+              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-[18px] inline-block">
                 <button
                   onClick={saveConfiguration}
                   disabled={isSaving}
-                  className="inline-flex items-center justify-center h-11 px-6 bg-[#EC7AB7] hover:brightness-105 active:opacity-95 text-white font-semibold rounded-xl shadow-sm text-sm transition-all duration-200 disabled:opacity-50 gap-2"
+                  className="inline-flex items-center justify-center h-[52px] px-[28px] bg-[#EC7FB6] hover:bg-[#F090C1] text-white font-semibold rounded-[14px] shadow-[0_8px_24px_rgba(236,127,182,0.25)] border border-[rgba(236,127,182,0.25)] text-[15px] transition-all duration-200 disabled:opacity-50 gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -642,12 +642,12 @@ function ConfiguratorCard({
             </div>
 
             {/* Mobile Save Button */}
-            <div className="mt-4 flex justify-stretch w-full">
-              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-2xl inline-block w-full">
+            <div className="mt-4 flex justify-stretch w-full pb-8">
+              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-[18px] inline-block w-full">
                 <button
                   onClick={saveConfiguration}
                   disabled={isSaving}
-                  className="inline-flex items-center justify-center h-11 w-full bg-[#EC7AB7] hover:brightness-105 active:opacity-95 text-white font-semibold rounded-xl shadow-sm text-sm transition-all duration-200 disabled:opacity-50 gap-2"
+                  className="inline-flex items-center justify-center h-[52px] w-full bg-[#EC7FB6] hover:bg-[#F090C1] text-white font-semibold rounded-[14px] shadow-[0_8px_24px_rgba(236,127,182,0.25)] border border-[rgba(236,127,182,0.25)] text-[15px] transition-all duration-200 disabled:opacity-50 gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
