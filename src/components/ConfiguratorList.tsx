@@ -285,7 +285,7 @@ function ConfiguratorCard({
           <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
             <Link
               href={`/configurators/${configurator.id}/edit`}
-              className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black font-semibold rounded-md shadow-sm text-xs transition-colors"
+              className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors"
             >
               Edit Details
             </Link>
@@ -303,7 +303,7 @@ function ConfiguratorCard({
           <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black font-semibold py-2 px-4 rounded-lg shadow-sm flex items-center space-x-2 transition-colors"
+              className="bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2 px-4 rounded-lg shadow-sm flex items-center space-x-2 transition-colors"
             >
               <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
               {expanded ? (
@@ -460,7 +460,7 @@ function ConfiguratorCard({
               <button
                 onClick={saveConfiguration}
                 disabled={isSaving}
-                className="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2 transition-colors disabled:opacity-50"
+                className="bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2 px-8 rounded-lg shadow-sm flex items-center space-x-2 transition-colors disabled:opacity-50"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

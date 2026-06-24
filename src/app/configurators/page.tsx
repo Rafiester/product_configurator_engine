@@ -85,7 +85,7 @@ export default async function ConfiguratorsPage() {
           <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
             <Link 
               href="/configurators/create" 
-              className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors"
+              className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />

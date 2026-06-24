@@ -67,7 +67,7 @@ export default function ConfirmModal({ isOpen, options, onClose }: ConfirmModalP
               className={`w-full inline-flex justify-center rounded-xl border border-transparent px-6 py-2.5 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm transition-colors ${
                 options.type === 'danger' 
                   ? 'bg-red-500 hover:bg-red-600 focus:ring-red-500' 
-                  : 'bg-primary-DEFAULT hover:bg-primary-hover focus:ring-primary-DEFAULT text-black dark:text-white'
+                  : 'bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT focus:ring-primary-DEFAULT text-black dark:text-white'
               }`}
             >
               {options.confirmText || 'Confirm'}

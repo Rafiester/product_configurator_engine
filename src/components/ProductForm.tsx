@@ -385,7 +385,7 @@ export default function ProductForm({
             </Link>
             <button
               type="submit"
-              className="w-full inline-flex justify-center items-center px-4 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-xl font-semibold text-black dark:text-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 transition-colors"
+              className="w-full inline-flex justify-center items-center px-4 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-xl font-semibold text-black dark:text-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 transition-colors"
             >
               {submitButtonText}
             </button>

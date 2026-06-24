@@ -56,13 +56,13 @@ export default async function ProductsPage({
           </div>
           <div className="flex items-center space-x-3">
             <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-              <a href="/api/products/export" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
+              <a href="/api/products/export" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
                 Download Master Data
               </a>
             </div>
             <ImportModal />
             <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-              <Link href="/products/create" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
+              <Link href="/products/create" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
                 Create New Product
               </Link>
             </div>
@@ -93,12 +93,12 @@ export default async function ProductsPage({
             </div>
             <div className="flex items-center space-x-3 flex-none ml-2">
               <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <button type="submit" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
+                <button type="submit" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
                   Filter
                 </button>
               </div>
               <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
-                <Link href="/products" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
+                <Link href="/products" className="inline-flex items-center justify-center px-6 py-2 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-lg shadow-sm sm:text-sm transition-colors">
                   Clear
                 </Link>
               </div>
@@ -148,7 +148,7 @@ export default async function ProductsPage({
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end gap-3">
                             <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
-                              <Link href={`/products/${p.id}/edit`} className="inline-flex items-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black font-semibold rounded-md text-xs transition-colors">Edit</Link>
+                              <Link href={`/products/${p.id}/edit`} className="inline-flex items-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md text-xs transition-colors">Edit</Link>
                             </div>
                             <div className="p-1 bg-red-100 dark:bg-red-900/30 rounded-lg inline-block">
                               <DeleteButton id={p.id} />

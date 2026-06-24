@@ -94,7 +94,7 @@ export default function ConfiguratorForm({
           <button 
             type="submit" 
             disabled={isPending}
-            className="bg-primary-DEFAULT hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2.5 px-8 rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 disabled:opacity-50"
+            className="bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2.5 px-8 rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 disabled:opacity-50"
           >
             {isPending ? 'Saving...' : submitButtonText}
           </button>
