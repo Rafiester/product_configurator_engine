@@ -287,7 +287,7 @@ function ConfiguratorCard({
               href={`/configurators/${configurator.id}/edit`}
               className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors"
             >
-              Edit Details
+              Edit
             </Link>
           </div>
 
@@ -300,18 +300,18 @@ function ConfiguratorCard({
             </button>
           </div>
 
-          <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
+          <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-lg inline-block">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2 px-4 rounded-lg shadow-sm flex items-center space-x-2 transition-colors"
+              className="inline-flex items-center justify-center px-4 py-1.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold rounded-md shadow-sm text-xs transition-colors space-x-2"
             >
               <span>{expanded ? 'Collapse Builder' : 'Expand Builder'}</span>
               {expanded ? (
-                <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               )}
