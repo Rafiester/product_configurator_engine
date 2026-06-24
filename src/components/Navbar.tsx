@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { useUI } from './ToastProvider';
 
 export default function Navbar({ lang }: { lang: string }) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { showToast } = useUI();
 
   useEffect(() => {
     setMounted(true);
@@ -23,24 +26,38 @@ export default function Navbar({ lang }: { lang: string }) {
     window.location.reload();
   };
 
+  const handleLogout = () => {
+    showToast('success', t.logoutSuccess, t.logoutSuccessDesc);
+    setIsProfileOpen(false);
+  };
+
   const t = {
     en: {
       dashboard: 'Dashboard',
       masterData: 'Master Data',
       configurator: 'Configurator',
-      adminUser: 'Admin User'
+      adminUser: 'Admin User',
+      logout: 'Logout',
+      logoutSuccess: 'Logged Out',
+      logoutSuccessDesc: 'You have been logged out successfully.'
     },
     id: {
       dashboard: 'Dasbor',
       masterData: 'Data Master',
       configurator: 'Konfigurator',
-      adminUser: 'Pengguna Admin'
+      adminUser: 'Pengguna Admin',
+      logout: 'Keluar',
+      logoutSuccess: 'Berhasil Keluar',
+      logoutSuccessDesc: 'Anda telah berhasil keluar.'
     }
   }[lang as 'en' | 'id'] || {
     dashboard: 'Dashboard',
     masterData: 'Master Data',
     configurator: 'Configurator',
-    adminUser: 'Admin User'
+    adminUser: 'Admin User',
+    logout: 'Logout',
+    logoutSuccess: 'Logged Out',
+    logoutSuccessDesc: 'You have been logged out successfully.'
   };
 
   return (
@@ -121,11 +138,33 @@ export default function Navbar({ lang }: { lang: string }) {
             </button>
 
             {/* Profile Dropdown Mock */}
-            <div className="relative">
-              <button className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+            <div 
+              className="relative"
+              onMouseLeave={() => setIsProfileOpen(false)}
+            >
+              <button 
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none"
+              >
                 <div>{t.adminUser}</div>
-                <svg className="ml-1 -mr-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                <svg className={`ml-1 -mr-0.5 h-4 w-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </button>
+
+              {isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white dark:bg-dark-surface border border-gray-150 dark:border-dark-border py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-700 dark:hover:text-red-400 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>{t.logout}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -191,8 +230,20 @@ export default function Navbar({ lang }: { lang: string }) {
           </div>
           
           <div className="pt-4 pb-4 border-t border-gray-200 dark:border-dark-border px-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col items-start gap-1">
               <div className="text-sm font-semibold text-gray-900 dark:text-white">{t.adminUser}</div>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="text-xs font-bold text-red-500 hover:text-red-600 hover:underline flex items-center gap-1 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>{t.logout}</span>
+              </button>
             </div>
             <div className="flex items-center gap-2">
               {/* Language Toggle */}
