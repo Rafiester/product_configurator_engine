@@ -393,7 +393,7 @@ function ConfiguratorCard({
         <div className="border-t border-gray-200 dark:border-[#2A2F3A] pt-6 pb-4 transition-all duration-300">
 
           {/* Desktop Builder Grid View */}
-          <div className="hidden md:block px-6 md:px-8">
+          <div className="hidden md:block">
             
             {/* Custom Scrollbar Styles */}
             <style dangerouslySetInnerHTML={{ __html: `
@@ -414,7 +414,7 @@ function ConfiguratorCard({
                 <table className="min-w-[1500px] text-left border-collapse table-fixed whitespace-nowrap">
                   <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                      <th className="py-4 pl-0 pr-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
+                      <th className="py-4 pl-6 md:pl-8 pr-4 font-semibold text-left text-gray-600 dark:text-gray-300 w-36">
                         Category
                       </th>
                       <th className="py-4 px-4 font-semibold text-left text-gray-600 dark:text-gray-300">
@@ -438,7 +438,7 @@ function ConfiguratorCard({
                       <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         Margin
                       </th>
-                      <th className="py-4 pl-4 pr-0 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                      <th className="py-4 pl-4 pr-6 md:pr-8 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         Margin %
                       </th>
                     </tr>
@@ -449,7 +449,7 @@ function ConfiguratorCard({
                         key={row.category}
                         className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
-                        <td className="py-3 pl-0 pr-4 font-medium text-gray-900 dark:text-gray-100 truncate">
+                        <td className="py-3 pl-6 md:pl-8 pr-4 font-medium text-gray-900 dark:text-gray-100 truncate">
                           {row.category}
                         </td>
                         <td className="py-3 px-4">
@@ -498,7 +498,7 @@ function ConfiguratorCard({
                             : '-'}
                         </td>
                         <td
-                          className={`py-3 pl-4 pr-0 text-right tabular-nums ${marginClass(
+                          className={`py-3 pl-4 pr-6 md:pr-8 text-right tabular-nums ${marginClass(
                             row.pagePrice - row.sdp * row.qty
                           )}`}
                         >
@@ -515,7 +515,7 @@ function ConfiguratorCard({
                   </tbody>
                   <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
                     <tr>
-                      <td colSpan={4} className="py-4 pl-0 pr-4 text-right text-gray-900 dark:text-gray-100">
+                      <td colSpan={4} className="py-4 pl-6 md:pl-8 pr-4 text-right text-gray-900 dark:text-gray-100">
                         GRAND TOTAL:
                       </td>
                       <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
@@ -530,7 +530,7 @@ function ConfiguratorCard({
                       <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                         RM {totals.marginSum.toFixed(2)}
                       </td>
-                      <td className={`py-4 pl-4 pr-0 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                      <td className={`py-4 pl-4 pr-6 md:pr-8 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                         {totals.marginPercent.toFixed(2)}%
                       </td>
                     </tr>
@@ -539,7 +539,7 @@ function ConfiguratorCard({
               </div>
             </div>
 
-            <div className="pt-6 pb-8 flex justify-end">
+            <div className="pt-6 pb-8 px-6 md:px-8 flex justify-end">
               <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-[18px] inline-block">
                 <button
                   onClick={saveConfiguration}
