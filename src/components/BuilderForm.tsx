@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUI } from '@/components/ToastProvider';
 
-interface ConfiguratorFormProps {
+interface BuilderFormProps {
   initialData?: {
     name: string;
     status: string;
@@ -15,12 +15,12 @@ interface ConfiguratorFormProps {
   successMessage: string;
 }
 
-export default function ConfiguratorForm({
+export default function BuilderForm({
   initialData,
   action,
   submitButtonText,
   successMessage,
-}: ConfiguratorFormProps) {
+}: BuilderFormProps) {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
   const { showToast } = useUI();
@@ -34,10 +34,10 @@ export default function ConfiguratorForm({
       const res = await action(formData);
       if (res.success) {
         showToast('success', 'Success', successMessage);
-        router.push('/configurators');
+        router.push('/builders');
         router.refresh();
       } else {
-        showToast('error', 'Error', res.error || 'Failed to save configurator.');
+        showToast('error', 'Error', res.error || 'Failed to save builder.');
         setIsPending(false);
       }
     } catch (err: any) {
@@ -49,14 +49,14 @@ export default function ConfiguratorForm({
   return (
     <form onSubmit={handleSubmit} className="p-8">
       <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-6 pb-2 border-b border-gray-200 dark:border-dark-border">
-        Configurator Details
+        Builder Details
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Name */}
         <div>
           <label htmlFor="name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Configurator Name <span className="text-red-500">*</span>
+            Builder Name <span className="text-red-500">*</span>
           </label>
           <input 
             type="text" 
@@ -87,14 +87,14 @@ export default function ConfiguratorForm({
       </div>
 
       <div className="mt-10 flex items-center justify-end gap-6 border-t border-gray-200 dark:border-dark-border pt-6">
-        <Link href="/configurators" className="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+        <Link href="/builders" className="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
           Cancel
         </Link>
         <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block">
           <button 
             type="submit" 
             disabled={isPending}
-            className="bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active text-black dark:text-white font-semibold py-2.5 px-8 rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 disabled:opacity-50"
+            className="bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-hover active:bg-primary-active text-black dark:text-white font-semibold py-2.5 px-8 rounded-lg shadow-sm transition-colors focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 disabled:opacity-50"
           >
             {isPending ? 'Saving...' : submitButtonText}
           </button>

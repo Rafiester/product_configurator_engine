@@ -14,17 +14,23 @@ interface InitialConfigData {
 }
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
-  const [rawProduct, configurators] = await Promise.all([
+  const [rawProduct, builders, categoriesData] = await Promise.all([
     prisma.product.findUnique({
       where: { id: params.id, deletedAt: null },
       include: {
-        configurators: true
+        builders: true
       }
     }),
-    prisma.configurator.findMany({
+    prisma.builder.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.category.findMany({
+      where: { status: 'active' },
       orderBy: { name: 'asc' }
     })
   ]);
+
+  const categories = categoriesData.map(c => c.name);
 
   if (!rawProduct) {
     notFound();
@@ -43,8 +49,8 @@ export default async function EditProductPage({ params }: { params: { id: string
 
   // Prepare initial toggle data for checklist
   const initialConfigData: InitialConfigData = {};
-  rawProduct.configurators.forEach((mapping) => {
-    initialConfigData[mapping.configuratorId] = {
+  rawProduct.builders.forEach((mapping) => {
+    initialConfigData[mapping.builderId] = {
       enabled: true,
       qty: mapping.qty,
     };
@@ -82,7 +88,8 @@ export default async function EditProductPage({ params }: { params: { id: string
         {/* Form Container */}
         <ProductForm 
           product={product}
-          configurators={configurators}
+          builders={builders}
+          categories={categories}
           initialConfigData={initialConfigData}
           action={updateProductWithId}
           submitButtonText="Save Changes"

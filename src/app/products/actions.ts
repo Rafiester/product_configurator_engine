@@ -19,7 +19,7 @@ export async function createProduct(formData: FormData) {
     const srp = parseFloat(formData.get('srp') as string) || 0;
     const status = formData.get('status') as string || 'active';
 
-    const configuratorIds = formData.getAll('configurator_ids') as string[];
+    const builderIds = formData.getAll('builder_ids') as string[];
 
     trace('CREATE_ATTEMPT', { name });
 
@@ -36,15 +36,15 @@ export async function createProduct(formData: FormData) {
         }
       });
 
-      if (configuratorIds.length > 0) {
-        const mappings = configuratorIds.map(cid => {
-          const cQty = parseInt(formData.get(`configurator_qty_${cid}`) as string) || 1;
+      if (builderIds.length > 0) {
+        const mappings = builderIds.map(bid => {
+          const cQty = parseInt(formData.get(`builder_qty_${bid}`) as string) || 1;
           const totalSdp = sdp * cQty;
           const margin = pagePrice - totalSdp;
           const marginPercentage = pagePrice > 0 ? (margin / pagePrice) * 100 : 0;
 
           return {
-            configuratorId: cid,
+            builderId: bid,
             productId: p.id,
             category: p.category,
             qty: cQty,
@@ -57,7 +57,7 @@ export async function createProduct(formData: FormData) {
           };
         });
 
-        await tx.configuratorProductMapping.createMany({
+        await tx.builderProductMapping.createMany({
           data: mappings
         });
       }
@@ -85,7 +85,7 @@ export async function updateProduct(id: string, formData: FormData) {
     const srp = parseFloat(formData.get('srp') as string) || 0;
     const status = formData.get('status') as string || 'active';
 
-    const configuratorIds = formData.getAll('configurator_ids') as string[];
+    const builderIds = formData.getAll('builder_ids') as string[];
 
     trace('UPDATE_ATTEMPT', { id, name });
 
@@ -104,20 +104,20 @@ export async function updateProduct(id: string, formData: FormData) {
       });
 
       // Clear existing assignments
-      await tx.configuratorProductMapping.deleteMany({
+      await tx.builderProductMapping.deleteMany({
         where: { productId: id }
       });
 
       // Set new assignments
-      if (configuratorIds.length > 0) {
-        const mappings = configuratorIds.map(cid => {
-          const cQty = parseInt(formData.get(`configurator_qty_${cid}`) as string) || 1;
+      if (builderIds.length > 0) {
+        const mappings = builderIds.map(bid => {
+          const cQty = parseInt(formData.get(`builder_qty_${bid}`) as string) || 1;
           const totalSdp = sdp * cQty;
           const margin = pagePrice - totalSdp;
           const marginPercentage = pagePrice > 0 ? (margin / pagePrice) * 100 : 0;
 
           return {
-            configuratorId: cid,
+            builderId: bid,
             productId: id,
             category: category,
             qty: cQty,
@@ -130,7 +130,7 @@ export async function updateProduct(id: string, formData: FormData) {
           };
         });
 
-        await tx.configuratorProductMapping.createMany({
+        await tx.builderProductMapping.createMany({
           data: mappings
         });
       }

@@ -49,7 +49,7 @@ export default function ImportModal() {
       <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block w-full sm:w-auto text-center sm:text-left">
         <button 
           onClick={() => setIsOpen(true)}
-          className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors"
+          className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors"
         >
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
           Import Excel
@@ -71,7 +71,7 @@ export default function ImportModal() {
                       </h3>
                       <div className="mt-4">
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                          Upload an Excel (.xlsx) file containing Master Data. The system will automatically ignore rows that match exactly with existing Category + Product Name combinations to prevent duplicates.
+                          Upload an Excel (.xlsx) file containing Master Product details. The system will automatically ignore rows that match exactly with existing Category + Product Name combinations to prevent duplicates.
                         </p>
                         <input 
                           type="file" 
@@ -89,7 +89,7 @@ export default function ImportModal() {
                   <button 
                     type="submit" 
                     disabled={isImporting}
-                    className="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-primary-DEFAULT text-base font-semibold text-black dark:text-white hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-DEFAULT sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                    className="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-primary-DEFAULT text-base font-semibold text-black dark:text-white hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-DEFAULT sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                   >
                     {isImporting ? 'Importing...' : 'Upload & Import'}
                   </button>

@@ -1,13 +1,32 @@
-You are a frontend development AI specializing in pixel-perfect SaaS UI design. Please update the mobile card component layout based on the input image `image_1.png`. The goal is to improve the spacing of the top title and stack the action buttons for a more precise and clean layout.
+# Context
+I have an existing web application with a "Master Data" page that manages products. I need to add a new "Master Category" page to manage product categories dynamically, and I also need to update the behavior of several input fields on the existing "Add/Edit Product" form.
 
-Follow these specific layout and spacing instructions:
+# Task Requirements
 
-1.  **Title Alignment:** Align the top content group (Item Number "#1", Category Badge "GPU", and the full product title "Colorful RTX 5070 Ti BATTLE-AX 16GB") perfectly with the table content below. Specifically, adjust the left padding or margin of the entire top group so its left edge is vertically flush with the left edge of the 'QTY' label and the data box below it.
+## 1. Navigation & New Page (Master Category)
+- **Navbar Update**: Add a new tab called **"Master Category"** next to the existing "Master Data" tab.
+- **New Page Creation**: Create the "Master Category" page strictly following the existing UI/UX, layout, and component structures of the "Master Data" (Products) page.
+  - **Header**: "Categories (Master Data)"
+  - **Top Actions**: Include a "Create New Category" button (styled exactly like the "Create New Product" button).
+  - **Search & Filter**: Search bar, Status filter (Publish / Draft), "Filter" and "Clear" buttons.
+  - **Data Table**: Columns `NO`, `CATEGORY NAME`, `STATUS`, `ACTIONS` (Edit outline button and Delete red solid button matching current styles).
 
-2.  **Action Buttons (Stacked):** Transform the layout of the two action buttons ("Edit" and "Delete") at the bottom of the card. Instead of being side-by-side (horizontal), they must be stacked vertically (one on top of the other).
-    *   Place the "Edit" button first, above the "Delete" button.
-    *   Both stacked buttons should be the same uniform, wider width (filling a greater portion of the card width) and have a consistent height.
-    *   Maintain the existing button styling: The "Edit" button remains dark black with white text and icon. The "Delete" button remains solid red with white text.
-    *   Add a consistent, moderate vertical spacing between the stacked buttons.
+## 2. Form Input Adjustments (Add/Edit Product)
+Please update the UI and behavior of the following fields in the product form:
+- **Number Inputs (SDP, Page Price, SRP, Global Quantity)**: 
+  - **Empty Default State**: Remove the default `0` or `1` values. When creating a new entry, these fields must start completely empty.
+  - **Remove Spinners**: Hide the default HTML up/down arrows (spin buttons) on all number input fields (e.g., using CSS `appearance: none;` or similar Tailwind utility).
+  - **Add Placeholders**: 
+    - For Pricing inputs (SDP, Page Price, SRP): add `placeholder="e.g. RM 200"`.
+    - For Global Quantity input: add `placeholder="e.g. 10"`.
+- **Status Dropdown**:
+  - Remove the default pre-selected value (currently defaults to "Publish").
+  - The dropdown should start unselected with a default placeholder option like `-- Select Status --`.
 
-3.  **Overall Precision:** Ensure all other text, values, badges (PUBLISH), and icons remain identical in content and styling. The total look should feel more balanced and professional. The overall padding around the entire content should be consistent.
+## 3. Data Integration
+- The categories created and managed on the new "Master Category" page must directly populate the "Category" dropdown options in the existing "Base Product Details" form (Add/Edit Product page).
+
+## 4. Styling & Responsiveness Constraints
+- **Theme Support**: The new page and components MUST fully support both Dark Mode and Light Mode. Reuse the existing CSS/Tailwind variables or classes that govern the current theme.
+- **Mobile Responsiveness**: Ensure the table, search filters, and layout collapse gracefully on mobile devices, matching the behavior of the existing Master Data page.
+- **Component Reusability**: Do not invent new UI components. Reuse the existing table, button, input, and modal/form components currently utilized in the `Master Data` page to ensure 100% visual consistency.

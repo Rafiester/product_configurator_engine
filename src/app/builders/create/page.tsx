@@ -1,24 +1,10 @@
 import Link from 'next/link';
-import { createProduct } from '../actions';
-import { prisma } from '@/lib/prisma';
-import ProductForm from '@/components/ProductForm';
+import { createBuilder } from '../actions';
+import BuilderForm from '@/components/BuilderForm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function CreateProductPage() {
-  // Fetch builders and active categories concurrently
-  const [builders, categoriesData] = await Promise.all([
-    prisma.builder.findMany({
-      orderBy: { name: 'asc' }
-    }),
-    prisma.category.findMany({
-      where: { status: 'active' },
-      orderBy: { name: 'asc' }
-    })
-  ]);
-
-  const categories = categoriesData.map(c => c.name);
-
+export default async function CreateBuilderPage() {
   return (
     <div className="py-12">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -33,26 +19,26 @@ export default async function CreateProductPage() {
             </div>
             <div>
               <h2 className="font-semibold text-xl text-gray-900 dark:text-gray-100 leading-tight m-0">
-                Create New Product
+                Create New Builder
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Add a new product to Master Product and configure its package availability.
+                Build a new system specification package.
               </p>
             </div>
           </div>
-          <Link href="/products" className="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-            &larr; Back to Products
+          <Link href="/builders" className="text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            &larr; Back to Builders
           </Link>
         </div>
 
         {/* Form Container */}
-        <ProductForm 
-          builders={builders}
-          categories={categories}
-          action={createProduct}
-          submitButtonText="Create Product"
-          title="Create New Product"
-        />
+        <div className="bg-white dark:bg-dark-surface shadow-sm rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden">
+          <BuilderForm 
+            action={createBuilder}
+            submitButtonText="Create Builder"
+            successMessage="Builder created successfully."
+          />
+        </div>
 
       </div>
     </div>

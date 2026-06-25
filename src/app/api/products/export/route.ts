@@ -23,7 +23,7 @@ export async function GET() {
 
     // Create ExcelJS workbook & worksheet
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Master Data');
+    const worksheet = workbook.addWorksheet('Master Product');
 
     // Configure headers and columns matching Laravel
     worksheet.columns = [

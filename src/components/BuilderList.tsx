@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/components/ToastProvider';
-import { deleteConfigurator, syncConfiguratorProducts } from '@/app/configurators/actions';
+import { deleteBuilder, syncBuilderProducts } from '@/app/builders/actions';
 
 interface ProductInfo {
   id: string;
@@ -20,7 +20,7 @@ interface GroupedProducts {
 
 interface MappingData {
   id: string;
-  configuratorId: string;
+  builderId: string;
   productId: string;
   category: string;
   qty: number;
@@ -36,7 +36,7 @@ interface MappingData {
   };
 }
 
-interface ConfiguratorWithProducts {
+interface BuilderWithProducts {
   id: string;
   name: string;
   status: string;
@@ -44,22 +44,24 @@ interface ConfiguratorWithProducts {
   products: MappingData[];
 }
 
-interface ConfiguratorListProps {
-  initialConfigurators: ConfiguratorWithProducts[];
+interface BuilderListProps {
+  initialBuilders: BuilderWithProducts[];
   productsByCategory: GroupedProducts;
+  categories?: string[];
 }
 
-export default function ConfiguratorList({
-  initialConfigurators,
+export default function BuilderList({
+  initialBuilders,
   productsByCategory,
-}: ConfiguratorListProps) {
-  const [configurators, setConfigurators] = useState(initialConfigurators);
+  categories,
+}: BuilderListProps) {
+  const [builders, setBuilders] = useState(initialBuilders);
   const router = useRouter();
   const { confirm, showToast } = useUI();
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Delete Configurator?',
+      title: 'Delete Builder?',
       message: `Are you sure you want to delete ${name}? This action cannot be undone.`,
       confirmText: 'Delete',
       type: 'danger',
@@ -67,49 +69,52 @@ export default function ConfiguratorList({
 
     if (confirmed) {
       try {
-        await deleteConfigurator(id);
-        showToast('success', 'Deleted', 'Configurator deleted successfully.');
-        setConfigurators((prev) => prev.filter((c) => c.id !== id));
+        await deleteBuilder(id);
+        showToast('success', 'Deleted', 'Builder deleted successfully.');
+        setBuilders((prev) => prev.filter((b) => b.id !== id));
       } catch (err: any) {
-        showToast('error', 'Error', err.message || 'Failed to delete configurator.');
+        showToast('error', 'Error', err.message || 'Failed to delete builder.');
       }
     }
   };
 
   return (
     <div className="space-y-6">
-      {configurators.map((c) => (
-        <ConfiguratorCard
-          key={c.id}
-          configurator={c}
+      {builders.map((b) => (
+        <BuilderCard
+          key={b.id}
+          builder={b}
           productsByCategory={productsByCategory}
+          categories={categories}
           onDelete={handleDelete}
         />
       ))}
 
-      {configurators.length === 0 && (
+      {builders.length === 0 && (
         <div className="bg-white dark:bg-dark-surface2 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-dark-border text-center text-gray-500 dark:text-gray-400">
-          No configurators found. Add one to get started!
+          No builders found. Add one to get started!
         </div>
       )}
     </div>
   );
 }
 
-function ConfiguratorCard({
-  configurator,
+function BuilderCard({
+  builder,
   productsByCategory,
+  categories: propCategories,
   onDelete,
 }: {
-  configurator: ConfiguratorWithProducts;
+  builder: BuilderWithProducts;
   productsByCategory: GroupedProducts;
+  categories?: string[];
   onDelete: (id: string, name: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useUI();
 
-  const categories = [
+  const categories = propCategories || [
     'GPU',
     'RAM',
     'CPU',
@@ -125,7 +130,7 @@ function ConfiguratorCard({
   const [rows, setRows] = useState(() => {
     return categories.map((cat) => {
       // Find existing selection in this category
-      const existing = configurator.products.find((p) => p.category === cat);
+      const existing = builder.products.find((p) => p.category === cat);
 
       // Make sure the existing product is appended to category choices (in case it is inactive but assigned)
       if (existing && productsByCategory[cat]) {
@@ -244,11 +249,11 @@ function ConfiguratorCard({
     }
 
     try {
-      const res = await syncConfiguratorProducts(configurator.id, selections);
+      const res = await syncBuilderProducts(builder.id, selections);
       if (res.success) {
-        showToast('success', 'Saved', 'PC configuration saved successfully.');
+        showToast('success', 'Saved', 'PC build saved successfully.');
       } else {
-        showToast('error', 'Save Failed', res.message || 'Failed to save configuration.');
+        showToast('error', 'Save Failed', res.message || 'Failed to save build.');
       }
     } catch (err: any) {
       showToast('error', 'Error', err.message || 'An error occurred while saving.');
@@ -265,9 +270,9 @@ function ConfiguratorCard({
 
   const componentsCount = rows.filter((r) => r.productId).length;
 
-  const description = configurator.name.toLowerCase().includes('gaming')
-    ? "Gaming PC configuration optimized for high-performance gaming, streaming, content creation, and productivity workloads with balanced component selection and healthy profit margins."
-    : `Custom PC build configuration for ${configurator.name} optimized for high-performance content creation, office productivity, and standard workloads.`;
+  const description = builder.name.toLowerCase().includes('gaming')
+    ? "Gaming PC build optimized for high-performance gaming, streaming, content creation, and productivity workloads with balanced component selection and healthy profit margins."
+    : `Custom PC build for ${builder.name} optimized for high-performance content creation, office productivity, and standard workloads.`;
 
   const formatDate = (date?: Date) => {
     if (!date) return 'Not Available';
@@ -281,7 +286,7 @@ function ConfiguratorCard({
     return `${day} ${month} ${year}, ${hours}:${minutes}`;
   };
 
-  const lastUpdatedStr = formatDate(configurator.updatedAt);
+  const lastUpdatedStr = formatDate(builder.updatedAt);
 
   return (
     <div className="bg-white dark:bg-[#171A21] shadow-sm rounded-2xl border border-gray-200 dark:border-[#2A2F3A] transition-all duration-300 overflow-hidden">
@@ -290,9 +295,9 @@ function ConfiguratorCard({
         
         {/* TOP ROW */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          {/* Left: Configurator Name */}
+          {/* Left: Builder Name */}
           <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight m-0">
-            {configurator.name}
+            {builder.name}
           </h3>
           
           {/* Right: Last Updated label */}
@@ -319,14 +324,14 @@ function ConfiguratorCard({
             {/* Status Badge */}
             <div className="flex items-center">
               <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border ${
-                configurator.status === 'active'
+                builder.status === 'active'
                   ? 'bg-primary-soft text-[#F472B6] border-primary-border dark:bg-primary-darkSoft dark:text-[#F472B6]'
                   : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
               }`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${
-                  configurator.status === 'active' ? 'bg-[#F472B6] animate-pulse' : 'bg-gray-400'
+                  builder.status === 'active' ? 'bg-[#F472B6] animate-pulse' : 'bg-gray-400'
                 }`} />
-                {configurator.status === 'active' ? 'Publish' : 'Unpublish'}
+                {builder.status === 'active' ? 'Publish' : 'Unpublish'}
               </span>
             </div>
             
@@ -346,7 +351,7 @@ function ConfiguratorCard({
             {/* Edit Button */}
             <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full md:w-auto">
               <Link
-                href={`/configurators/${configurator.id}/edit`}
+                href={`/builders/${builder.id}/edit`}
                 className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Edit
@@ -356,7 +361,7 @@ function ConfiguratorCard({
             {/* Delete Button */}
             <div className="p-1 bg-red-100 dark:bg-red-950/30 rounded-xl w-full md:w-auto">
               <button
-                onClick={() => onDelete(configurator.id, configurator.name)}
+                onClick={() => onDelete(builder.id, builder.name)}
                 className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
               >
                 Delete
@@ -497,16 +502,16 @@ function ConfiguratorCard({
                             className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
                           />
                         </td>
-                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
                           {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
                         </td>
                         <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
                           {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
                         </td>
-                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
                           {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
                         </td>
-                        <td className="py-3 px-4 text-right text-gray-650 dark:text-gray-400 tabular-nums">
+                        <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
                           {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
                         </td>
                         <td
@@ -575,7 +580,7 @@ function ConfiguratorCard({
                       d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
                     />
                   </svg>
-                  <span>{isSaving ? 'Saving...' : 'Save Configuration'}</span>
+                  <span>{isSaving ? 'Saving...' : 'Save Build'}</span>
                 </button>
               </div>
             </div>
@@ -620,29 +625,29 @@ function ConfiguratorCard({
                       />
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">SDP</span>
+                      <span className="text-gray-555 dark:text-gray-400">SDP</span>
                       <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.sdp.toFixed(2)}</div>
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">Total SDP</span>
+                      <span className="text-gray-555 dark:text-gray-400">Total SDP</span>
                       <div className="font-bold text-gray-900 dark:text-gray-100 mt-0.5">RM {(row.sdp * row.qty).toFixed(2)}</div>
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">Page Price</span>
+                      <span className="text-gray-555 dark:text-gray-400">Page Price</span>
                       <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.pagePrice.toFixed(2)}</div>
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">SRP</span>
+                      <span className="text-gray-555 dark:text-gray-400">SRP</span>
                       <div className="font-semibold text-gray-900 dark:text-gray-100 mt-0.5">RM {row.srp.toFixed(2)}</div>
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">Margin</span>
+                      <span className="text-gray-555 dark:text-gray-400">Margin</span>
                       <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
                         RM {(row.pagePrice - row.sdp * row.qty).toFixed(2)}
                       </div>
                     </div>
                     <div>
-                      <span className="text-gray-550 dark:text-gray-400">Margin %</span>
+                      <span className="text-gray-555 dark:text-gray-400">Margin %</span>
                       <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
                         {row.pagePrice > 0
                           ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(2)}%`
@@ -695,7 +700,7 @@ function ConfiguratorCard({
                       d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
                     />
                   </svg>
-                  <span>{isSaving ? 'Saving...' : 'Save Configuration'}</span>
+                  <span>{isSaving ? 'Saving...' : 'Save Build'}</span>
                 </button>
               </div>
             </div>

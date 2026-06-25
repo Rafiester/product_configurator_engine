@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import ConfiguratorList from '@/components/ConfiguratorList';
+import BuilderList from '@/components/BuilderList';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ConfiguratorsPage() {
-  // Fetch configurators along with their mappings/nested product info, and active products concurrently
-  const [rawConfigurators, activeProducts] = await Promise.all([
-    prisma.configurator.findMany({
+export default async function BuildersPage() {
+  // Fetch builders along with their mappings/nested product info, active products, and active categories concurrently
+  const [rawBuilders, activeProducts, categoriesData] = await Promise.all([
+    prisma.builder.findMany({
       include: {
         products: {
           include: {
@@ -27,17 +27,21 @@ export default async function ConfiguratorsPage() {
     prisma.product.findMany({
       where: { deletedAt: null, status: 'active' },
       orderBy: { name: 'asc' }
+    }),
+    prisma.category.findMany({
+      where: { status: 'active' },
+      orderBy: { name: 'asc' }
     })
   ]);
 
-  const configurators = rawConfigurators.map(c => ({
-    id: c.id,
-    name: c.name,
-    status: c.status,
-    updatedAt: c.updatedAt,
-    products: c.products.map(p => ({
+  const builders = rawBuilders.map(b => ({
+    id: b.id,
+    name: b.name,
+    status: b.status,
+    updatedAt: b.updatedAt,
+    products: b.products.map(p => ({
       id: p.id,
-      configuratorId: p.configuratorId,
+      builderId: p.builderId,
       productId: p.productId,
       category: p.category,
       qty: p.qty,
@@ -66,6 +70,8 @@ export default async function ConfiguratorsPage() {
     });
   });
 
+  const categories = categoriesData.map(c => c.name);
+
   return (
     <div className="py-6">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
@@ -80,26 +86,27 @@ export default async function ConfiguratorsPage() {
               </svg>
             </div>
             <h2 className="font-semibold text-xl text-gray-900 dark:text-gray-100 leading-tight m-0">
-              Configurators
+              Builders
             </h2>
           </div>
           <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full sm:w-auto">
             <Link 
-              href="/configurators/create" 
+              href="/builders/create" 
               className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors"
             >
               <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
               </svg>
-              Add Configurator
+              Add Builder
             </Link>
           </div>
         </div>
 
-        {/* Configurations List */}
-        <ConfiguratorList 
-          initialConfigurators={configurators}
+        {/* Builder List Component */}
+        <BuilderList 
+          initialBuilders={builders}
           productsByCategory={productsByCategory}
+          categories={categories}
         />
 
       </div>

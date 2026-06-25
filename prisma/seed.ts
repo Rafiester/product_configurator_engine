@@ -16,8 +16,8 @@ async function main() {
     }
   });
 
-  // Create a base configurator
-  const configurator = await prisma.configurator.create({
+  // Create a base builder
+  const builder = await prisma.builder.create({
     data: {
       name: 'Budget Gaming PC',
       status: 'active'
@@ -25,9 +25,9 @@ async function main() {
   });
 
   // Map them together
-  await prisma.configuratorProductMapping.create({
+  await prisma.builderProductMapping.create({
     data: {
-      configuratorId: configurator.id,
+      builderId: builder.id,
       productId: product.id,
       category: product.category,
       qty: 1,

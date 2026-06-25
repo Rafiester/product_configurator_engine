@@ -10,21 +10,21 @@ const t = {
     liveData: 'LIVE SYSTEM DATA',
     totalProducts: 'Total Products',
     publishedCatalog: 'Published items in catalog',
-    configurators: 'Configurators',
+    builders: 'Builders',
     publishedBuilds: 'Published Builds',
     avgMargin: 'Average Margin %',
     weightedAverage: 'Weighted average across builds',
     potentialRevenue: 'Potential Revenue',
-    sumConfigurator: 'Sum of configurator values',
+    sumBuilder: 'Sum of builder values',
     quickActions: 'Quick Actions',
-    quickActionsDesc: 'Shortcuts to manage catalog items, compile configurations, or import/export master files.',
+    quickActionsDesc: 'Shortcuts to manage catalog items, compile builds, or import/export master files.',
     newProduct: 'New Product',
     newProductDesc: 'Add component to master database',
-    newConfigurator: 'New Configurator',
-    newConfiguratorDesc: 'Build new system specification',
+    newBuilder: 'New Builder',
+    newBuilderDesc: 'Build new system specification',
     importProducts: 'Import Products',
     importProductsDesc: 'Upload catalog from Excel',
-    exportMaster: 'Export Master Data',
+    exportMaster: 'Export Master Product',
     exportMasterDesc: 'Download database spreadsheet',
     categoryDist: 'Product Category Distribution',
     categoryDistDesc: 'Spread of active products in catalog by component category.',
@@ -34,9 +34,9 @@ const t = {
     healthy: 'Healthy',
     target: 'Target',
     low: 'Low',
-    topConfigurators: 'Top Configurators',
-    topConfiguratorsDesc: 'Top 5 configuration builds ranked by estimated margin amount.',
-    noConfigurators: 'No configuration builds created yet.',
+    topBuilders: 'Top Builders',
+    topBuildersDesc: 'Top 5 builder builds ranked by estimated margin amount.',
+    noBuilders: 'No builder builds created yet.',
     recentActivities: 'Recent Activities',
     recentActivitiesDesc: 'Timeline tracking recent additions or edits to catalog and builds.',
     noActivities: 'No recent activities recorded.',
@@ -44,8 +44,8 @@ const t = {
     unpublish: 'Unpublish',
     createdProduct: 'Created product "{name}"',
     updatedProduct: 'Updated product "{name}"',
-    createdConfigurator: 'Created configurator "{name}"',
-    updatedConfigurator: 'Updated configurator "{name}"'
+    createdBuilder: 'Created builder "{name}"',
+    updatedBuilder: 'Updated builder "{name}"'
   },
   id: {
     title: 'Dasbor Metrik',
@@ -53,21 +53,21 @@ const t = {
     liveData: 'DATA SISTEM LANGSUNG',
     totalProducts: 'Total Produk',
     publishedCatalog: 'Item terbitan di katalog',
-    configurators: 'Konfigurator',
+    builders: 'Builder',
     publishedBuilds: 'Konfigurasi Terbit',
     avgMargin: 'Rata-rata Margin %',
     weightedAverage: 'Rata-rata tertimbang di semua konfigurasi',
     potentialRevenue: 'Potensi Pendapatan',
-    sumConfigurator: 'Jumlah nilai konfigurasi',
+    sumBuilder: 'Jumlah nilai builder',
     quickActions: 'Tindakan Cepat',
-    quickActionsDesc: 'Pintasan untuk mengelola item katalog, menyusun konfigurasi, atau impor/ekspor file master.',
+    quickActionsDesc: 'Pintasan untuk mengelola item katalog, menyusun spesifikasi build, atau impor/ekspor file master.',
     newProduct: 'Produk Baru',
     newProductDesc: 'Tambah komponen ke database master',
-    newConfigurator: 'Konfigurator Baru',
-    newConfiguratorDesc: 'Buat spesifikasi sistem baru',
+    newBuilder: 'Builder Baru',
+    newBuilderDesc: 'Buat spesifikasi sistem baru',
     importProducts: 'Impor Produk',
     importProductsDesc: 'Unggah katalog dari Excel',
-    exportMaster: 'Ekspor Data Master',
+    exportMaster: 'Ekspor Produk Master',
     exportMasterDesc: 'Unduh spreadsheet database',
     categoryDist: 'Distribusi Kategori Produk',
     categoryDistDesc: 'Penyebaran produk aktif di katalog berdasarkan kategori komponen.',
@@ -77,9 +77,9 @@ const t = {
     healthy: 'Sehat',
     target: 'Target',
     low: 'Rendah',
-    topConfigurators: 'Konfigurator Teratas',
-    topConfiguratorsDesc: '5 konfigurasi teratas diurutkan berdasarkan perkiraan jumlah margin.',
-    noConfigurators: 'Belum ada konfigurasi yang dibuat.',
+    topBuilders: 'Builder Teratas',
+    topBuildersDesc: '5 builder teratas diurutkan berdasarkan perkiraan jumlah margin.',
+    noBuilders: 'Belum ada builder yang dibuat.',
     recentActivities: 'Aktivitas Terbaru',
     recentActivitiesDesc: 'Linimasa pelacakan penambahan atau pengeditan terbaru pada katalog dan konfigurasi.',
     noActivities: 'Tidak ada aktivitas terbaru yang tercatat.',
@@ -87,8 +87,8 @@ const t = {
     unpublish: 'Batal Terbit',
     createdProduct: 'Membuat produk "{name}"',
     updatedProduct: 'Memperbarui produk "{name}"',
-    createdConfigurator: 'Membuat konfigurator "{name}"',
-    updatedConfigurator: 'Memperbarui konfigurator "{name}"'
+    createdBuilder: 'Membuat builder "{name}"',
+    updatedBuilder: 'Memperbarui builder "{name}"'
   }
 };
 
@@ -102,17 +102,17 @@ export default async function DashboardPage() {
   // Query all necessary data concurrently
   const [
     totalProducts,
-    totalConfigurators,
-    activeConfigurators,
+    totalBuilders,
+    activeBuilders,
     allMappings,
-    configuratorsWithProducts,
+    buildersWithProducts,
     catalogProducts
   ] = await Promise.all([
     prisma.product.count({ where: { deletedAt: null } }),
-    prisma.configurator.count(),
-    prisma.configurator.count({ where: { status: 'active' } }),
-    prisma.configuratorProductMapping.findMany(),
-    prisma.configurator.findMany({
+    prisma.builder.count(),
+    prisma.builder.count({ where: { status: 'active' } }),
+    prisma.builderProductMapping.findMany(),
+    prisma.builder.findMany({
       include: {
         products: true
       }
@@ -127,24 +127,24 @@ export default async function DashboardPage() {
     })
   ]);
 
-  // 1. Calculate Average Margin % across all configurators with builds
-  let totalConfiguratorsMarginPercent = 0;
-  let configuratorsWithProductsCount = 0;
+  // 1. Calculate Average Margin % across all builders with builds
+  let totalBuildersMarginPercent = 0;
+  let buildersWithProductsCount = 0;
 
-  configuratorsWithProducts.forEach(c => {
+  buildersWithProducts.forEach(c => {
     if (c.products.length > 0) {
       const sdpSum = c.products.reduce((sum, p) => sum + Number(p.totalSdp), 0);
       const pageSum = c.products.reduce((sum, p) => sum + Number(p.pagePrice), 0);
       if (pageSum > 0) {
         const marginPercent = ((pageSum - sdpSum) / pageSum) * 100;
-        totalConfiguratorsMarginPercent += marginPercent;
-        configuratorsWithProductsCount += 1;
+        totalBuildersMarginPercent += marginPercent;
+        buildersWithProductsCount += 1;
       }
     }
   });
 
-  const avgMarginPercent = configuratorsWithProductsCount > 0
-    ? totalConfiguratorsMarginPercent / configuratorsWithProductsCount
+  const avgMarginPercent = buildersWithProductsCount > 0
+    ? totalBuildersMarginPercent / buildersWithProductsCount
     : 0;
 
   // 2. Calculate Potential Revenue (sum of pagePrice of all mapping items)
@@ -258,8 +258,8 @@ export default async function DashboardPage() {
     };
   });
 
-  // 5. Top 5 Configurators
-  const topConfigurators = configuratorsWithProducts.map(c => {
+  // 5. Top 5 Builders
+  const topBuilders = buildersWithProducts.map(c => {
     const marginSum = c.products.reduce((sum, p) => sum + Number(p.margin), 0);
     return {
       id: c.id,
@@ -268,17 +268,17 @@ export default async function DashboardPage() {
       margin: marginSum
     };
   });
-  topConfigurators.sort((a, b) => b.margin - a.margin);
-  const displayTopConfigurators = topConfigurators.slice(0, 5);
+  topBuilders.sort((a, b) => b.margin - a.margin);
+  const displayTopBuilders = topBuilders.slice(0, 5);
 
   // 6. Recent Activities timeline (derived dynamically from timestamps)
-  const [recentProducts, recentConfigurators] = await Promise.all([
+  const [recentProducts, recentBuilders] = await Promise.all([
     prisma.product.findMany({
       where: { deletedAt: null },
       orderBy: { updatedAt: 'desc' },
       take: 5
     }),
-    prisma.configurator.findMany({
+    prisma.builder.findMany({
       orderBy: { updatedAt: 'desc' },
       take: 5
     })
@@ -296,11 +296,11 @@ export default async function DashboardPage() {
     });
   });
 
-  recentConfigurators.forEach(c => {
+  recentBuilders.forEach(c => {
     const isNew = Math.abs(c.createdAt.getTime() - c.updatedAt.getTime()) < 2000;
-    const titleTemplate = isNew ? activeT.createdConfigurator : activeT.updatedConfigurator;
+    const titleTemplate = isNew ? activeT.createdBuilder : activeT.updatedBuilder;
     activities.push({
-      type: 'configurator',
+      type: 'builder',
       title: titleTemplate.replace('{name}', c.name),
       time: c.updatedAt
     });
@@ -375,19 +375,19 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Card: Configurators */}
+          {/* Card: Builders */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div className="flex justify-between items-start">
-              <span className="text-sm font-semibold dashboard-text-muted">{activeT.configurators}</span>
+              <span className="text-sm font-semibold dashboard-text-muted">{activeT.builders}</span>
               <div className="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
               </div>
             </div>
             <div className="mt-4">
-              <h3 className="text-3xl font-extrabold tracking-tight">{totalConfigurators}</h3>
+              <h3 className="text-3xl font-extrabold tracking-tight">{totalBuilders}</h3>
               <p className="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                {activeConfigurators} {activeT.publishedBuilds}
+                {activeBuilders} {activeT.publishedBuilds}
               </p>
             </div>
           </div>
@@ -420,7 +420,7 @@ export default async function DashboardPage() {
               <h3 className="text-3xl font-extrabold tracking-tight">
                 RM {potentialRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
               </h3>
-              <p className="text-xs dashboard-text-muted mt-1">{activeT.sumConfigurator}</p>
+              <p className="text-xs dashboard-text-muted mt-1">{activeT.sumBuilder}</p>
             </div>
           </div>
 
@@ -457,8 +457,8 @@ export default async function DashboardPage() {
               </div>
             </Link>
 
-            {/* Card 2: New Configurator */}
-            <Link href="/configurators/create" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
+            {/* Card 2: New Builder */}
+            <Link href="/builders/create" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
               <div className="relative flex items-center justify-between">
                 <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-emerald-600/5 group-hover:from-pink-500/15 group-hover:to-rose-500/5 transition-all duration-300">
@@ -469,8 +469,8 @@ export default async function DashboardPage() {
                 </div>
               </div>
               <div className="relative mt-auto">
-                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.newConfigurator}</h4>
-                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.newConfiguratorDesc}</p>
+                <h4 className="font-bold text-[15px] text-gray-900 dark:text-gray-100 leading-tight">{activeT.newBuilder}</h4>
+                <p className="text-xs dashboard-text-muted mt-1 leading-relaxed">{activeT.newBuilderDesc}</p>
               </div>
             </Link>
 
@@ -491,7 +491,7 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            {/* Card 4: Export Master Data */}
+            {/* Card 4: Export Master Product */}
             <a href="/api/products/export" className="relative dashboard-card border rounded-2xl p-5 group flex flex-col gap-4 h-[168px] hover:shadow-lg hover:shadow-pink-500/5 hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/40 transition-all duration-300 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-pink-500/[0.03] to-transparent group-hover:from-pink-500/[0.05] group-hover:to-rose-500/[0.02] transition-all duration-300" />
               <div className="relative flex items-center justify-between">
@@ -625,16 +625,16 @@ export default async function DashboardPage() {
         {/* 3. Top Rankings and Recent Actions Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* Card: Top Configurators */}
+          {/* Card: Top Builders */}
           <div className="dashboard-card border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.topConfigurators}</h3>
-              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.topConfiguratorsDesc}</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{activeT.topBuilders}</h3>
+              <p className="text-xs dashboard-text-muted mt-0.5">{activeT.topBuildersDesc}</p>
             </div>
             
             <div className="mt-4 divide-y divide-gray-150 dark:divide-dark-border/40 flex-1 flex flex-col justify-center">
-              {displayTopConfigurators.length > 0 ? (
-                displayTopConfigurators.map((c, idx) => (
+              {displayTopBuilders.length > 0 ? (
+                displayTopBuilders.map((c, idx) => (
                   <div key={c.id} className="py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary-soft text-[#F472B6] text-xs font-bold shrink-0">
@@ -658,7 +658,7 @@ export default async function DashboardPage() {
                 ))
               ) : (
                 <div className="py-8 text-center text-sm dashboard-text-muted">
-                  {activeT.noConfigurators}
+                  {activeT.noBuilders}
                 </div>
               )}
             </div>

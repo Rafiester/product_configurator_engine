@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 
 const trace = (action: string, details: any) => {
-  console.info(`[TRACE - ${new Date().toISOString()}] CONFIGURATOR_${action}:`, JSON.stringify(details));
+  console.info(`[TRACE - ${new Date().toISOString()}] BUILDER_${action}:`, JSON.stringify(details));
 };
 
-export async function createConfigurator(formData: FormData) {
+export async function createBuilder(formData: FormData) {
   try {
     const data = {
       name: formData.get('name') as string,
@@ -17,18 +17,18 @@ export async function createConfigurator(formData: FormData) {
 
     trace('CREATE_ATTEMPT', { name: data.name });
 
-    const config = await prisma.configurator.create({ data });
+    const builder = await prisma.builder.create({ data });
 
-    trace('CREATE_SUCCESS', { id: config.id });
-    revalidatePath('/configurators');
-    return { success: true, id: config.id };
+    trace('CREATE_SUCCESS', { id: builder.id });
+    revalidatePath('/builders');
+    return { success: true, id: builder.id };
   } catch (error: any) {
     trace('CREATE_FAILED', { error: error.message });
     return { success: false, error: error.message };
   }
 }
 
-export async function updateConfigurator(id: string, formData: FormData) {
+export async function updateBuilder(id: string, formData: FormData) {
   try {
     const data = {
       name: formData.get('name') as string,
@@ -37,13 +37,13 @@ export async function updateConfigurator(id: string, formData: FormData) {
 
     trace('UPDATE_ATTEMPT', { id, name: data.name });
 
-    await prisma.configurator.update({
+    await prisma.builder.update({
       where: { id },
       data
     });
 
     trace('UPDATE_SUCCESS', { id });
-    revalidatePath('/configurators');
+    revalidatePath('/builders');
     return { success: true };
   } catch (error: any) {
     trace('UPDATE_FAILED', { id, error: error.message });
@@ -51,12 +51,12 @@ export async function updateConfigurator(id: string, formData: FormData) {
   }
 }
 
-export async function deleteConfigurator(id: string) {
+export async function deleteBuilder(id: string) {
   try {
     trace('DELETE_ATTEMPT', { id });
 
-    // Hard delete since Configurator model doesn't use soft deletes in our schema
-    await prisma.configurator.delete({
+    // Hard delete since Builder model doesn't use soft deletes in our schema
+    await prisma.builder.delete({
       where: { id },
     });
 
@@ -66,23 +66,23 @@ export async function deleteConfigurator(id: string) {
     throw error;
   }
   
-  revalidatePath('/configurators');
+  revalidatePath('/builders');
 }
 
-export async function syncConfiguratorProducts(configuratorId: string, mappings: any[]) {
+export async function syncBuilderProducts(builderId: string, mappings: any[]) {
   try {
-    trace('SYNC_ATTEMPT', { configuratorId, mappingsCount: mappings.length });
+    trace('SYNC_ATTEMPT', { builderId, mappingsCount: mappings.length });
 
     // Run in a transaction to ensure clean wipe & replace
     await prisma.$transaction(async (tx) => {
       // Delete old mappings
-      await tx.configuratorProductMapping.deleteMany({
-        where: { configuratorId }
+      await tx.builderProductMapping.deleteMany({
+        where: { builderId }
       });
 
       // Prepare new mappings
       const newMappings = mappings.map(m => ({
-        configuratorId,
+        builderId,
         productId: m.product_id,
         category: m.category,
         qty: parseInt(m.qty) || 0,
@@ -96,17 +96,17 @@ export async function syncConfiguratorProducts(configuratorId: string, mappings:
 
       // Insert new mappings
       if (newMappings.length > 0) {
-        await tx.configuratorProductMapping.createMany({
+        await tx.builderProductMapping.createMany({
           data: newMappings
         });
       }
     });
 
-    trace('SYNC_SUCCESS', { configuratorId });
-    revalidatePath('/configurators');
+    trace('SYNC_SUCCESS', { builderId });
+    revalidatePath('/builders');
     return { success: true };
   } catch (error: any) {
-    trace('SYNC_FAILED', { configuratorId, error: error.message });
+    trace('SYNC_FAILED', { builderId, error: error.message });
     return { success: false, message: error.message };
   }
 }

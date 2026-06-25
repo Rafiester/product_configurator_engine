@@ -1,4 +1,4 @@
-// Helper utilities for importing Master Data from Excel
+// Helper utilities for importing Master Product from Excel
 // Uses the xlsx package to parse sheets and safely convert them to Prisma types.
 
 import * as xlsx from 'xlsx';

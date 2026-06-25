@@ -22,9 +22,9 @@ async function main() {
 
   // Clean the target tables first (wipe and replace)
   console.log('Cleaning existing records in database...');
-  await prisma.configuratorProductMapping.deleteMany();
+  await prisma.builderProductMapping.deleteMany();
   await prisma.product.deleteMany();
-  await prisma.configurator.deleteMany();
+  await prisma.builder.deleteMany();
 
   // Seed Products
   console.log('Importing products...');
@@ -46,10 +46,10 @@ async function main() {
     });
   }
 
-  // Seed Configurators
-  console.log('Importing configurators...');
+  // Seed Builders
+  console.log('Importing builders...');
   for (const c of configurators) {
-    await prisma.configurator.create({
+    await prisma.builder.create({
       data: {
         id: c.id,
         name: c.name,
@@ -63,10 +63,10 @@ async function main() {
   // Seed Mappings
   console.log('Importing mappings...');
   for (const m of mappings) {
-    await prisma.configuratorProductMapping.create({
+    await prisma.builderProductMapping.create({
       data: {
         id: m.id,
-        configuratorId: m.configurator_id,
+        builderId: m.configurator_id,
         productId: m.product_id,
         category: m.category,
         qty: parseInt(m.qty) || 0,

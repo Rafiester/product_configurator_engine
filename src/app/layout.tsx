@@ -9,8 +9,8 @@ import { cookies } from 'next/headers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'PC Configurator - Admin',
-  description: 'Manage Product Master Data and dynamic PC Configurations.',
+  title: 'PC Builder - Admin',
+  description: 'Manage Master Product and dynamic PC Builder builds.',
 };
 
 export default function RootLayout({

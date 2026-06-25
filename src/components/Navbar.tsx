@@ -57,8 +57,9 @@ export default function Navbar({ lang }: { lang: string }) {
   const t = {
     en: {
       dashboard: 'Dashboard',
-      masterData: 'Master Data',
-      configurator: 'Configurator',
+      masterData: 'Master Product',
+      masterCategory: 'Master Category',
+      configurator: 'Builder',
       adminUser: 'Admin User',
       logout: 'Logout',
       logoutSuccess: 'Logged Out',
@@ -66,8 +67,9 @@ export default function Navbar({ lang }: { lang: string }) {
     },
     id: {
       dashboard: 'Dasbor',
-      masterData: 'Data Master',
-      configurator: 'Konfigurator',
+      masterData: 'Produk Master',
+      masterCategory: 'Kategori Master',
+      configurator: 'Builder',
       adminUser: 'Pengguna Admin',
       logout: 'Keluar',
       logoutSuccess: 'Berhasil Keluar',
@@ -75,8 +77,9 @@ export default function Navbar({ lang }: { lang: string }) {
     }
   }[lang as 'en' | 'id'] || {
     dashboard: 'Dashboard',
-    masterData: 'Master Data',
-    configurator: 'Configurator',
+    masterData: 'Master Product',
+    masterCategory: 'Master Category',
+    configurator: 'Builder',
     adminUser: 'Admin User',
     logout: 'Logout',
     logoutSuccess: 'Logged Out',
@@ -116,6 +119,16 @@ export default function Navbar({ lang }: { lang: string }) {
                 {t.dashboard}
               </Link>
               <Link
+                href="/categories"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
+                  isActive('/categories')
+                    ? 'border-pink-300 text-gray-900 dark:text-white'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
+                }`}
+              >
+                {t.masterCategory}
+              </Link>
+              <Link
                 href="/products"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
                   isActive('/products')
@@ -126,9 +139,9 @@ export default function Navbar({ lang }: { lang: string }) {
                 {t.masterData}
               </Link>
               <Link
-                href="/configurators"
+                href="/builders"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${
-                  isActive('/configurators')
+                  isActive('/builders')
                     ? 'border-pink-300 text-gray-900 dark:text-white'
                     : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
@@ -234,6 +247,17 @@ export default function Navbar({ lang }: { lang: string }) {
               {t.dashboard}
             </Link>
             <Link
+              href="/categories"
+              onClick={() => setIsOpen(false)}
+              className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
+                isActive('/categories')
+                  ? 'border-pink-300 bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-300'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
+              }`}
+            >
+              {t.masterCategory}
+            </Link>
+            <Link
               href="/products"
               onClick={() => setIsOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
@@ -245,10 +269,10 @@ export default function Navbar({ lang }: { lang: string }) {
               {t.masterData}
             </Link>
             <Link
-              href="/configurators"
+              href="/builders"
               onClick={() => setIsOpen(false)}
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
-                isActive('/configurators')
+                isActive('/builders')
                   ? 'border-pink-300 bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-300'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-surface2'
               }`}
