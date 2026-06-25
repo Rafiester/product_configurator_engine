@@ -3,7 +3,7 @@
 An exclusive SaaS-style admin portal and PC builder dashboard featuring a premium Pastel Pink theme and fully responsive layout. Migrated from Laravel to Next.js.
 
 ## 🚀 Technology Stack
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Actions)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Server Actions, Turbopack)
 - **Database ORM**: [Prisma](https://www.prisma.io/) (PostgreSQL / Supabase connection)
 - **Styling**: [TailwindCSS v3](https://tailwindcss.com/)
 - **Theme Support**: Class-based Dark Mode & Light Mode using `next-themes`
