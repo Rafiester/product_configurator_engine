@@ -132,3 +132,31 @@ export async function deleteCategory(id: string) {
   
   revalidatePath('/categories');
 }
+
+export async function createCategoryModal(formData: FormData) {
+  try {
+    const name = (formData.get('name') as string || '').trim();
+    const status = formData.get('status') as string || 'active';
+
+    if (!name) {
+      throw new Error('Category name is required.');
+    }
+
+    trace('CREATE_ATTEMPT', { name, status });
+
+    const category = await prisma.category.create({
+      data: {
+        name,
+        status,
+      }
+    });
+
+    trace('CREATE_SUCCESS', { id: category.id });
+    revalidatePath('/categories');
+    return { success: true, category };
+  } catch (error: any) {
+    trace('CREATE_FAILED', { error: error.message });
+    return { success: false, error: error.message };
+  }
+}
+

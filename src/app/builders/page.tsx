@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import BuilderList from '@/components/BuilderList';
+import { cookies } from 'next/headers';
+import CreateBuilderModal from '@/components/CreateBuilderModal';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BuildersPage() {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get('lang')?.value || 'en';
   // Fetch builders along with their mappings/nested product info, active products, and active categories concurrently
   const [rawBuilders, activeProducts, categoriesData] = await Promise.all([
     prisma.builder.findMany({
@@ -89,17 +93,7 @@ export default async function BuildersPage() {
               Builders
             </h2>
           </div>
-          <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full sm:w-auto">
-            <Link 
-              href="/builders/create" 
-              className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2 bg-primary-DEFAULT hover:bg-primary-DEFAULT dark:bg-primary-DEFAULT dark:hover:bg-primary-DEFAULT active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white focus:outline-none shadow-sm text-sm transition-colors"
-            >
-              <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-              </svg>
-              Add Builder
-            </Link>
-          </div>
+          <CreateBuilderModal lang={lang} />
         </div>
 
         {/* Builder List Component */}

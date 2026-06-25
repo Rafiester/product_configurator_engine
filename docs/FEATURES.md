@@ -4,10 +4,10 @@
 Comprehensive CRUD (Create, Read, Update, Delete) management for PC components, allowing precise data entry for Category, Quantity, SDP, Page Price, and SRP.
 
 ## Master Categories
-Dynamic category lookup management allowing admins to create, publish, and delete categories. Category name updates cascade automatically to all associated products and builder mappings.
+Dynamic category lookup management allowing admins to create, publish, and delete categories. Category creation is done via a modern popup modal directly on the listing page. Category name updates cascade automatically to all associated products and builder mappings.
 
 ## Builders
-Administer high-level PC builds (e.g., "Gaming Build A", "Office Build B") which are then populated with precise product selections via the spreadsheet-style Builder interface.
+Administer high-level PC builds (e.g., "Gaming Build A", "Office Build B"). Creation of new builders is accessible via a modern popup modal directly on the listing page, after which builders can be populated with precise product selections via the spreadsheet-style Builder interface.
 
 ## Dynamic PC Builder
 A spreadsheet-style, fully interactive user interface powered by React. It groups available components by category in dropdowns, dynamically binds live pricing calculations, and saves the final matrix to the backend.

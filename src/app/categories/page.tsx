@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { DeleteCategoryButton } from '@/components/DeleteCategoryButton';
 import PerPageSelect from '@/components/PerPageSelect';
 import { cookies } from 'next/headers';
+import CreateCategoryModal from '@/components/CreateCategoryModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,16 +59,17 @@ const translations = {
 export default async function CategoriesPage({
   searchParams,
 }: {
-  searchParams: { search?: string; status?: string; page?: string; perPage?: string }
+  searchParams: Promise<{ search?: string; status?: string; page?: string; perPage?: string }>
 }) {
   const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
   const t = translations[lang as 'en' | 'id'] || translations.en;
 
-  const search = searchParams.search || '';
-  const status = searchParams.status || '';
-  const perPage = parseInt(searchParams.perPage || '10', 10) || 10;
-  const page = parseInt(searchParams.page || '1', 10) || 1;
+  const resolvedParams = await searchParams;
+  const search = resolvedParams.search || '';
+  const status = resolvedParams.status || '';
+  const perPage = parseInt(resolvedParams.perPage || '10', 10) || 10;
+  const page = parseInt(resolvedParams.page || '1', 10) || 1;
 
   // Query conditions
   const where: any = {};
@@ -121,11 +123,7 @@ export default async function CategoriesPage({
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-            <div className="p-1.5 bg-primary-soft dark:bg-primary-darkSoft rounded-xl inline-block text-center sm:text-left">
-              <Link href="/categories/create" className="inline-flex items-center justify-center w-full sm:w-auto px-6 py-2.5 bg-primary-DEFAULT hover:bg-primary-hover dark:bg-primary-DEFAULT dark:hover:bg-primary-hover active:bg-primary-active border border-transparent rounded-lg font-semibold text-black dark:text-white shadow-sm text-sm transition-colors">
-                {t.createButton}
-              </Link>
-            </div>
+            <CreateCategoryModal lang={lang} />
           </div>
         </div>
 
