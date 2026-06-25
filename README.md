@@ -1,4 +1,4 @@
-# PC Configurator Admin Panel (Next.js & Prisma)
+# PC Builder Admin Panel (Next.js & Prisma)
 
 An exclusive SaaS-style admin portal and PC builder dashboard featuring a premium Pastel Pink theme and fully responsive layout. Migrated from Laravel to Next.js.
 
@@ -21,8 +21,8 @@ Ensure you have the following installed:
 ### 2. Installation Steps
 1. Clone this repository to your local system:
    ```bash
-   git clone <repository_url> pc-configurator-cms
-   cd pc-configurator-cms
+   git clone <repository_url> pc-builder-cms
+   cd pc-builder-cms
    ```
 2. Install Javascript dependencies:
    ```bash

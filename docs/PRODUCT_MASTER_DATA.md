@@ -3,7 +3,7 @@
 The Product Master Data module is the core component repository for the application.
 
 ## Core Fields
-- **Category**: Determines the grouping in the Configurator Builder.
+- **Category**: Determines the grouping in the PC Builder.
 - **Product Name**: The display name of the component.
 - **Qty**: Base quantity.
 - **SDP**: Standard Dealer Price.

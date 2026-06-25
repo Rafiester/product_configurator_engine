@@ -1,6 +1,6 @@
 # Design System
 
-The PC Configurator CMS leverages an exclusive SaaS-style Pastel Pink design system, built heavily on TailwindCSS and injected dynamically into both Light and Dark modes.
+The PC Builder CMS leverages an exclusive SaaS-style Pastel Pink design system, built heavily on TailwindCSS and injected dynamically into both Light and Dark modes.
 
 ## Primary Accent Palette
 
@@ -19,4 +19,4 @@ Typography leans on Inter/System fonts, cleanly spaced using robust `py-x` and `
 - **Badges**: pill-shaped `rounded-full` elements primarily used for `Publish` and `Unpublish` statuses.
 - **Tables**: Clean spreadsheet-style padding with sticky headers where applicable.
 
-This design logic is hardcoded deeply into `tailwind.config.js` and global CSS files to ensure consistency across the admin panel.
+This design logic is hardcoded deeply into `tailwind.config.ts` and global CSS files to ensure consistency across the admin panel.
