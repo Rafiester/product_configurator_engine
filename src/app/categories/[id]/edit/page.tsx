@@ -31,7 +31,7 @@ export default async function EditCategoryPage({ params }: { params: { id: strin
     notFound();
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
   const t = translations[lang as 'en' | 'id'] || translations.en;
 

@@ -13,12 +13,12 @@ export const metadata: Metadata = {
   description: 'Manage Master Product and dynamic PC Builder builds.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
 
   return (

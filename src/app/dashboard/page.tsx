@@ -95,7 +95,7 @@ const t = {
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
   const activeT = t[lang as 'en' | 'id'] || t.en;
 

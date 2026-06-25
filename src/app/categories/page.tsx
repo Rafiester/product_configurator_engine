@@ -60,7 +60,7 @@ export default async function CategoriesPage({
 }: {
   searchParams: { search?: string; status?: string; page?: string; perPage?: string }
 }) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const lang = cookieStore.get('lang')?.value || 'en';
   const t = translations[lang as 'en' | 'id'] || translations.en;
 
