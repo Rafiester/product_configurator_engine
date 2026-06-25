@@ -60,7 +60,7 @@ export default function Navbar({ lang }: { lang: string }) {
       masterData: 'Master Product',
       masterCategory: 'Master Category',
       configurator: 'Builder',
-      adminUser: 'Admin User',
+      adminUser: ' Empiw Tanti <3',
       logout: 'Logout',
       logoutSuccess: 'Logged Out',
       logoutSuccessDesc: 'You have been logged out successfully.'
@@ -70,7 +70,7 @@ export default function Navbar({ lang }: { lang: string }) {
       masterData: 'Produk Master',
       masterCategory: 'Kategori Master',
       configurator: 'Builder',
-      adminUser: 'Pengguna Admin',
+      adminUser: ' Empiw Tanti <3',
       logout: 'Keluar',
       logoutSuccess: 'Berhasil Keluar',
       logoutSuccessDesc: 'Anda telah berhasil keluar.'
@@ -80,7 +80,7 @@ export default function Navbar({ lang }: { lang: string }) {
     masterData: 'Master Product',
     masterCategory: 'Master Category',
     configurator: 'Builder',
-    adminUser: 'Admin User',
+    adminUser: ' Empiw Tanti <3',
     logout: 'Logout',
     logoutSuccess: 'Logged Out',
     logoutSuccessDesc: 'You have been logged out successfully.'
@@ -182,7 +182,7 @@ export default function Navbar({ lang }: { lang: string }) {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-surface2"
               >
-                <div className="w-7 h-7 rounded-full bg-primary-DEFAULT/20 text-primary-DEFAULT flex items-center justify-center mr-2 text-xs font-bold">A</div>
+                <div className="w-7 h-7 rounded-full bg-primary-DEFAULT/20 text-primary-DEFAULT flex items-center justify-center mr-2 text-xs font-bold">E</div>
                 <div>{t.adminUser}</div>
                 <svg className={`ml-1.5 h-4 w-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
