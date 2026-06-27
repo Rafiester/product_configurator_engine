@@ -80,44 +80,89 @@ export default function SearchableSelect({
         <div className={`absolute z-50 w-full bg-white dark:bg-dark-surface border border-gray-250 dark:border-dark-border rounded-lg shadow-xl overflow-hidden animate-fadeInUp ${
           openUpward ? 'bottom-full mb-1' : 'top-full mt-1'
         }`}>
-          {/* Search Input */}
-          <div className="p-2 border-b border-gray-150 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search product..."
-              className="w-full px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white text-gray-900 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-primary-DEFAULT"
-              autoFocus
-            />
-          </div>
-
-          {/* Options List */}
-          <div className="max-h-56 overflow-y-auto divide-y divide-gray-100 dark:divide-dark-border/50">
-            {filteredOptions.length > 0 ? (
-              filteredOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => {
-                    onChange(opt.id);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2 text-xs transition-colors truncate block ${
-                    opt.id === value
-                      ? 'bg-primary-soft text-black font-semibold dark:bg-primary-darkSoft dark:text-white'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-surface2'
-                  }`}
-                >
-                  {opt.name}
-                </button>
-              ))
-            ) : (
-              <div className="px-3 py-3 text-xs text-gray-400 dark:text-gray-500 text-center">
-                No products found
+          {openUpward ? (
+            <>
+              {/* Options List */}
+              <div className="max-h-48 overflow-y-auto divide-y divide-gray-100 dark:divide-dark-border/50">
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        onChange(opt.id);
+                        setIsOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs transition-colors truncate block ${
+                        opt.id === value
+                          ? 'bg-primary-soft text-black font-semibold dark:bg-primary-darkSoft dark:text-white'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-surface2'
+                      }`}
+                    >
+                      {opt.name}
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-3 text-xs text-gray-400 dark:text-gray-500 text-center">
+                    No products found
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+
+              {/* Search Input (at bottom when opening upward) */}
+              <div className="p-2 border-t border-gray-150 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search product..."
+                  className="w-full px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white text-gray-900 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-primary-DEFAULT"
+                  autoFocus
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Search Input */}
+              <div className="p-2 border-b border-gray-150 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search product..."
+                  className="w-full px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-700 dark:bg-gray-800 bg-white text-gray-900 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-primary-DEFAULT"
+                  autoFocus
+                />
+              </div>
+
+              {/* Options List */}
+              <div className="max-h-48 overflow-y-auto divide-y divide-gray-100 dark:divide-dark-border/50">
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        onChange(opt.id);
+                        setIsOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs transition-colors truncate block ${
+                        opt.id === value
+                          ? 'bg-primary-soft text-black font-semibold dark:bg-primary-darkSoft dark:text-white'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-surface2'
+                      }`}
+                    >
+                      {opt.name}
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-3 text-xs text-gray-400 dark:text-gray-500 text-center">
+                    No products found
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
