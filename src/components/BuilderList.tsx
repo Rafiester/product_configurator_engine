@@ -233,13 +233,14 @@ function BuilderCard({
     );
   };
 
-  const onQtyChange = (rowId: string, qty: number) => {
+  const onQtyChange = (rowId: string, value: string) => {
+    const qty = parseInt(value, 10);
     setRows((prev) =>
       prev.map((r) => {
         if (r.id === rowId) {
           return {
             ...r,
-            qty: Math.max(1, qty),
+            qty: isNaN(qty) ? 0 : Math.max(0, qty),
           };
         }
         return r;
@@ -279,14 +280,15 @@ function BuilderCard({
     const selections = rows
       .filter((r) => r.productId)
       .map((r) => {
-        const totalSdp = r.sdp * r.qty;
-        const margin = (r.pagePrice - r.sdp) * r.qty;
+        const rowQty = r.qty || 1;
+        const totalSdp = r.sdp * rowQty;
+        const margin = (r.pagePrice - r.sdp) * rowQty;
         const marginPercentage = r.pagePrice > 0 ? ((r.pagePrice - r.sdp) / r.pagePrice) * 100 : 0;
 
         return {
           category: r.category,
           product_id: r.productId,
-          qty: r.qty,
+          qty: rowQty,
           sdp: r.sdp,
           totalSdp,
           pagePrice: r.pagePrice,
@@ -550,8 +552,8 @@ function BuilderCard({
                             type="number"
                             min="1"
                             disabled={!row.productId}
-                            value={row.qty}
-                            onChange={(e) => onQtyChange(row.id, parseInt(e.target.value) || 1)}
+                            value={row.qty === 0 ? '' : row.qty}
+                            onChange={(e) => onQtyChange(row.id, e.target.value)}
                             className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
                           />
                         </td>
@@ -725,8 +727,8 @@ function BuilderCard({
                       <input
                         type="number"
                         min="1"
-                        value={row.qty}
-                        onChange={(e) => onQtyChange(row.id, parseInt(e.target.value) || 1)}
+                        value={row.qty === 0 ? '' : row.qty}
+                        onChange={(e) => onQtyChange(row.id, e.target.value)}
                         className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1"
                       />
                     </div>
