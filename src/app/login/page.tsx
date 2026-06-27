@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -151,10 +152,36 @@ export default function LoginPage() {
           </form>
 
           {/* Hint */}
-          <div className="mt-5 pt-5 border-t border-gray-100 dark:border-dark-border">
-            <p className="text-xs text-center text-gray-400 dark:text-gray-500">
-              Demo credentials: <span className="font-mono text-gray-500 dark:text-gray-400">admin@dynamicdata.com</span> / <span className="font-mono text-gray-500 dark:text-gray-400">admin123</span>
-            </p>
+          <div className="mt-5 pt-5 border-t border-gray-100 dark:border-dark-border flex flex-col items-center">
+            <button
+              type="button"
+              onClick={() => setShowHint(!showHint)}
+              className="text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1.5 transition-colors focus:outline-none"
+            >
+              <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{showHint ? 'Hide Demo Credentials' : 'Show Demo Credentials'}</span>
+            </button>
+            
+            {showHint && (
+              <div className="mt-3 p-3 bg-gray-50 dark:bg-dark-surface2 border border-gray-200/60 dark:border-dark-border rounded-xl text-center w-full" style={{ animation: 'fadeInUp 0.2s ease-out' }}>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  <span className="font-semibold text-gray-700 dark:text-gray-300">Email:</span> <span className="font-mono text-gray-600 dark:text-gray-400">admin@dynamicdata.com</span><br/>
+                  <span className="font-semibold text-gray-700 dark:text-gray-300">Password:</span> <span className="font-mono text-gray-600 dark:text-gray-400">admin123</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('admin@dynamicdata.com');
+                    setPassword('admin123');
+                  }}
+                  className="text-xs font-bold text-pink-600 hover:text-pink-750 dark:text-pink-400 dark:hover:text-pink-300 transition-colors"
+                >
+                  Autofill Credentials
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
