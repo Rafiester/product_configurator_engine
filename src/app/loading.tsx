@@ -15,18 +15,38 @@ const PC_TIPS = [
 export default function Loading() {
   const [tipIndex, setTipIndex] = useState(0);
   const [dots, setDots] = useState('.');
+  const [progress, setProgress] = useState(0);
 
-  // Rotate tips automatically every 4 seconds
+  // Progressive speed increments for a highly realistic loading feel
   useEffect(() => {
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 98) {
+          clearInterval(progressInterval);
+          return 98;
+        }
+        let increment = 1;
+        if (prev < 30) {
+          increment = Math.floor(Math.random() * 8) + 5; // Fast start
+        } else if (prev < 70) {
+          increment = Math.floor(Math.random() * 4) + 1; // Medium pace
+        } else {
+          increment = Math.random() > 0.5 ? 1 : 0; // Slow crawl near the end
+        }
+        return Math.min(98, prev + increment);
+      });
+    }, 150);
+
     const tipInterval = setInterval(() => {
       setTipIndex((prev) => (prev + 1) % PC_TIPS.length);
-    }, 4000);
+    }, 4500);
 
     const dotInterval = setInterval(() => {
       setDots((prev) => (prev.length >= 3 ? '.' : prev + '.'));
     }, 500);
 
     return () => {
+      clearInterval(progressInterval);
       clearInterval(tipInterval);
       clearInterval(dotInterval);
     };
@@ -62,6 +82,20 @@ export default function Loading() {
           </p>
         </div>
 
+        {/* Progress Bar */}
+        <div className="space-y-2">
+          <div className="w-full bg-gray-100 dark:bg-gray-800/80 rounded-full h-2.5 overflow-hidden relative border border-gray-200/20 dark:border-gray-700/30">
+            <div 
+              className="bg-gradient-to-r from-pink-500 via-rose-455 to-pink-500 h-full rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="flex justify-between items-center text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider px-0.5">
+            <span>Progress</span>
+            <span className="tabular-nums text-pink-600 dark:text-pink-450">{progress}%</span>
+          </div>
+        </div>
+
         {/* Tips Box */}
         <div className="p-4 rounded-xl bg-gray-50 dark:bg-dark-surface2/60 border border-gray-150 dark:border-[#222735] text-left transition-all duration-300 min-h-[90px] flex flex-col justify-between">
           <p className="text-xs font-medium text-gray-600 dark:text-gray-300 leading-relaxed transition-all duration-300">
@@ -71,7 +105,7 @@ export default function Loading() {
             <button
               type="button"
               onClick={nextTip}
-              className="text-[10px] font-extrabold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 transition-colors focus:outline-none flex items-center gap-1 cursor-pointer"
+              className="text-[10px] font-extrabold uppercase tracking-wider text-pink-600 dark:text-pink-450 hover:text-pink-700 dark:hover:text-pink-300 transition-colors focus:outline-none flex items-center gap-1 cursor-pointer"
             >
               <span>Next Tip</span>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
