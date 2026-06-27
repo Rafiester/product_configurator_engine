@@ -504,17 +504,17 @@ function BuilderCard({
                       <th className="py-4 px-4 font-semibold text-center text-gray-600 dark:text-gray-300 w-20">
                         Qty
                       </th>
-                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
-                        SDP
-                      </th>
-                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
-                        Total SDP
-                      </th>
                       <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-36">
                         Page Price
                       </th>
                       <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         SRP
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-28">
+                        SDP
+                      </th>
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                        Total SDP
                       </th>
                       <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         Margin
@@ -561,16 +561,16 @@ function BuilderCard({
                           />
                         </td>
                         <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
-                          {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
-                        </td>
-                        <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
-                          {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
-                        </td>
-                        <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
                           {row.productId ? `RM ${row.pagePrice.toFixed(2)}` : '-'}
                         </td>
                         <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
                           {row.productId ? `RM ${row.srp.toFixed(2)}` : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
+                          {row.productId ? `RM ${row.sdp.toFixed(2)}` : '-'}
+                        </td>
+                        <td className="py-3 px-4 text-right text-gray-900 dark:text-gray-100 font-medium tabular-nums">
+                          {row.productId ? `RM ${(row.sdp * row.qty).toFixed(2)}` : '-'}
                         </td>
                         <td
                           className={`py-3 px-4 text-right tabular-nums ${marginClass(
@@ -611,17 +611,20 @@ function BuilderCard({
                   </tbody>
                   <tfoot className="bg-gray-50 dark:bg-gray-900 border-t-2 border-gray-200 dark:border-dark-border font-bold text-sm">
                     <tr>
-                      <td colSpan={4} className="py-4 pl-6 md:pl-8 pr-4 text-right text-gray-900 dark:text-gray-100">
+                      <td colSpan={3} className="py-4 pl-6 md:pl-8 pr-4 text-right text-gray-900 dark:text-gray-100">
                         GRAND TOTAL:
-                      </td>
-                      <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
-                        RM {totals.sdpSum.toFixed(2)}
                       </td>
                       <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
                         RM {totals.pageSum.toFixed(2)}
                       </td>
                       <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
                         RM {totals.srpSum.toFixed(2)}
+                      </td>
+                      <td className="py-4 px-4 text-right text-gray-655 dark:text-gray-400 tabular-nums">
+                        -
+                      </td>
+                      <td className="py-4 px-4 text-right text-gray-900 dark:text-gray-100 tabular-nums">
+                        RM {totals.sdpSum.toFixed(2)}
                       </td>
                       <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                         RM {totals.marginSum.toFixed(2)}
