@@ -84,25 +84,28 @@ export default function BuilderList({
   };
 
   const handleDuplicate = async (id: string, name: string) => {
-    const confirmed = await confirm({
-      title: 'Duplicate Builder?',
-      message: `Are you sure you want to duplicate "${name}"?`,
-      confirmText: 'Duplicate',
-      type: 'info',
-    });
+    const newName = window.prompt(`Duplicate Builder Name:`, `${name} (Copy)`);
+    
+    if (newName === null) {
+      return;
+    }
 
-    if (confirmed) {
-      try {
-        const res = await duplicateBuilder(id);
-        if (res.success) {
-          showToast('success', 'Duplicated', 'Builder duplicated successfully.');
-          router.refresh();
-        } else {
-          showToast('error', 'Error', res.error || 'Failed to duplicate builder.');
-        }
-      } catch (err: any) {
-        showToast('error', 'Error', err.message || 'Failed to duplicate builder.');
+    const trimmedName = newName.trim();
+    if (!trimmedName) {
+      showToast('error', 'Error', 'Builder name cannot be empty.');
+      return;
+    }
+
+    try {
+      const res = await duplicateBuilder(id, trimmedName);
+      if (res.success) {
+        showToast('success', 'Duplicated', 'Builder duplicated successfully.');
+        router.refresh();
+      } else {
+        showToast('error', 'Error', res.error || 'Failed to duplicate builder.');
       }
+    } catch (err: any) {
+      showToast('error', 'Error', err.message || 'Failed to duplicate builder.');
     }
   };
 

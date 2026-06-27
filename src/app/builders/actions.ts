@@ -120,9 +120,9 @@ export async function syncBuilderProducts(builderId: string, mappings: any[], se
   }
 }
 
-export async function duplicateBuilder(id: string) {
+export async function duplicateBuilder(id: string, newName?: string) {
   try {
-    trace('DUPLICATE_ATTEMPT', { id });
+    trace('DUPLICATE_ATTEMPT', { id, newName });
 
     // Fetch the original builder details including its products mappings
     const original = await prisma.builder.findUnique({
@@ -139,7 +139,7 @@ export async function duplicateBuilder(id: string) {
     // Create duplicate builder
     const duplicated = await prisma.builder.create({
       data: {
-        name: `${original.name} (Copy)`,
+        name: newName || `${original.name} (Copy)`,
         status: original.status,
         selectedCategories: original.selectedCategories,
         products: {
