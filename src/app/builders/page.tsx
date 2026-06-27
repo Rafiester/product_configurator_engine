@@ -42,6 +42,7 @@ export default async function BuildersPage() {
     id: b.id,
     name: b.name,
     status: b.status,
+    selectedCategories: b.selectedCategories,
     updatedAt: b.updatedAt,
     products: b.products.map(p => ({
       id: p.id,
@@ -93,7 +94,7 @@ export default async function BuildersPage() {
               Builders
             </h2>
           </div>
-          <CreateBuilderModal lang={lang} />
+          <CreateBuilderModal lang={lang} categories={categories} />
         </div>
 
         {/* Builder List Component */}

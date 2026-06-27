@@ -1,32 +1,21 @@
-# Context
-I have an existing web application with a "Master Data" page that manages products. I need to add a new "Master Category" page to manage product categories dynamically, and I also need to update the behavior of several input fields on the existing "Add/Edit Product" form.
+# Context & Task Update
+The "Create New Builder" modal is looking good with the component category checklist. Now, we need to implement the core logic in the **Builder Table View** to support adding **multiple instances of ANY category**. 
 
-# Task Requirements
+Whether the user wants 2 RAMs, 2 GPUs, multiple ARGB/Accessories, or multiple Storage/SSDs, the system must handle duplicate categories flawlessly without overwriting data. The Grand Total and Save functionalities must remain perfectly intact.
 
-## 1. Navigation & New Page (Master Category)
-- **Navbar Update**: Add a new tab called **"Master Category"** next to the existing "Master Data" tab.
-- **New Page Creation**: Create the "Master Category" page strictly following the existing UI/UX, layout, and component structures of the "Master Data" (Products) page.
-  - **Header**: "Categories (Master Data)"
-  - **Top Actions**: Include a "Create New Category" button (styled exactly like the "Create New Product" button).
-  - **Search & Filter**: Search bar, Status filter (Publish / Draft), "Filter" and "Clear" buttons.
-  - **Data Table**: Columns `NO`, `CATEGORY NAME`, `STATUS`, `ACTIONS` (Edit outline button and Delete red solid button matching current styles).
+Please implement the code using my current tech stack: [TULIS_TECH_STACK_KAMU_DISINI, cth: React + Tailwind CSS + TypeScript]. Ensure full support for Dark/Light mode and responsive mobile layouts.
 
-## 2. Form Input Adjustments (Add/Edit Product)
-Please update the UI and behavior of the following fields in the product form:
-- **Number Inputs (SDP, Page Price, SRP, Global Quantity)**: 
-  - **Empty Default State**: Remove the default `0` or `1` values. When creating a new entry, these fields must start completely empty.
-  - **Remove Spinners**: Hide the default HTML up/down arrows (spin buttons) on all number input fields (e.g., using CSS `appearance: none;` or similar Tailwind utility).
-  - **Add Placeholders**: 
-    - For Pricing inputs (SDP, Page Price, SRP): add `placeholder="e.g. RM 200"`.
-    - For Global Quantity input: add `placeholder="e.g. 10"`.
-- **Status Dropdown**:
-  - Remove the default pre-selected value (currently defaults to "Publish").
-  - The dropdown should start unselected with a default placeholder option like `-- Select Status --`.
+# Detailed Requirements
 
-## 3. Data Integration
-- The categories created and managed on the new "Master Category" page must directly populate the "Category" dropdown options in the existing "Base Product Details" form (Add/Edit Product page).
-
-## 4. Styling & Responsiveness Constraints
-- **Theme Support**: The new page and components MUST fully support both Dark Mode and Light Mode. Reuse the existing CSS/Tailwind variables or classes that govern the current theme.
-- **Mobile Responsiveness**: Ensure the table, search filters, and layout collapse gracefully on mobile devices, matching the behavior of the existing Master Data page.
-- **Component Reusability**: Do not invent new UI components. Reuse the existing table, button, input, and modal/form components currently utilized in the `Master Data` page to ensure 100% visual consistency.
+## 1. Refactor State Management (Crucial for ALL Categories)
+* **Change from Object to Array of Objects:** The current state likely uses categories as object keys (which prevents duplicate categories). You MUST refactor the builder state into an array of objects. Every row must have a unique identifier (like a UUID), not just a category name.
+* **Expected State Structure (Example showing duplicates across different categories):**
+  ```json
+  [
+    { "id": "uuid-1", "category": "CPU", "productId": null, "price": 0, "qty": 1 },
+    { "id": "uuid-2", "category": "GPU", "productId": null, "price": 0, "qty": 1 },
+    { "id": "uuid-3", "category": "GPU", "productId": null, "price": 0, "qty": 1 }, 
+    { "id": "uuid-4", "category": "RAM", "productId": null, "price": 0, "qty": 1 },
+    { "id": "uuid-5", "category": "RAM", "productId": null, "price": 0, "qty": 1 },
+    { "id": "uuid-6", "category": "ARGB / Accessories", "productId": null, "price": 0, "qty": 1 }
+  ]

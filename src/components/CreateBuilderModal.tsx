@@ -44,26 +44,31 @@ const translations = {
 
 interface CreateBuilderModalProps {
   lang: string;
+  categories: string[];
 }
 
-export default function CreateBuilderModal({ lang }: CreateBuilderModalProps) {
+export default function CreateBuilderModal({ lang, categories }: CreateBuilderModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const router = useRouter();
   const { showToast } = useUI();
 
   const t = translations[lang as 'en' | 'id'] || translations.en;
 
+  const categoriesKey = categories?.join(',');
+
   // Handle modal entry/exit animation triggers
   useEffect(() => {
     if (isOpen) {
+      setSelectedCats(categories || []);
       const timer = setTimeout(() => setShowContent(true), 50);
       return () => clearTimeout(timer);
     } else {
       setShowContent(false);
     }
-  }, [isOpen]);
+  }, [isOpen, categoriesKey]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -180,6 +185,49 @@ export default function CreateBuilderModal({ lang }: CreateBuilderModalProps) {
                     <option value="active">{t.statusPublish}</option>
                     <option value="inactive">{t.statusUnpublish}</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">
+                    Component Categories
+                  </label>
+                  <div className="flex gap-3 mb-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCats(categories || [])}
+                      className="text-xs text-primary-DEFAULT dark:text-primary-dark font-semibold hover:underline"
+                    >
+                      Select All
+                    </button>
+                    <span className="text-gray-300 dark:text-gray-650 text-xs">|</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCats([])}
+                      className="text-xs text-gray-500 dark:text-gray-400 font-semibold hover:underline"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto border border-gray-250 dark:border-dark-border rounded-lg p-3 bg-gray-50 dark:bg-dark-surface/50">
+                    {categories.map((cat) => (
+                      <label key={cat} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-355 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                        <input
+                          type="checkbox"
+                          name="categories"
+                          value={cat}
+                          checked={selectedCats.includes(cat)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCats([...selectedCats, cat]);
+                            } else {
+                              setSelectedCats(selectedCats.filter(c => c !== cat));
+                            }
+                          }}
+                          className="rounded border-gray-300 text-primary-DEFAULT focus:ring-primary-DEFAULT dark:border-gray-700 dark:bg-gray-800"
+                        />
+                        <span className="truncate">{cat}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
 

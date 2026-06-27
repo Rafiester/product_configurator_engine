@@ -9,13 +9,14 @@ export const dynamic = 'force-dynamic';
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { search?: string; category?: string; status?: string; page?: string; perPage?: string }
+  searchParams: Promise<{ search?: string; category?: string; status?: string; page?: string; perPage?: string }>
 }) {
-  const search = searchParams.search || '';
-  const category = searchParams.category || '';
-  const status = searchParams.status || '';
-  const perPage = parseInt(searchParams.perPage || '10', 10) || 10;
-  const page = parseInt(searchParams.page || '1', 10) || 1;
+  const resolvedParams = await searchParams;
+  const search = resolvedParams.search || '';
+  const category = resolvedParams.category || '';
+  const status = resolvedParams.status || '';
+  const perPage = parseInt(resolvedParams.perPage || '10', 10) || 10;
+  const page = parseInt(resolvedParams.page || '1', 10) || 1;
 
   // Query conditions
   const where: any = { deletedAt: null };

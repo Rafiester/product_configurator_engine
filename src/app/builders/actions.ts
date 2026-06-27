@@ -13,9 +13,10 @@ export async function createBuilder(formData: FormData) {
     const data = {
       name: formData.get('name') as string,
       status: formData.get('status') as string || 'active',
+      selectedCategories: formData.getAll('categories') as string[],
     };
 
-    trace('CREATE_ATTEMPT', { name: data.name });
+    trace('CREATE_ATTEMPT', { name: data.name, selectedCategories: data.selectedCategories });
 
     const builder = await prisma.builder.create({ data });
 

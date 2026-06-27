@@ -13,10 +13,11 @@ interface InitialConfigData {
   };
 }
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const [rawProduct, builders, categoriesData] = await Promise.all([
     prisma.product.findUnique({
-      where: { id: params.id, deletedAt: null },
+      where: { id, deletedAt: null },
       include: {
         builders: true
       }

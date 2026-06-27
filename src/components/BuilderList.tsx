@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/components/ToastProvider';
@@ -58,6 +58,10 @@ export default function BuilderList({
   const [builders, setBuilders] = useState(initialBuilders);
   const router = useRouter();
   const { confirm, showToast } = useUI();
+
+  useEffect(() => {
+    setBuilders(initialBuilders);
+  }, [initialBuilders]);
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
@@ -128,12 +132,21 @@ function BuilderCard({
 
   // Initialize spreadsheet rows state
   const [rows, setRows] = useState(() => {
-    return categories.map((cat) => {
-      // Find existing selection in this category
-      const existing = builder.products.find((p) => p.category === cat);
+    const initialRows: {
+      id: string;
+      category: string;
+      productId: string;
+      qty: number;
+      sdp: number;
+      pagePrice: number;
+      srp: number;
+    }[] = [];
 
-      // Make sure the existing product is appended to category choices (in case it is inactive but assigned)
-      if (existing && productsByCategory[cat]) {
+    // 1. Add all existing product mappings from database
+    builder.products.forEach((existing) => {
+      const cat = existing.category;
+      // Make sure existing product is in productsByCategory
+      if (productsByCategory[cat]) {
         const found = productsByCategory[cat].find((p) => p.id === existing.productId);
         if (!found) {
           productsByCategory[cat].push({
@@ -146,24 +159,66 @@ function BuilderCard({
         }
       }
 
-      return {
+      initialRows.push({
+        id: existing.id || Math.random().toString(36).substring(2, 9),
         category: cat,
-        productId: existing ? existing.productId : '',
-        qty: existing ? existing.qty : 1,
-        sdp: existing ? Number(existing.sdp) : 0,
-        pagePrice: existing ? Number(existing.pagePrice) : 0,
-        srp: existing ? Number(existing.srp) : 0,
-      };
+        productId: existing.productId,
+        qty: existing.qty,
+        sdp: Number(existing.sdp),
+        pagePrice: Number(existing.pagePrice),
+        srp: Number(existing.srp),
+      });
     });
+
+    // 2. Identify which categories to initialize empty rows for
+    const catsToUse = (builder as any).selectedCategories && (builder as any).selectedCategories.length > 0
+      ? (builder as any).selectedCategories
+      : (initialRows.length === 0 ? categories : []);
+
+    catsToUse.forEach((cat: string) => {
+      // Only add an empty row if no product of this category is already in initialRows
+      const hasProduct = initialRows.some((r) => r.category === cat);
+      if (!hasProduct) {
+        initialRows.push({
+          id: Math.random().toString(36).substring(2, 9),
+          category: cat,
+          productId: '',
+          qty: 1,
+          sdp: 0,
+          pagePrice: 0,
+          srp: 0,
+        });
+      }
+    });
+
+    return initialRows;
   });
 
-  const onProductChange = (cat: string, prodId: string) => {
-    const list = productsByCategory[cat] || [];
-    const prod = list.find((p) => p.id === prodId);
+  const addRow = (category: string) => {
+    setRows((prev) => [
+      ...prev,
+      {
+        id: Math.random().toString(36).substring(2, 9),
+        category,
+        productId: '',
+        qty: 1,
+        sdp: 0,
+        pagePrice: 0,
+        srp: 0,
+      },
+    ]);
+  };
 
+  const removeRow = (rowId: string) => {
+    setRows((prev) => prev.filter((r) => r.id !== rowId));
+  };
+
+  const onProductChange = (rowId: string, prodId: string) => {
     setRows((prev) =>
       prev.map((r) => {
-        if (r.category === cat) {
+        if (r.id === rowId) {
+          const list = productsByCategory[r.category] || [];
+          const prod = list.find((p) => p.id === prodId);
           return {
             ...r,
             productId: prodId,
@@ -177,10 +232,10 @@ function BuilderCard({
     );
   };
 
-  const onQtyChange = (cat: string, qty: number) => {
+  const onQtyChange = (rowId: string, qty: number) => {
     setRows((prev) =>
       prev.map((r) => {
-        if (r.category === cat) {
+        if (r.id === rowId) {
           return {
             ...r,
             qty: Math.max(1, qty),
@@ -200,8 +255,8 @@ function BuilderCard({
     rows.forEach((r) => {
       if (r.productId) {
         sdpSum += r.sdp * r.qty;
-        pageSum += r.pagePrice;
-        srpSum += r.srp;
+        pageSum += r.pagePrice * r.qty;
+        srpSum += r.srp * r.qty;
       }
     });
 
@@ -224,8 +279,8 @@ function BuilderCard({
       .filter((r) => r.productId)
       .map((r) => {
         const totalSdp = r.sdp * r.qty;
-        const margin = r.pagePrice - totalSdp;
-        const marginPercentage = r.pagePrice > 0 ? (margin / r.pagePrice) * 100 : 0;
+        const margin = (r.pagePrice - r.sdp) * r.qty;
+        const marginPercentage = r.pagePrice > 0 ? ((r.pagePrice - r.sdp) / r.pagePrice) * 100 : 0;
 
         return {
           category: r.category,
@@ -464,15 +519,18 @@ function BuilderCard({
                       <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         Margin
                       </th>
-                      <th className="py-4 pl-4 pr-6 md:pr-8 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
+                      <th className="py-4 px-4 font-semibold text-right text-gray-600 dark:text-gray-300 w-32">
                         Margin %
+                      </th>
+                      <th className="py-4 pl-4 pr-6 md:pr-8 font-semibold text-right text-gray-600 dark:text-gray-300 w-20">
+                        Action
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-dark-border bg-white dark:bg-dark-surface2">
                     {rows.map((row) => (
                       <tr
-                        key={row.category}
+                        key={row.id}
                         className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <td className="py-3 pl-6 md:pl-8 pr-4 font-medium text-gray-900 dark:text-gray-100 truncate">
@@ -481,7 +539,7 @@ function BuilderCard({
                         <td className="py-3 px-4">
                           <select
                             value={row.productId}
-                            onChange={(e) => onProductChange(row.category, e.target.value)}
+                            onChange={(e) => onProductChange(row.id, e.target.value)}
                             className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
                           >
                             <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
@@ -498,7 +556,7 @@ function BuilderCard({
                             min="1"
                             disabled={!row.productId}
                             value={row.qty}
-                            onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
+                            onChange={(e) => onQtyChange(row.id, parseInt(e.target.value) || 1)}
                             className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
                           />
                         </td>
@@ -516,25 +574,37 @@ function BuilderCard({
                         </td>
                         <td
                           className={`py-3 px-4 text-right tabular-nums ${marginClass(
-                            row.pagePrice - row.sdp * row.qty
+                            (row.pagePrice - row.sdp) * row.qty
                           )}`}
                         >
                           {row.productId
-                            ? `RM ${(row.pagePrice - row.sdp * row.qty).toFixed(2)}`
+                            ? `RM ${((row.pagePrice - row.sdp) * row.qty).toFixed(2)}`
                             : '-'}
                         </td>
                         <td
-                          className={`py-3 pl-4 pr-6 md:pr-8 text-right tabular-nums ${marginClass(
-                            row.pagePrice - row.sdp * row.qty
+                          className={`py-3 px-4 text-right tabular-nums ${marginClass(
+                            (row.pagePrice - row.sdp) * row.qty
                           )}`}
                         >
                           {row.productId
                             ? row.pagePrice > 0
-                              ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(
+                              ? `${(((row.pagePrice - row.sdp) / row.pagePrice) * 100).toFixed(
                                   2
                                 )}%`
                               : '0.00%'
                             : '-'}
+                        </td>
+                        <td className="py-3 pl-4 pr-6 md:pr-8 text-right">
+                          <button
+                            type="button"
+                            onClick={() => removeRow(row.id)}
+                            className="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1"
+                            title="Remove Row"
+                          >
+                            <svg className="w-4 h-4 inline" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -556,17 +626,51 @@ function BuilderCard({
                       <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                         RM {totals.marginSum.toFixed(2)}
                       </td>
-                      <td className={`py-4 pl-4 pr-6 md:pr-8 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
+                      <td className={`py-4 px-4 text-right tabular-nums ${marginClass(totals.marginSum)}`}>
                         {totals.marginPercent.toFixed(2)}%
                       </td>
+                      <td className="py-4 pl-4 pr-6 md:pr-8"></td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
             </div>
 
-            <div className="pt-6 pb-8 px-6 md:px-8 flex justify-end">
-              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-[18px] inline-block">
+            <div className="pt-6 pb-8 px-6 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+              {/* Left: Add row selector */}
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <select
+                  id={`add-category-select-${builder.id}`}
+                  className="bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1.5 min-w-[180px]"
+                  defaultValue=""
+                >
+                  <option value="">-- Add Category --</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const select = document.getElementById(`add-category-select-${builder.id}`) as HTMLSelectElement;
+                    if (select && select.value) {
+                      addRow(select.value);
+                      select.value = "";
+                    }
+                  }}
+                  className="inline-flex items-center px-4 py-2 bg-primary-soft dark:bg-primary-darkSoft hover:bg-primary-soft/80 text-black dark:text-white font-semibold rounded-md border border-primary-border dark:border-primary-border text-sm transition-colors"
+                >
+                  <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Row
+                </button>
+              </div>
+
+              {/* Right: Save button */}
+              <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-[18px] inline-block shrink-0">
                 <button
                   onClick={saveConfiguration}
                   disabled={isSaving}
@@ -589,18 +693,28 @@ function BuilderCard({
           {/* Mobile Category Builder Cards View */}
           <div className="block md:hidden space-y-4 px-6 pt-4 pb-2">
             {rows.map((row) => (
-              <div key={row.category} className="border border-gray-200 dark:border-dark-border rounded-xl p-4 bg-gray-50/30 dark:bg-dark-surface space-y-3">
+              <div key={row.id} className="border border-gray-200 dark:border-dark-border rounded-xl p-4 bg-gray-50/30 dark:bg-dark-surface space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-900 dark:text-gray-100 text-sm">
                     {row.category}
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => removeRow(row.id)}
+                    className="text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors p-1"
+                    title="Remove Row"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
                 
                 <div className="space-y-2">
                   <label className="block text-xs text-gray-500 dark:text-gray-400">Select Component</label>
                   <select
                     value={row.productId}
-                    onChange={(e) => onProductChange(row.category, e.target.value)}
+                    onChange={(e) => onProductChange(row.id, e.target.value)}
                     className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1.5"
                   >
                     <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
@@ -620,7 +734,7 @@ function BuilderCard({
                         type="number"
                         min="1"
                         value={row.qty}
-                        onChange={(e) => onQtyChange(row.category, parseInt(e.target.value) || 1)}
+                        onChange={(e) => onQtyChange(row.id, parseInt(e.target.value) || 1)}
                         className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1"
                       />
                     </div>
@@ -642,15 +756,15 @@ function BuilderCard({
                     </div>
                     <div>
                       <span className="text-gray-555 dark:text-gray-400">Margin</span>
-                      <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
-                        RM {(row.pagePrice - row.sdp * row.qty).toFixed(2)}
+                      <div className={`font-semibold mt-0.5 ${marginClass((row.pagePrice - row.sdp) * row.qty)}`}>
+                        RM {((row.pagePrice - row.sdp) * row.qty).toFixed(2)}
                       </div>
                     </div>
                     <div>
                       <span className="text-gray-555 dark:text-gray-400">Margin %</span>
-                      <div className={`font-semibold mt-0.5 ${marginClass(row.pagePrice - row.sdp * row.qty)}`}>
+                      <div className={`font-semibold mt-0.5 ${marginClass((row.pagePrice - row.sdp) * row.qty)}`}>
                         {row.pagePrice > 0
-                          ? `${(((row.pagePrice - row.sdp * row.qty) / row.pagePrice) * 100).toFixed(2)}%`
+                          ? `${(((row.pagePrice - row.sdp) / row.pagePrice) * 100).toFixed(2)}%`
                           : '0.00%'}
                       </div>
                     </div>
@@ -658,6 +772,38 @@ function BuilderCard({
                 )}
               </div>
             ))}
+
+            {/* Mobile Add Row Selector */}
+            <div className="pt-2 pb-4 flex flex-col gap-3">
+              <select
+                id={`add-category-select-mobile-${builder.id}`}
+                className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1.5"
+                defaultValue=""
+              >
+                <option value="">-- Add Category --</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => {
+                  const select = document.getElementById(`add-category-select-mobile-${builder.id}`) as HTMLSelectElement;
+                  if (select && select.value) {
+                    addRow(select.value);
+                    select.value = "";
+                  }
+                }}
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-primary-soft dark:bg-primary-darkSoft hover:bg-primary-soft/80 text-black dark:text-white font-semibold rounded-md border border-primary-border dark:border-primary-border text-sm transition-colors"
+              >
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Row
+              </button>
+            </div>
             
             {/* Mobile Grand Totals Summary Card */}
             <div className="border-t border-gray-200 dark:border-dark-border pt-4 mt-4 text-xs">
