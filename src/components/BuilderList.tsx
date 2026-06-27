@@ -57,6 +57,12 @@ export default function BuilderList({
   categories,
 }: BuilderListProps) {
   const [builders, setBuilders] = useState(initialBuilders);
+  const [duplicateState, setDuplicateState] = useState<{
+    isOpen: boolean;
+    id: string;
+    originalName: string;
+    newName: string;
+  } | null>(null);
   const router = useRouter();
   const { confirm, showToast } = useUI();
 
@@ -83,23 +89,29 @@ export default function BuilderList({
     }
   };
 
-  const handleDuplicate = async (id: string, name: string) => {
-    const newName = window.prompt(`Duplicate Builder Name:`, `${name} (Copy)`);
-    
-    if (newName === null) {
-      return;
-    }
+  const handleDuplicate = (id: string, name: string) => {
+    setDuplicateState({
+      isOpen: true,
+      id,
+      originalName: name,
+      newName: `${name} (Copy)`,
+    });
+  };
 
-    const trimmedName = newName.trim();
+  const executeDuplicate = async () => {
+    if (!duplicateState) return;
+
+    const trimmedName = duplicateState.newName.trim();
     if (!trimmedName) {
       showToast('error', 'Error', 'Builder name cannot be empty.');
       return;
     }
 
     try {
-      const res = await duplicateBuilder(id, trimmedName);
+      const res = await duplicateBuilder(duplicateState.id, trimmedName);
       if (res.success) {
         showToast('success', 'Duplicated', 'Builder duplicated successfully.');
+        setDuplicateState(null);
         router.refresh();
       } else {
         showToast('error', 'Error', res.error || 'Failed to duplicate builder.');
@@ -121,6 +133,78 @@ export default function BuilderList({
           onDuplicate={handleDuplicate}
         />
       ))}
+
+      {/* Duplicate Builder Modal (SaaS Fluent Design) */}
+      {duplicateState && duplicateState.isOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          {/* Backdrop */}
+          <div 
+            onClick={() => setDuplicateState(null)}
+            className="fixed inset-0 bg-gray-900/50 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          />
+
+          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            {/* Modal Panel */}
+            <div className="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-dark-surface shadow-xl rounded-2xl border border-gray-200 dark:border-white/10 z-10 sm:my-8 sm:align-middle animate-fadeInUp">
+              <div className="sm:flex sm:items-start">
+                {/* Icon */}
+                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-pink-100 dark:bg-pink-900/30 sm:mx-0 sm:h-10 sm:w-10">
+                  <svg className="h-6 w-6 text-pink-655 dark:text-pink-450" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                  </svg>
+                </div>
+                
+                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                  <h3 className="text-lg leading-6 font-bold text-gray-900 dark:text-gray-100">
+                    Duplicate Builder
+                  </h3>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Enter a name for the duplicated configuration:
+                    </p>
+                  </div>
+                  
+                  {/* Name Input */}
+                  <div className="mt-4">
+                    <input
+                      type="text"
+                      value={duplicateState.newName}
+                      onChange={(e) => setDuplicateState(prev => prev ? { ...prev, newName: e.target.value } : null)}
+                      placeholder="Builder Name"
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-dark-surface2 text-gray-900 dark:text-gray-100 placeholder-gray-450 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-DEFAULT focus:border-primary-DEFAULT transition-all text-sm font-medium"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          executeDuplicate();
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 sm:mt-8 sm:flex sm:flex-row-reverse gap-3">
+                <button 
+                  type="button" 
+                  onClick={executeDuplicate}
+                  className="w-full inline-flex justify-center rounded-xl px-6 py-2.5 text-base font-bold text-white shadow-sm bg-[#F472B6] hover:bg-[#EC4899] active:bg-[#DB2777] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:w-auto sm:text-sm transition-colors"
+                >
+                  Duplicate
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setDuplicateState(null)} 
+                  className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 dark:border-gray-600 px-6 py-2.5 bg-white dark:bg-dark-surface2 text-base font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-dark-surface focus:outline-none focus:ring-2 focus:ring-primary-DEFAULT focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {builders.length === 0 && (
         <div className="bg-white dark:bg-dark-surface2 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-dark-border text-center text-gray-500 dark:text-gray-400">
