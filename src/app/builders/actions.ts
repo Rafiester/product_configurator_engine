@@ -70,9 +70,9 @@ export async function deleteBuilder(id: string) {
   revalidatePath('/builders');
 }
 
-export async function syncBuilderProducts(builderId: string, mappings: any[]) {
+export async function syncBuilderProducts(builderId: string, mappings: any[], selectedCategories?: string[]) {
   try {
-    trace('SYNC_ATTEMPT', { builderId, mappingsCount: mappings.length });
+    trace('SYNC_ATTEMPT', { builderId, mappingsCount: mappings.length, selectedCategories });
 
     // Run in a transaction to ensure clean wipe & replace
     await prisma.$transaction(async (tx) => {
@@ -99,6 +99,14 @@ export async function syncBuilderProducts(builderId: string, mappings: any[]) {
       if (newMappings.length > 0) {
         await tx.builderProductMapping.createMany({
           data: newMappings
+        });
+      }
+
+      // Update builder's selectedCategories list
+      if (selectedCategories) {
+        await tx.builder.update({
+          where: { id: builderId },
+          data: { selectedCategories }
         });
       }
     });

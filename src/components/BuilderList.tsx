@@ -306,8 +306,10 @@ function BuilderCard({
       return;
     }
 
+    const activeCategories = Array.from(new Set(rows.map((r) => r.category)));
+
     try {
-      const res = await syncBuilderProducts(builder.id, selections);
+      const res = await syncBuilderProducts(builder.id, selections, activeCategories);
       if (res.success) {
         showToast('success', 'Saved', 'PC build saved successfully.');
       } else {
