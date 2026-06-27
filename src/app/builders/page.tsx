@@ -30,6 +30,14 @@ export default async function BuildersPage() {
     }),
     prisma.product.findMany({
       where: { deletedAt: null, status: 'active' },
+      select: {
+        id: true,
+        name: true,
+        category: true,
+        sdp: true,
+        page_price: true,
+        srp: true,
+      },
       orderBy: { name: 'asc' }
     }),
     prisma.category.findMany({
