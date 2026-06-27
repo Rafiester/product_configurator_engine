@@ -17,6 +17,7 @@ export default function SearchableSelect({
 }: SearchableSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [openUpward, setOpenUpward] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on click outside
@@ -37,6 +38,16 @@ export default function SearchableSelect({
     }
   }, [isOpen]);
 
+  const handleToggle = () => {
+    if (!isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      // If there is less than 280px space below, open upward
+      setOpenUpward(spaceBelow < 280);
+    }
+    setIsOpen(!isOpen);
+  };
+
   const selectedOption = options.find((opt) => opt.id === value);
 
   const filteredOptions = options.filter((opt) =>
@@ -48,7 +59,7 @@ export default function SearchableSelect({
       {/* Trigger Button */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="w-full flex items-center justify-between bg-white border border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary-DEFAULT focus:border-primary-DEFAULT transition-all text-left"
       >
         <span className="truncate pr-2">
@@ -66,7 +77,9 @@ export default function SearchableSelect({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-dark-surface border border-gray-250 dark:border-dark-border rounded-lg shadow-xl overflow-hidden animate-fadeInUp">
+        <div className={`absolute z-50 w-full bg-white dark:bg-dark-surface border border-gray-250 dark:border-dark-border rounded-lg shadow-xl overflow-hidden animate-fadeInUp ${
+          openUpward ? 'bottom-full mb-1' : 'top-full mt-1'
+        }`}>
           {/* Search Input */}
           <div className="p-2 border-b border-gray-150 dark:border-dark-border bg-gray-50 dark:bg-dark-surface2">
             <input
