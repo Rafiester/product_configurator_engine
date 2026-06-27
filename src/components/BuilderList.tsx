@@ -551,7 +551,6 @@ function BuilderCard({
                           <input
                             type="number"
                             min="1"
-                            disabled={!row.productId}
                             value={row.qty === 0 ? '' : row.qty}
                             onChange={(e) => onQtyChange(row.id, e.target.value)}
                             className="w-16 bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm text-center focus:border-primary-DEFAULT focus:ring-primary-DEFAULT disabled:opacity-50 py-1"
