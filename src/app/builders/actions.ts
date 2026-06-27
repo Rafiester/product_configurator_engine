@@ -119,3 +119,50 @@ export async function syncBuilderProducts(builderId: string, mappings: any[], se
     return { success: false, message: error.message };
   }
 }
+
+export async function duplicateBuilder(id: string) {
+  try {
+    trace('DUPLICATE_ATTEMPT', { id });
+
+    // Fetch the original builder details including its products mappings
+    const original = await prisma.builder.findUnique({
+      where: { id },
+      include: {
+        products: true
+      }
+    });
+
+    if (!original) {
+      return { success: false, error: 'Original builder not found.' };
+    }
+
+    // Create duplicate builder
+    const duplicated = await prisma.builder.create({
+      data: {
+        name: `${original.name} (Copy)`,
+        status: original.status,
+        selectedCategories: original.selectedCategories,
+        products: {
+          create: original.products.map(p => ({
+            productId: p.productId,
+            category: p.category,
+            qty: p.qty,
+            sdp: p.sdp,
+            totalSdp: p.totalSdp,
+            pagePrice: p.pagePrice,
+            srp: p.srp,
+            margin: p.margin,
+            marginPercentage: p.marginPercentage
+          }))
+        }
+      }
+    });
+
+    trace('DUPLICATE_SUCCESS', { originalId: id, duplicatedId: duplicated.id });
+    revalidatePath('/builders');
+    return { success: true, id: duplicated.id };
+  } catch (error: any) {
+    trace('DUPLICATE_FAILED', { id, error: error.message });
+    return { success: false, error: error.message };
+  }
+}

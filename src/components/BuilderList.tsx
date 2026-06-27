@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/components/ToastProvider';
-import { deleteBuilder, syncBuilderProducts } from '@/app/builders/actions';
+import { deleteBuilder, syncBuilderProducts, duplicateBuilder } from '@/app/builders/actions';
 import SearchableSelect from './SearchableSelect';
 
 interface ProductInfo {
@@ -83,6 +83,29 @@ export default function BuilderList({
     }
   };
 
+  const handleDuplicate = async (id: string, name: string) => {
+    const confirmed = await confirm({
+      title: 'Duplicate Builder?',
+      message: `Are you sure you want to duplicate "${name}"?`,
+      confirmText: 'Duplicate',
+      type: 'info',
+    });
+
+    if (confirmed) {
+      try {
+        const res = await duplicateBuilder(id);
+        if (res.success) {
+          showToast('success', 'Duplicated', 'Builder duplicated successfully.');
+          router.refresh();
+        } else {
+          showToast('error', 'Error', res.error || 'Failed to duplicate builder.');
+        }
+      } catch (err: any) {
+        showToast('error', 'Error', err.message || 'Failed to duplicate builder.');
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       {builders.map((b) => (
@@ -92,6 +115,7 @@ export default function BuilderList({
           productsByCategory={productsByCategory}
           categories={categories}
           onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
         />
       ))}
 
@@ -109,11 +133,13 @@ function BuilderCard({
   productsByCategory,
   categories: propCategories,
   onDelete,
+  onDuplicate,
 }: {
   builder: BuilderWithProducts;
   productsByCategory: GroupedProducts;
   categories?: string[];
   onDelete: (id: string, name: string) => void;
+  onDuplicate: (id: string, name: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -416,6 +442,17 @@ function BuilderCard({
               >
                 Edit
               </Link>
+            </div>
+
+            {/* Duplicate Button */}
+            <div className="p-1 bg-primary-soft dark:bg-primary-darkSoft rounded-xl w-full md:w-auto">
+              <button
+                type="button"
+                onClick={() => onDuplicate(builder.id, builder.name)}
+                className="inline-flex items-center justify-center w-full md:w-auto h-10 px-6 bg-[#F472B6] hover:bg-[#EC4899] text-white font-bold rounded-lg shadow-sm text-sm transition-colors"
+              >
+                Duplicate
+              </button>
             </div>
 
             {/* Delete Button */}
