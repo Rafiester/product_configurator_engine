@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/components/ToastProvider';
 import { deleteBuilder, syncBuilderProducts } from '@/app/builders/actions';
+import SearchableSelect from './SearchableSelect';
 
 interface ProductInfo {
   id: string;
@@ -537,18 +538,12 @@ function BuilderCard({
                           {row.category}
                         </td>
                         <td className="py-3 px-4">
-                          <select
+                          <SearchableSelect
                             value={row.productId}
-                            onChange={(e) => onProductChange(row.id, e.target.value)}
-                            className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT truncate py-1.5"
-                          >
-                            <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
-                            {(productsByCategory[row.category] || []).map((p) => (
-                              <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
-                                {p.name}
-                              </option>
-                            ))}
-                          </select>
+                            onChange={(val) => onProductChange(row.id, val)}
+                            options={productsByCategory[row.category] || []}
+                            placeholder="-- Select Product --"
+                          />
                         </td>
                         <td className="py-3 px-4 text-center">
                           <input
@@ -715,18 +710,12 @@ function BuilderCard({
                 
                 <div className="space-y-2">
                   <label className="block text-xs text-gray-500 dark:text-gray-400">Select Component</label>
-                  <select
+                  <SearchableSelect
                     value={row.productId}
-                    onChange={(e) => onProductChange(row.id, e.target.value)}
-                    className="w-full bg-white border-gray-300 text-gray-900 dark:border-gray-700 dark:bg-dark-surface dark:text-gray-100 rounded-md text-sm focus:border-primary-DEFAULT focus:ring-primary-DEFAULT py-1.5"
-                  >
-                    <option value="" className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">-- Select Product --</option>
-                    {(productsByCategory[row.category] || []).map((p) => (
-                      <option key={p.id} value={p.id} className="bg-white dark:bg-dark-surface text-gray-900 dark:text-gray-100">
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => onProductChange(row.id, val)}
+                    options={productsByCategory[row.category] || []}
+                    placeholder="-- Select Product --"
+                  />
                 </div>
 
                 {row.productId && (
